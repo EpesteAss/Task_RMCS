@@ -1,4 +1,6 @@
+#include <cmath>
 #include <memory>
+#include <numbers>
 
 #include <librmcs/board/c_board.hpp>
 #include <rclcpp/node.hpp>
@@ -13,6 +15,7 @@ class M6020Task3Hardware
     : public rmcs_executor::Component
     , public rclcpp::Node
     , public librmcs::board::CBoard::Callback {
+
 public:
     M6020Task3Hardware()
         : Node{
@@ -31,19 +34,46 @@ public:
                 1}
                 .enable_multi_turn_angle());
 
+        target_angle_ = get_parameter("target_angle").as_double();
+
+        major_arc_tolerance_ =
+            get_parameter("major_arc_tolerance").as_double();
+
+        register_output(
+            "/m6020/target_angle",
+            target_angle_output_,
+            0.0);
+
         board_ = std::make_unique<librmcs::board::CBoard>(
             *this,
             get_parameter("board_serial").as_string());
     }
 
     void update() override {
+
         motor_.update_status();
+
+        const double current_angle = motor_.angle();
+
+        if (!target_initialized_) {
+            target_angle_output_value_ =
+                resolve_major_arc_target(
+                    current_angle,
+                    target_angle_);
+
+            target_initialized_ = true;
+        }
+
+        *target_angle_output_ =
+            target_angle_output_value_;
     }
 
 private:
+
     class CommandTransmitter : public rmcs_executor::Component {
     public:
-        explicit CommandTransmitter(M6020Task3Hardware& hardware)
+        explicit CommandTransmitter(
+            M6020Task3Hardware& hardware)
             : hardware_(hardware) {}
 
         void update() override {
@@ -55,6 +85,7 @@ private:
     };
 
     void command_update() {
+
         auto builder = board_->start_transmit();
 
         builder.can_transmit(
@@ -71,6 +102,38 @@ private:
             });
     }
 
+    static double wrap_angle(double angle) {
+
+        angle =
+            std::remainder(
+                angle,
+                2.0 * std::numbers::pi);
+
+        if (angle <= -std::numbers::pi)
+            angle += 2.0 * std::numbers::pi;
+
+        return angle;
+    }
+
+
+    double resolve_major_arc_target(
+        double current,
+        double target) const {
+
+        const double shortest_error =
+            wrap_angle(target - current);
+
+        if (std::abs(shortest_error) <= major_arc_tolerance_)
+            return current;
+
+        const double major_error =
+            shortest_error > 0.0
+                ? shortest_error - 2.0 * std::numbers::pi
+                : shortest_error + 2.0 * std::numbers::pi;
+
+        return current + major_error;
+    }
+
     void can_receive_callback(
         const Spec::Can& can,
         const View::Can& data) override {
@@ -83,16 +146,27 @@ private:
         if (can != Spec::kCans.kCan1)
             return;
 
-        // GM6020 ID = 1 -> feedback CAN ID = 0x205
         if (data.can_id == 0x205)
             motor_.store_status(data.can_data);
     }
 
-    std::shared_ptr<CommandTransmitter> command_component_;
+    std::shared_ptr<CommandTransmitter>
+        command_component_;
 
-    std::unique_ptr<librmcs::board::CBoard> board_;
+    std::unique_ptr<librmcs::board::CBoard>
+        board_;
 
     device::DjiMotor motor_;
+
+    OutputInterface<double>
+        target_angle_output_;
+
+    double target_angle_ = 0.0;
+    double major_arc_tolerance_ = 0.05;
+
+    double target_angle_output_value_ = 0.0;
+
+    bool target_initialized_ = false;
 };
 
 }  // namespace rmcs_core::hardware

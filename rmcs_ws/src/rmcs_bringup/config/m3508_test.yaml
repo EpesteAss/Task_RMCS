@@ -5,18 +5,20 @@ rmcs_executor:
     components:
       - rmcs_core::hardware::M3508TestHardware -> m3508_hardware
       - rmcs_core::controller::pid::PidController -> task2_pid
-      - rmcs_core::debug::Task2Telemetry -> task2_telemetry
+      - rmcs_core::broadcaster::ValueBroadcaster -> value_broadcaster
 
 
 m3508_hardware:
   ros__parameters:
     board_serial: ""
     max_velocity: 100.0
+    velocity_filter_cutoff: 100.0
+    filter_sampling_frequency: 1000.0
 
 
 task2_pid:
   ros__parameters:
-    measurement: /m3508/velocity
+    measurement: /m3508/filtered_velocity
     setpoint: /m3508/target_velocity
     control: /m3508/control_torque
 
@@ -26,9 +28,17 @@ task2_pid:
 
     integral_min: -100.0
     integral_max: 100.0
-
     integral_split_min: -100.0
     integral_split_max: 100.0
 
     output_min: -3.0
     output_max: 3.0
+
+
+value_broadcaster:
+  ros__parameters:
+    forward_list:
+      - /m3508/velocity
+      - /m3508/filtered_velocity
+      - /m3508/target_velocity
+      - /m3508/control_torque
