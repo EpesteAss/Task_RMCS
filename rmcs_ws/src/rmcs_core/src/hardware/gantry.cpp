@@ -110,7 +110,7 @@ public:
     ~Gantry() override = default;
 
     void update() override {
-        // 更新两个电机的反馈
+        
         left_motor_.update_status();
         right_motor_.update_status();
 
@@ -126,15 +126,15 @@ public:
         const double right_angle =
             right_motor_.angle();
 
-        // 输出电机速度反馈
+        
         *left_velocity_ = left_velocity;
         *right_velocity_ = right_velocity;
 
-        // 输出电机角度反馈
+       
         *left_angle_ = left_angle;
         *right_angle_ = right_angle;
 
-        // 利用左右电机角度差估计龙门左右位置偏差
+       
         if (std::isfinite(left_angle)
             && std::isfinite(right_angle)) {
             *position_error_ =
@@ -143,7 +143,7 @@ public:
             *position_error_ = nan_;
         }
 
-        // 反馈无效时停止输出控制量
+      
         if (!std::isfinite(left_velocity)
             || !std::isfinite(right_velocity)
             || !std::isfinite(target_velocity_)) {
@@ -153,23 +153,23 @@ public:
             return;
         }
 
-        // 左右电机的速度误差
+        
         Eigen::Vector2d setpoint_error{
             target_velocity_ - left_velocity,
             target_velocity_ - right_velocity};
 
-        // 左右电机之间的速度同步误差
+        
         Eigen::Vector2d relative_velocity{
             left_velocity - right_velocity,
             right_velocity - left_velocity};
 
-        // 将同步误差加入速度控制误差
+        
         Eigen::Vector2d control_error =
             setpoint_error
             - sync_coefficient_
                   * relative_velocity;
 
-        // 使用已有的二维 Matrix PID 同时计算两个电机控制量
+        
         const auto control_torques =
             velocity_pid_calculator_.update(
                 control_error);
