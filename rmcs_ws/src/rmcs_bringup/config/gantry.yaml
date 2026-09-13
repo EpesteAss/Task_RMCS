@@ -1,28 +1,49 @@
 rmcs_executor:
   ros__parameters:
     update_rate: 1000.0
-
     components:
       - rmcs_core::hardware::Gantry -> gantry
-
+      - rmcs_core::controller::gantry::GantryController -> gantry_controller
+      - rmcs_core::controller::pid::PidController -> gantry_left_pid
+      - rmcs_core::controller::pid::PidController -> gantry_right_pid
 
 gantry:
   ros__parameters:
-    # C Board
-    # 没有实物，暂时留空
     board_serial: ""
+    reduction_ratio: 19.2
+    lead_screw: 0.01
 
-    # 龙门架目标速度
-    #
-    # 正值：一个方向
-    # 负值：反方向
-    # 0：停止
-    target_velocity: 5.0
+gantry_controller:
+  ros__parameters:
+    target_position: 0.3
+    max_velocity: 0.15
+    sync_gain: 2.5
+    max_sync_error: 0.008
+    position_min: -0.4
+    position_max: 0.4
 
-    # 左右双电机同步系数
-    sync_coefficient: 0.2
+gantry_left_pid:
+  ros__parameters:
+    setpoint: /gantry/cmd_vel_left
+    measurement: /gantry/left_motor/velocity
+    control: /gantry/left_motor/control_torque
+    kp: 8.0
+    ki: 0.2
+    kd: 0.1
+    integral_min: -10.0
+    integral_max: 10.0
+    output_min: -24.0
+    output_max: 24.0
 
-    # MatrixPidCalculator<2>
-    kp: 1.0
-    ki: 0.0
-    kd: 0.5
+gantry_right_pid:
+  ros__parameters:
+    setpoint: /gantry/cmd_vel_right
+    measurement: /gantry/right_motor/velocity
+    control: /gantry/right_motor/control_torque
+    kp: 8.0
+    ki: 0.2
+    kd: 0.1
+    integral_min: -10.0
+    integral_max: 10.0
+    output_min: -24.0
+    output_max: 24.0
