@@ -9,10 +9,15 @@ rmcs_executor:
 
 gantry:
   ros__parameters:
+<<<<<<< HEAD
+=======
+
+>>>>>>> 849704d55a23fcce944d7076dc6523db3b12371a
     board_serial: ""
     reduction_ratio: 19.2
     lead_screw: 0.01
 
+<<<<<<< HEAD
 gantry_controller:
   ros__parameters:
     target_position: 0.3
@@ -47,3 +52,15 @@ gantry_right_pid:
     integral_max: 10.0
     output_min: -24.0
     output_max: 24.0
+=======
+
+    target_velocity: 5.0
+
+
+    sync_coefficient: 0.2
+
+    # MatrixPidCalculator<2>
+    kp: 1.0
+    ki: 0.0
+    kd: 0.5
+>>>>>>> 849704d55a23fcce944d7076dc6523db3b12371a
