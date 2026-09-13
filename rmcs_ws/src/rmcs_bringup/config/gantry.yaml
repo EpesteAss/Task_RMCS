@@ -8,18 +8,13 @@ rmcs_executor:
 
 gantry:
   ros__parameters:
-    # C Board
-    # 没有实物，暂时留空
+
     board_serial: ""
 
-    # 龙门架目标速度
-    #
-    # 正值：一个方向
-    # 负值：反方向
-    # 0：停止
+
     target_velocity: 5.0
 
-    # 左右双电机同步系数
+
     sync_coefficient: 0.2
 
     # MatrixPidCalculator<2>
