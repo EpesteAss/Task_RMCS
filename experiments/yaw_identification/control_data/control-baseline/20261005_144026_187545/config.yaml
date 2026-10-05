@@ -1,0 +1,105 @@
+rmcs_executor:
+  ros__parameters:
+    update_rate: 1000.0
+    components:
+    - rmcs_core::hardware::DeformableInfantryOmniC -> deformable_infantry
+    - rmcs_core::referee::Status -> referee_status
+    - yaw_identification::Controller -> yaw_experiment
+    - rmcs_core::debug::ValueCollector -> yaw_collector
+deformable_infantry:
+  ros__parameters:
+    serial_filter_bottom_board: AF-C1C3-DFE8-40A8-FC4B-B853-6ED7-AC9F-1DED
+    serial_filter_top_board: AF-ABAC-786D-1B53-99F6-00A2-42A6-AA95-9D69
+    chassis_radius: 0.2341741
+    rod_length: 0.14
+    yaw_motor_zero_point: 38910
+    pitch_motor_zero_point: 32214
+    rl_high_physical_angle_deg: 75.0
+    rl_low_physical_angle_deg: 17.0
+yaw_experiment:
+  ros__parameters:
+    allow_arm: true
+    world_pitch_control: true
+    world_pitch_target_deg: 5.0
+    pitch_target_deg: -18.0
+    pitch_ready_tolerance_deg: 1.5
+    min_world_pitch_deg: 3.0
+    pitch_min: -0.6
+    pitch_max: 0.1
+    pitch_ramp_rad_s: 0.0872665
+    pitch_torque_limit: 4.5
+    pitch_torque_slew_Nm_s: 5.0
+    pitch_torque_release_slew_Nm_s: 30.0
+    pitch_velocity_limit: 6.0
+    yaw_torque_limit: 4.5
+    yaw_span_rad: 0.2617993877991494
+    pitch_gravity_ff_gain: 3.5
+    pitch_gravity_ff_raise_gain: 2.575
+    pitch_gravity_ff_phase: 1.784
+    start_freq: 0.2
+    end_freq: 3.0
+    duration: 20.0
+    sweep_amplitude: 0.0
+    yaw_angle_kp: 10.0
+    yaw_angle_ki: 0.0
+    yaw_angle_kd: 0.0
+    yaw_velocity_kp: 13.0
+    yaw_velocity_ki: 0.02
+    yaw_velocity_kd: 0.0
+    yaw_angle_output_min: -100.0
+    yaw_angle_output_max: 100.0
+    yaw_velocity_output_min: -100.0
+    yaw_velocity_output_max: 100.0
+    pitch_angle_output_min: -6.0
+    pitch_angle_output_max: 6.0
+    pitch_velocity_output_min: -20.0
+    pitch_velocity_output_max: 20.0
+    pitch_angle_kp: 35.0
+    pitch_angle_ki: 0.02
+    pitch_angle_kd: 0.3
+    pitch_angle_integral_min: -0.5
+    pitch_angle_integral_max: 0.5
+    pitch_velocity_kp: 2.0
+    pitch_velocity_ki: 0.0
+    pitch_velocity_kd: 0.0
+    tracking_test: true
+    tracking_amplitude_deg: 5.0
+    tracking_frequency_hz: 0.25
+    tracking_ramp_s: 1.0
+    yaw_angle_integral_min: -0.5
+    yaw_angle_integral_max: 0.5
+    yaw_velocity_integral_min: -5.0
+    yaw_velocity_integral_max: 5.0
+    yaw_velocity_ff_torque_gain: 0.0
+    yaw_acceleration_ff_torque_gain: 0.0
+    yaw_bias_ff_torque: 0.0
+    yaw_torque_slew_Nm_s: 1000000.0
+yaw_collector:
+  ros__parameters:
+    csv_path: /root/yaw_identification/control_data/control-baseline/20261005_144026_187545/feedback.csv
+    signals:
+    - /gimbal/yaw/angle
+    - /gimbal/yaw/velocity
+    - /gimbal/yaw/velocity_imu
+    - /gimbal/yaw/torque
+    - /gimbal/yaw/control_torque
+    - /gimbal/pitch/angle
+    - /gimbal/pitch/velocity_imu
+    - /gimbal/pitch/control_torque
+    - /gimbal/pitch/velocity
+    - /gimbal/pitch/torque
+    - /gimbal/pitch/temperature
+    - /gimbal/yaw/temperature
+    - /yaw_experiment/state
+    - /yaw_experiment/fault
+    - /yaw_experiment/completed
+    - /yaw_experiment/time_s
+    - /yaw_experiment/excitation
+    - /yaw_experiment/pitch_target
+    - /yaw_experiment/pitch_torque_unlimited
+    - /yaw_experiment/pitch_world
+    - /yaw_experiment/yaw_target_offset
+    - /yaw_experiment/yaw_error
+    - /yaw_experiment/yaw_feedforward
+    write_interval: 10
+    flush_interval: 100

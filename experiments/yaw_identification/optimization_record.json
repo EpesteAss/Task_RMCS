@@ -1,0 +1,138 @@
+{
+  "stage": "controller_candidate_generated_not_yet_tested",
+  "identification_data": "data/20261005_093410_444865/feedback.csv",
+  "complete_trials": 70,
+  "rejected_trials": [
+    {
+      "trial": 71,
+      "reason": "interrupted or incomplete"
+    }
+  ],
+  "stable_trials_used": [
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70
+  ],
+  "model": {
+    "equation": "theta_dot=omega; omega_dot=a*omega+b*u+c",
+    "a": -10.382922831986454,
+    "b": 3.0675375932171973,
+    "c": -0.15334150741310387,
+    "normalized_design_condition": 2.715735129974162,
+    "regression_windows": 15961
+  },
+  "design": {
+    "desired_natural_frequency_rad_s": 12.0,
+    "desired_damping_ratio": 0.9,
+    "formula": {
+      "velocity_kp": "(2*zeta*wn+a)/b",
+      "angle_kp": "wn^2/(b*velocity_kp)",
+      "velocity_feedforward": "-a/b",
+      "acceleration_feedforward": "1/b",
+      "bias_feedforward": "-c/b"
+    }
+  },
+  "baseline": {
+    "yaw_angle_kp": 10.0,
+    "yaw_angle_ki": 0.0,
+    "yaw_angle_kd": 0.0,
+    "yaw_angle_integral_min": -0.5,
+    "yaw_angle_integral_max": 0.5,
+    "yaw_angle_output_min": -100.0,
+    "yaw_angle_output_max": 100.0,
+    "yaw_velocity_kp": 13.0,
+    "yaw_velocity_ki": 0.02,
+    "yaw_velocity_kd": 0.0,
+    "yaw_velocity_integral_min": -5.0,
+    "yaw_velocity_integral_max": 5.0,
+    "yaw_velocity_output_min": -100.0,
+    "yaw_velocity_output_max": 100.0,
+    "yaw_velocity_ff_torque_gain": 0.0,
+    "yaw_acceleration_ff_torque_gain": 0.0,
+    "yaw_bias_ff_torque": 0.0,
+    "yaw_torque_limit": 4.5,
+    "yaw_torque_slew_Nm_s": 1000000.0
+  },
+  "tuned_candidate": {
+    "yaw_angle_kp": 12.837568810761887,
+    "yaw_angle_ki": 0.0,
+    "yaw_angle_kd": 0.0,
+    "yaw_angle_integral_min": -0.5,
+    "yaw_angle_integral_max": 0.5,
+    "yaw_angle_output_min": -1.2,
+    "yaw_angle_output_max": 1.2,
+    "yaw_velocity_kp": 3.6567040589221302,
+    "yaw_velocity_ki": 0.02,
+    "yaw_velocity_kd": 0.0,
+    "yaw_velocity_integral_min": -3.0,
+    "yaw_velocity_integral_max": 3.0,
+    "yaw_velocity_output_min": -3.6,
+    "yaw_velocity_output_max": 3.6,
+    "yaw_velocity_ff_torque_gain": 3.384774437628641,
+    "yaw_acceleration_ff_torque_gain": 0.32599437484031346,
+    "yaw_bias_ff_torque": 0.049988468846206086,
+    "yaw_torque_limit": 3.6,
+    "yaw_torque_slew_Nm_s": 12.0
+  },
+  "matched_test": {
+    "target": "5 deg sine with 1 s raised-cosine start/end envelope",
+    "frequency_hz": 0.25,
+    "duration_s": 20.0,
+    "planned_repetitions_each": 3,
+    "metrics": [
+      "angle RMSE",
+      "absolute-error p95",
+      "torque RMS",
+      "peak torque",
+      "saturation fraction"
+    ]
+  },
+  "implementation_note": "Baseline uses the original RMCS cascaded PID gains and the same copied PidCalculator; the deterministic target and pitch holder replace unavailable DR16 input.",
+  "pitch_holder_safety": {
+    "observed_fault": "fault 4 while raising from about -8.3 deg; pitch speed reached the 0.8 rad/s hard trip",
+    "cause": "the symmetric 5 Nm/s torque slew kept about -4.1 Nm applied after the PID demand had fallen to about -2.3 Nm",
+    "correction": "retain the hard speed trip; apply torque at 5 Nm/s and release torque at 30 Nm/s"
+  },
+  "deployable_parameter_candidate": {
+    "file": "tuned.yaml",
+    "controller": "rmcs_core::controller::gimbal::DeformableInfantryGimbalController",
+    "scope": "PID gains only; model feedforward and output constraints are implemented in the experiment addon"
+  }
+}

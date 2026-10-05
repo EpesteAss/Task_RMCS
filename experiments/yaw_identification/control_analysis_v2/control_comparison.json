@@ -1,0 +1,50 @@
+{
+  "baseline_source": "control_data/control-baseline/20261005_125502_972052/feedback.csv",
+  "tuned_source": "control_data/control-tuned/20261005_133745_901452/feedback.csv",
+  "baseline": {
+    "complete_trials": 3,
+    "angle_rmse_deg": 0.7652728366410804,
+    "angle_mae_deg": 0.7034527100901354,
+    "angle_p95_abs_deg": 1.0574706737373794,
+    "peak_abs_error_deg": 1.2151174327575471,
+    "target_peak_deg": 5.000002142878398,
+    "torque_rms_Nm": 0.6783932396127013,
+    "peak_abs_torque_Nm": 1.45214,
+    "torque_limit_fraction": 0.0,
+    "pitch_world_range_deg": [
+      4.8995683709699165,
+      5.0053994053085304
+    ],
+    "max_pitch_temp_C": 38.0,
+    "max_yaw_temp_C": 31.0
+  },
+  "tuned": {
+    "complete_trials": 3,
+    "angle_rmse_deg": 0.6117589282886297,
+    "angle_mae_deg": 0.5766171464911479,
+    "angle_p95_abs_deg": 0.8090751348987233,
+    "peak_abs_error_deg": 0.8975040086047267,
+    "target_peak_deg": 4.999944847098885,
+    "torque_rms_Nm": 0.7346196815714523,
+    "peak_abs_torque_Nm": 1.20693,
+    "torque_limit_fraction": 0.0,
+    "pitch_world_range_deg": [
+      4.500612128642373,
+      4.65546543193238
+    ],
+    "max_pitch_temp_C": 41.0,
+    "max_yaw_temp_C": 32.0
+  },
+  "rejected": {
+    "baseline": [],
+    "tuned": []
+  },
+  "comparison_valid": true,
+  "note": "Compare only matched target profiles and similar starting temperature/load.",
+  "change_percent": {
+    "angle_rmse_deg": -20.060023171115127,
+    "angle_p95_abs_deg": -23.489591248971564,
+    "torque_rms_Nm": 8.288178400900792,
+    "peak_abs_torque_Nm": -16.886112909223627
+  }
+}

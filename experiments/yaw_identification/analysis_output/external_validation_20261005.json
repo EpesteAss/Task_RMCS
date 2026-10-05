@@ -1,0 +1,43 @@
+{
+  "frozen_model_source": "/workspaces/RMCS/experiments/yaw_identification/analysis_output/20261005_093410_444865_improved/results.json",
+  "method": "All coefficients and delay are frozen; each listed CSV is independent and no refitting occurs.",
+  "datasets": [
+    {
+      "source": "/workspaces/RMCS/experiments/yaw_identification/control_data/control-baseline/20261005_141022_896820/feedback.csv",
+      "complete_trials": 3,
+      "rejected_trials": [],
+      "linear": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.13368426550836499,
+        "angle_rmse_deg": 17.06904440239892,
+        "velocity_fit_percent": -42.76781712348934
+      },
+      "delayed_arx2": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.07024614643557091,
+        "velocity_fit_percent": 24.980782519122226,
+        "angle_rmse_deg": 2.3574217160723867,
+        "angle_fit_percent": 28.798313153695265
+      }
+    },
+    {
+      "source": "/workspaces/RMCS/experiments/yaw_identification/control_data/control-tuned/20261005_142257_467316/feedback.csv",
+      "complete_trials": 3,
+      "rejected_trials": [],
+      "linear": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.14201985968058675,
+        "angle_rmse_deg": 19.824131181875558,
+        "velocity_fit_percent": -50.880740513296075
+      },
+      "delayed_arx2": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.07427350893748733,
+        "velocity_fit_percent": 21.092429930482083,
+        "angle_rmse_deg": 2.5384439131078085,
+        "angle_fit_percent": 23.46163166864995
+      }
+    }
+  ],
+  "interpretation": "These tracking logs use a narrower excitation spectrum than the identification chirp. A lower external fit measures cross-experiment transfer and does not replace the original held-out result."
+}

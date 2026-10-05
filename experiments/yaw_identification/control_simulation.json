@@ -1,0 +1,80 @@
+{
+  "status": "model_screening_only_hardware_test_required",
+  "models": {
+    "stable_trials_31_70": {
+      "baseline": {
+        "angle_rmse_deg": 0.6620395259680927,
+        "angle_p95_abs_deg": 0.9501899873797148,
+        "torque_rms_Nm": 0.3350598289527158,
+        "peak_abs_torque_Nm": 0.5813967349023352,
+        "peak_abs_velocity_rad_s": 0.14826417933495042
+      },
+      "tuned_v1_candidate": {
+        "angle_rmse_deg": 0.44526561638057605,
+        "angle_p95_abs_deg": 0.6256651645618923,
+        "torque_rms_Nm": 0.33383817682725136,
+        "peak_abs_torque_Nm": 0.5568384191450318,
+        "peak_abs_velocity_rad_s": 0.142387529334128
+      },
+      "tuned_v2_candidate": {
+        "angle_rmse_deg": 0.44197356814578614,
+        "angle_p95_abs_deg": 0.6214402579738667,
+        "torque_rms_Nm": 0.3342482504320045,
+        "peak_abs_torque_Nm": 0.5776845340897263,
+        "peak_abs_velocity_rad_s": 0.14723181408017336
+      },
+      "predicted_change_percent": {
+        "tuned_v1_candidate": {
+          "angle_rmse_deg": -32.743348559216415,
+          "angle_p95_abs_deg": -34.153677383272196,
+          "torque_rms_Nm": -0.3646071596475453,
+          "peak_abs_torque_Nm": -4.224020240056692
+        },
+        "tuned_v2_candidate": {
+          "angle_rmse_deg": -33.24060712243829,
+          "angle_p95_abs_deg": -34.59831547082734,
+          "torque_rms_Nm": -0.2422189861577828,
+          "peak_abs_torque_Nm": -0.6384970175714044
+        }
+      }
+    },
+    "all_trials_model": {
+      "baseline": {
+        "angle_rmse_deg": 0.6433781928910085,
+        "angle_p95_abs_deg": 0.9224471123614566,
+        "torque_rms_Nm": 0.29046487646084423,
+        "peak_abs_torque_Nm": 0.515313013832528,
+        "peak_abs_velocity_rad_s": 0.14860778337020597
+      },
+      "tuned_v1_candidate": {
+        "angle_rmse_deg": 0.42785497883600004,
+        "angle_p95_abs_deg": 0.6018565240110443,
+        "torque_rms_Nm": 0.28776363492029144,
+        "peak_abs_torque_Nm": 0.49119394660935944,
+        "peak_abs_velocity_rad_s": 0.1425286928506858
+      },
+      "tuned_v2_candidate": {
+        "angle_rmse_deg": 0.4309193831828601,
+        "angle_p95_abs_deg": 0.6049214109474004,
+        "torque_rms_Nm": 0.2886779159858268,
+        "peak_abs_torque_Nm": 0.5059292239880144,
+        "peak_abs_velocity_rad_s": 0.1468629333028155
+      },
+      "predicted_change_percent": {
+        "tuned_v1_candidate": {
+          "angle_rmse_deg": -33.49868186961058,
+          "angle_p95_abs_deg": -34.75435979518687,
+          "torque_rms_Nm": -0.9299718346210906,
+          "peak_abs_torque_Nm": -4.680469263484788
+        },
+        "tuned_v2_candidate": {
+          "angle_rmse_deg": -33.022382799993345,
+          "angle_p95_abs_deg": -34.42210368041515,
+          "torque_rms_Nm": -0.6152070765975459,
+          "peak_abs_torque_Nm": -1.8209883299324603
+        }
+      }
+    }
+  },
+  "safety_gate": "peak velocity below 1 rad/s and torque within each configured limit"
+}

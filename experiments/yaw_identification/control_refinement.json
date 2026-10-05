@@ -1,0 +1,149 @@
+{
+  "source_comparison": "control_analysis/control_comparison.json",
+  "observed_tuned_v1": {
+    "yaw_velocity_kp": 3.6567040589221302,
+    "angle_rmse_deg": 0.8472654144546686,
+    "closed_loop_amplitude_ratio": 0.8479378913229947,
+    "closed_loop_phase_deg": -11.24181270224071,
+    "torque_rms_Nm": 0.6983506953064034,
+    "peak_abs_torque_Nm": 1.06961
+  },
+  "load_change": {
+    "baseline_empirical_plant_gain_rad_per_Nm": 0.09274918348443645,
+    "tuned_v1_empirical_plant_gain_rad_per_Nm": 0.07677447393921083,
+    "change_percent": -17.22355814367489,
+    "frequency_hz": 0.25
+  },
+  "tuned_v2": {
+    "yaw_velocity_kp": 8.0,
+    "reason": "restore rejection of the measured load change while remaining below the original RMCS gain of 13.0",
+    "unchanged": [
+      "yaw_angle_kp",
+      "model feedforward",
+      "integral limits",
+      "torque limit",
+      "torque slew limit"
+    ],
+    "prediction_from_tuned_v1_empirical_plant": {
+      "closed_loop_amplitude_ratio": 0.9156838467435424,
+      "closed_loop_phase_deg": -9.491110391950706,
+      "steady_sine_rmse_deg": 0.6342164925490482,
+      "torque_rms_Nm": 0.7359716370677593
+    },
+    "measured_three_trial_result": {
+      "source": "control_data/control-tuned/20261005_133745_901452/feedback.csv",
+      "angle_rmse_deg": 0.6117589282886297,
+      "angle_rmse_per_trial_deg": [
+        0.6077053479092734,
+        0.6111761380119686,
+        0.6163642571319352
+      ],
+      "angle_p95_abs_deg": 0.8090751348987233,
+      "peak_abs_error_deg": 0.8975040086047267,
+      "closed_loop_amplitude_ratio_per_trial": [
+        0.9360486290109853,
+        0.9362240167900375,
+        0.9354360063800089
+      ],
+      "closed_loop_phase_deg_per_trial": [
+        -9.335414460885847,
+        -9.388556816546618,
+        -9.463783749991606
+      ],
+      "torque_rms_Nm": 0.7346196815714523,
+      "peak_abs_torque_Nm": 1.20693,
+      "torque_limit_fraction": 0.0,
+      "faults": 0,
+      "completed_trials": 3
+    },
+    "change_from_baseline_percent": {
+      "angle_rmse": -20.060023171115127,
+      "angle_p95_abs": -23.489591248971564,
+      "torque_rms": 8.288178400900792,
+      "peak_abs_torque": -16.886112909223627
+    }
+  },
+  "final_candidate_v3": {
+    "yaw_velocity_kp": 10.0,
+    "fallback_config": "control_tuned_v2.yaml",
+    "basis": "same-condition baseline and v2 runs; estimate empirical plant response at 0.25 Hz, retain all other controller parameters",
+    "predicted_from_v2_empirical_frequency_response": {
+      "closed_loop_amplitude_ratio": 0.9465908457857455,
+      "closed_loop_phase_deg": -8.257237917364106,
+      "steady_sine_rmse_deg": 0.5300787086510049,
+      "torque_rms_Nm": 0.590793154505953
+    },
+    "measured_three_trial_result": {
+      "source": "control_data/control-tuned/20261005_142257_467316/feedback.csv",
+      "angle_rmse_deg": 0.5309877805290394,
+      "angle_rmse_per_trial_deg": [
+        0.5277364466142541,
+        0.5322608379164933,
+        0.5329509476010519
+      ],
+      "angle_p95_abs_deg": 0.7248615116914973,
+      "peak_abs_error_deg": 0.7701125724353395,
+      "closed_loop_amplitude_ratio_per_trial": [
+        0.9557966012521465,
+        0.9558588959184596,
+        0.9559862752452916
+      ],
+      "closed_loop_phase_deg_per_trial": [
+        -8.280680630906915,
+        -8.336617956008325,
+        -8.360807637477171
+      ],
+      "torque_rms_Nm": 0.6304783929544606,
+      "peak_abs_torque_Nm": 1.06278,
+      "torque_limit_fraction": 0.0,
+      "faults": 0,
+      "completed_trials": 3
+    },
+    "change_from_same_condition_baseline_percent": {
+      "angle_rmse": -26.88288010140958,
+      "angle_p95_abs": -28.154480797232328,
+      "torque_rms": 5.5356701179174905,
+      "peak_abs_torque": -19.363576354904055
+    },
+    "status": "hardware_validated"
+  },
+  "status": "v3_hardware_validated_at_0p25_and_0p5_Hz",
+  "unseen_fast_condition_validation": {
+    "status": "validated_on_hardware",
+    "condition": {
+      "tracking_amplitude_deg": 3.0,
+      "tracking_frequency_hz": 0.5,
+      "duration_s": 12.0,
+      "trials_per_controller": 3
+    },
+    "baseline_source": "control_data/control-baseline-fast/20261005_144837_071389/feedback.csv",
+    "tuned_source": "control_data/control-tuned-fast/20261005_144955_736649/feedback.csv",
+    "baseline": {
+      "angle_rmse_deg": 0.7646476009104859,
+      "angle_p95_abs_deg": 1.0876059619300802,
+      "peak_abs_error_deg": 1.1223097291022566,
+      "torque_rms_Nm": 0.5876328012785211,
+      "peak_abs_torque_Nm": 1.33792,
+      "max_pitch_temp_C": 40.0,
+      "max_yaw_temp_C": 32.0,
+      "completed_trials": 3
+    },
+    "tuned": {
+      "angle_rmse_deg": 0.5477147055885456,
+      "angle_p95_abs_deg": 0.773228889883056,
+      "peak_abs_error_deg": 0.821386565521597,
+      "torque_rms_Nm": 0.5881943735020864,
+      "peak_abs_torque_Nm": 1.00185,
+      "max_pitch_temp_C": 41.0,
+      "max_yaw_temp_C": 32.0,
+      "completed_trials": 3
+    },
+    "change_percent": {
+      "angle_rmse": -28.37031007010714,
+      "angle_p95_abs": -28.905420074116396,
+      "torque_rms": 0.09556515945730037,
+      "peak_abs_torque": -25.118841186319074
+    },
+    "model_external_validation": "analysis_output/external_validation_fast_20261005.json"
+  }
+}

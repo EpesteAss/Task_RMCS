@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>rmcs_yaw_identification</name>
+  <version>0.1.0</version>
+  <description>Isolated terminal-controlled yaw experiment with pitch holding.</description>
+  <maintainer email="maintainer@example.com">RMCS experiment</maintainer>
+  <license>GPL-3.0-only</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>pluginlib</depend>
+  <depend>rmcs_executor</depend>
+  <depend>rmcs_description</depend>
+  <depend>fast_tf</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

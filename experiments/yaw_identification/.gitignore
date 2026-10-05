@@ -1,0 +1,7 @@
+__pycache__/
+.venv/
+addon_build/
+addon_install/
+addon_log/
+addon/.cache/
+addon/compile_commands.json

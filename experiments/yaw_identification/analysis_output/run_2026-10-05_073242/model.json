@@ -1,0 +1,13 @@
+{
+  "model": "theta_dot=omega; omega_dot=a*omega+b*u+c",
+  "a_per_s": -108.12470681620839,
+  "b_rad_per_s2_per_torque_unit": 14.038971865378562,
+  "c_rad_per_s2": 0.2852283104001341,
+  "time_constant_s": 0.009248579991063573,
+  "train_pairs": 6999,
+  "validation_pairs": 3000,
+  "validation_velocity_one_step_rmse_rad_s": 0.016032130893528274,
+  "validation_angle_one_step_rmse_rad": 4.808036313542648e-05,
+  "measured_angle_span_rad": 0.020800000000000374,
+  "note": "b combines motor torque calibration with inertia; J and K cannot be separated without calibration"
+}

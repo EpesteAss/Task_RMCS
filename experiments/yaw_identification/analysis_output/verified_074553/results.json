@@ -1,0 +1,52 @@
+{
+  "source": "/workspaces/RMCS/experiments/yaw_identification/data/c_yaw_ident_2026-10-05_07-45-53.csv",
+  "accepted_trials": 1,
+  "rejected_trials": [],
+  "split": "Only one trial: first 70% trains, last 30% validates; independent trial still needed",
+  "training_trials": [
+    1
+  ],
+  "validation_trials": [
+    1
+  ],
+  "models": {
+    "linear": {
+      "equations": "theta_dot=omega; omega_dot=a*omega+b*u+c",
+      "coefficients": {
+        "a": -8.357417301214172,
+        "b": 3.693269735133735,
+        "c": -0.4338534886722907
+      },
+      "normalized_design_condition": 3.4766946184055727,
+      "training_windows": 279,
+      "physical_signs_plausible": true,
+      "validation": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.07512980995150939,
+        "angle_rmse_deg": 2.554346343800284,
+        "velocity_fit_percent": 57.0676223392723
+      },
+      "interpretation": "Candidate only; inspect held-out free-run plots and repeatability"
+    },
+    "friction": {
+      "equations": "theta_dot=omega; omega_dot=a*omega+b*u+c+f*tanh(omega/0.02)",
+      "coefficients": {
+        "a": -5.429263175794688,
+        "b": 4.206399006284806,
+        "c": -0.5012180142267566,
+        "f": -0.9420432431604674
+      },
+      "normalized_design_condition": 5.827249580341698,
+      "training_windows": 279,
+      "physical_signs_plausible": true,
+      "validation": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.06984066205975481,
+        "angle_rmse_deg": 2.6578246141706616,
+        "velocity_fit_percent": 60.0900670245285
+      },
+      "interpretation": "Candidate only; inspect held-out free-run plots and repeatability"
+    }
+  },
+  "note": "Second-order angle model; torque input is commanded Nm, not independently calibrated shaft torque. Closed-loop noise/friction can bias estimates. Do not deploy gains from these fits without separate matched tests."
+}
