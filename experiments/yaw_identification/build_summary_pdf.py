@@ -36,6 +36,8 @@ TIME_CHART = HERE / "control_analysis_final_kp10" / "control_comparison.svg"
 WIDE_TIME_CHART = HERE / "control_analysis_wide_latest" / "control_comparison_trial_3.svg"
 RICH_MODEL_CHART = (HERE / "analysis_output" / "20261006_133045_810815"
                     / "filtered_velocity_arx2_one_step_validation.svg")
+DELAYED_CHART = (HERE / "analysis_output" / "20261005_093410_444865_improved"
+                 / "delayed_arx2_validation.svg")
 CASCADE_CHART = (HERE / "analysis_output" / "20261007_cascade_fresh"
                  / "profile_0_validation.svg")
 
@@ -188,10 +190,12 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
             story.extend([ControlChart(), Spacer(1, 4 * mm)])
             i += 1
             continue
-        if line in ("[[TIME_CHART]]", "[[WIDE_TIME_CHART]]", "[[RICH_MODEL_CHART]]", "[[CASCADE_CHART]]"):
+        if line in ("[[TIME_CHART]]", "[[WIDE_TIME_CHART]]", "[[RICH_MODEL_CHART]]",
+                    "[[DELAYED_CHART]]", "[[CASCADE_CHART]]"):
             chart_path = {"[[TIME_CHART]]": TIME_CHART,
                           "[[WIDE_TIME_CHART]]": WIDE_TIME_CHART,
                           "[[RICH_MODEL_CHART]]": RICH_MODEL_CHART,
+                          "[[DELAYED_CHART]]": DELAYED_CHART,
                           "[[CASCADE_CHART]]": CASCADE_CHART}[line]
             drawing = svg2rlg(str(chart_path))
             if drawing is None:
