@@ -16,6 +16,7 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Flowable,
+    KeepTogether,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -247,7 +248,7 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
             while i < len(lines) and lines[i].strip().startswith("|"):
                 block.append(lines[i].strip())
                 i += 1
-            story.extend([parse_table(block, styles, width), Spacer(1, 4 * mm)])
+            story.extend([KeepTogether([parse_table(block, styles, width)]), Spacer(1, 4 * mm)])
             continue
         if line.startswith("# "):
             story.append(paragraph(line[2:], styles["title"] if first_title else styles["h1"]))
