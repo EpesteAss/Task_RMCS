@@ -5,6 +5,7 @@
 - 实现：`rmcs_ws/src/rmcs_core/src/hardware/gantry.cpp`、`rmcs_ws/src/rmcs_core/src/controller/motor/gantry_controller.cpp`。
 - 配置与实机操作说明：`rmcs_ws/src/rmcs_bringup/config/gantry.yaml`、`gantry.README.md`。
 - 三台 M2006 的分工为上方 ID 1 控制 yaw、下方左 ID 2 与右 ID 3 控制 pitch。当前配置是带自动上限找平的单环手动测试；几何尺寸和安全行程尚未实测，完整角度位置控制保持锁定。实机前请先阅读配置目录中的说明。
+- 实操验收待补：纯升降时检查发射架实际水平度；仅操作 yaw 时用倾角仪记录中位和左右两端的实际 pitch。当前手动模式不主动补偿 yaw 引起的 pitch 几何变化，不能把两项写成已实测通过。
 
 ## 步兵 C 车 yaw 系统辨识与控制优化
 

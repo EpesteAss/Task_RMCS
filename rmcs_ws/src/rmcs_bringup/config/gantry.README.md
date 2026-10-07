@@ -123,3 +123,26 @@ identify the physical end of travel on its own, so measured travel limits
 are required for routine operation. Stall thresholds and PID gains in the
 configuration need low-speed tuning; the current manual-test gains are not
 validated gains for normal operation.
+
+## Acceptance checks still requiring the mechanism
+
+The present YAML runs single-loop manual speed control. Its lift angle feedback
+reduces left/right screw travel difference, but equal screw travel alone does
+not prove that the launcher is physically level. After both upper stops are
+found (`/gantry/homing_state == 2`), inspect the actual left/right height at
+the front; a jam before an upper stop can produce a false zero. Then move pitch
+through a conservative range while recording `/gantry/left_position_m`,
+`/gantry/right_position_m`, and `/gantry/sync_error_m` from the collector CSV.
+Check the launcher itself for tilt at several positions.
+
+For the yaw-only acceptance test, center the pitch stick and measure the
+launcher pitch with an inclinometer at yaw center, a safe left position, and a
+safe right position. Repeat while yaw is moving. In manual mode the two lift
+motors receive no pitch-hold command during yaw-only motion, so mechanical
+coupling can change the actual pitch. The placeholder `/gantry/pitch_rad` is
+not a measurement while `geometry_ready: false`; it cannot validate this
+requirement. If pitch changes, measure the pivot-to-front distance and the
+reference offsets/travel bounds, configure the calibrated controller, and
+repeat the test with its yaw-dependent height compensation. Keep the manual
+mode disabled when enabling that controller. These two physical acceptance
+checks have not yet been recorded as passed.
