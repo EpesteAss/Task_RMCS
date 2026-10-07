@@ -16,7 +16,6 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Flowable,
-    KeepTogether,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -41,6 +40,35 @@ DELAYED_CHART = (HERE / "analysis_output" / "20261005_093410_444865_improved"
                  / "delayed_arx2_validation.svg")
 CASCADE_CHART = (HERE / "analysis_output" / "20261007_cascade_fresh"
                  / "profile_0_validation.svg")
+
+
+class EquationBlock(Flowable):
+    """Center standalone equations in a compact vector panel."""
+
+    def __init__(self, equations: list[str]):
+        super().__init__()
+        self.equations = equations
+        self.width = 0.0
+        self.height = 14 + 16 * len(equations)
+
+    def wrap(self, avail_width: float, avail_height: float) -> tuple[float, float]:
+        self.width = avail_width
+        return self.width, self.height
+
+    def draw(self) -> None:
+        c = self.canv
+        c.setFillColor(colors.HexColor("#f2f7fa"))
+        c.roundRect(0, 0, self.width, self.height, 5, fill=1, stroke=0)
+        c.setStrokeColor(colors.HexColor("#00798c"))
+        c.setLineWidth(2.4)
+        c.line(0, 5, 0, self.height - 5)
+        c.setFillColor(colors.HexColor("#17365d"))
+        for index, equation in enumerate(self.equations):
+            size = 11.4
+            while size > 8 and pdfmetrics.stringWidth(equation, MATH_FONT, size) > self.width - 28:
+                size -= 0.25
+            c.setFont(MATH_FONT, size)
+            c.drawCentredString(self.width / 2, self.height - 17 - 16 * index, equation)
 
 
 class ControlChart(Flowable):
@@ -236,9 +264,9 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
         elif re.fullmatch(r"`[^`]+`", line):
             formulae = []
             while i < len(lines) and re.fullmatch(r"`[^`]+`", lines[i].strip()):
-                formulae.append(paragraph(lines[i].strip(), styles["body"]))
+                formulae.append(lines[i].strip()[1:-1])
                 i += 1
-            story.append(KeepTogether(formulae))
+            story.extend([EquationBlock(formulae), Spacer(1, 2.1 * mm)])
             continue
         else:
             story.append(paragraph(line, styles["lead"] if line.endswith("：") else styles["body"]))
