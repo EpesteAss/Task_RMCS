@@ -13,6 +13,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Flowable,
     PageBreak,
@@ -29,6 +30,8 @@ HERE = Path(__file__).resolve().parent
 SOURCE = HERE / "FINAL_REPORT.md"
 OUTPUT = HERE / "步兵C车Yaw轴系统辨识与控制优化实验总结.pdf"
 FONT = "STSong-Light"
+MATH_FONT = "DejaVuSans"
+MATH_FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
 TIME_CHART = HERE / "control_analysis_final_kp10" / "control_comparison.svg"
 WIDE_TIME_CHART = HERE / "control_analysis_wide_latest" / "control_comparison_trial_3.svg"
 RICH_MODEL_CHART = (HERE / "analysis_output" / "20261006_133045_810815"
@@ -110,12 +113,9 @@ class ControlChart(Flowable):
 
 
 def markdown_markup(value: str) -> str:
-    # STSong-Light renders Chinese, while Helvetica renders ASCII formulae.
-    # Neither font covers every Greek/subscript/combining math glyph used in
-    # Markdown. Spell those glyphs out before choosing the font for code spans.
+    # STSong-Light renders Chinese; the embedded TrueType font renders Greek math.
+    # Use plain digits/operators where combining marks and subscripts vary by viewer.
     value = value.translate(str.maketrans({
-        "θ": "theta", "ω": "omega", "φ": "phi", "π": "pi", "μ": "mu",
-        "σ": "sigma", "Σ": "Sigma", "Δ": "Delta", "Ω": "Omega",
         "̇": "_dot", "₀": "0", "₁": "1", "₂": "2", "₃": "3",
         "₄": "4", "₅": "5", "₆": "6", "₇": "7", "₈": "8", "₉": "9",
         "−": "-", "·": "*", "×": "*", "≈": "~",
@@ -124,9 +124,12 @@ def markdown_markup(value: str) -> str:
     value = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", value)
     def code_span(match: re.Match[str]) -> str:
         content = match.group(1)
-        font = FONT if any('\u3400' <= char <= '\u9fff' for char in content) else "Helvetica"
+        font = FONT if any('\u3400' <= char <= '\u9fff' for char in content) else MATH_FONT
         return f'<font name="{font}">{content}</font>'
     value = re.sub(r"`(.+?)`", code_span, value)
+    # Greek outside formula spans also needs the embedded font.
+    value = re.sub(r"[\u0370-\u03ff]+",
+                   lambda match: f'<font name="{MATH_FONT}">{match.group()}</font>', value)
     value = re.sub(
         r"https://github\.com/[A-Za-z0-9_./-]+",
         lambda match: f'<link href="{match.group()}" color="#006b9a">{match.group()}</link>',
@@ -215,15 +218,13 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
             first_title = False
             story.append(Spacer(1, 4 * mm))
         elif line.startswith("## "):
-            story.extend([Spacer(1, 2 * mm), paragraph(line[3:], styles["h1"]), Spacer(1, 1.5 * mm)])
+            story.extend([Spacer(1, 2 * mm), paragraph(line[3:], styles["h1"])])
         elif line.startswith("### "):
             story.extend([Spacer(1, 1.5 * mm), paragraph(line[4:], styles["h2"])])
         elif line.startswith("- "):
             story.append(Paragraph(markdown_markup(line[2:]), styles["body"], bulletText="•"))
         elif re.match(r"^\d+\. ", line):
             story.append(paragraph(line, styles["body"]))
-        elif line.startswith("**实验日期：**"):
-            story.append(paragraph(line, styles["metadata"]))
         else:
             story.append(paragraph(line, styles["body"]))
         i += 1
@@ -239,18 +240,19 @@ def decorate(canvas, doc) -> None:
         canvas.line(17 * mm, page_h - 13 * mm, page_w - 17 * mm, page_h - 13 * mm)
         canvas.setFont(FONT, 8)
         canvas.setFillColor(colors.HexColor("#53657d"))
-        canvas.drawString(17 * mm, page_h - 10 * mm, "RMCS 控制作业｜龙门架与步兵 C 车 Yaw 轴")
+        canvas.drawString(17 * mm, page_h - 10 * mm, "算法大作业")
     canvas.setStrokeColor(colors.HexColor("#d6e0ec"))
     canvas.line(17 * mm, 12 * mm, page_w - 17 * mm, 12 * mm)
     canvas.setFont(FONT, 8)
     canvas.setFillColor(colors.HexColor("#53657d"))
-    canvas.drawString(17 * mm, 7 * mm, "实验总结与原始数据索引｜2026-10-07")
+    canvas.drawString(17 * mm, 7 * mm, "算法大作业｜实验数据与报告")
     canvas.drawRightString(page_w - 17 * mm, 7 * mm, str(doc.page))
     canvas.restoreState()
 
 
 def main() -> None:
     pdfmetrics.registerFont(UnicodeCIDFont(FONT))
+    pdfmetrics.registerFont(TTFont(MATH_FONT, str(MATH_FONT_PATH)))
     page_w, _ = A4
     left = right = 17 * mm
     top, bottom = 20 * mm, 17 * mm
@@ -268,9 +270,6 @@ def main() -> None:
         "body": ParagraphStyle("BodyCN", fontName=FONT, fontSize=9.3, leading=14.2,
                                 textColor=colors.HexColor("#202733"), alignment=TA_LEFT,
                                 spaceAfter=2.1 * mm, wordWrap="CJK", allowWidows=0, allowOrphans=0),
-        "metadata": ParagraphStyle("MetadataCN", fontName=FONT, fontSize=9.5, leading=14,
-                                    textColor=colors.HexColor("#53657d"), spaceAfter=1.2 * mm,
-                                    wordWrap="CJK"),
         "table": ParagraphStyle("TableCN", fontName=FONT, fontSize=7.7, leading=10.5,
                                  textColor=colors.HexColor("#202733"), wordWrap="CJK"),
         "table_header": ParagraphStyle("TableHeaderCN", fontName=FONT, fontSize=7.7,
@@ -278,7 +277,7 @@ def main() -> None:
     }
     doc = SimpleDocTemplate(str(OUTPUT), pagesize=A4, rightMargin=right, leftMargin=left,
                             topMargin=top, bottomMargin=bottom,
-                            title="控制方向作业实验总结：龙门架与步兵 C 车 Yaw 轴",
+                            title="算法大作业",
                             author="RMCS 控制作业实验记录")
     story = parse_markdown(SOURCE.read_text(encoding="utf-8"), styles, width)
     doc.build(story, onFirstPage=decorate, onLaterPages=decorate)
