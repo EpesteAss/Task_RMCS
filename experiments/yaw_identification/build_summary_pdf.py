@@ -127,6 +127,11 @@ def markdown_markup(value: str) -> str:
         font = FONT if any('\u3400' <= char <= '\u9fff' for char in content) else "Helvetica"
         return f'<font name="{font}">{content}</font>'
     value = re.sub(r"`(.+?)`", code_span, value)
+    value = re.sub(
+        r"https://github\.com/[A-Za-z0-9_./-]+",
+        lambda match: f'<link href="{match.group()}" color="#006b9a">{match.group()}</link>',
+        value,
+    )
     return value
 
 
@@ -234,7 +239,7 @@ def decorate(canvas, doc) -> None:
         canvas.line(17 * mm, page_h - 13 * mm, page_w - 17 * mm, page_h - 13 * mm)
         canvas.setFont(FONT, 8)
         canvas.setFillColor(colors.HexColor("#53657d"))
-        canvas.drawString(17 * mm, page_h - 10 * mm, "RMCS 控制作业｜步兵 C 车 Yaw 轴")
+        canvas.drawString(17 * mm, page_h - 10 * mm, "RMCS 控制作业｜龙门架与步兵 C 车 Yaw 轴")
     canvas.setStrokeColor(colors.HexColor("#d6e0ec"))
     canvas.line(17 * mm, 12 * mm, page_w - 17 * mm, 12 * mm)
     canvas.setFont(FONT, 8)
@@ -273,7 +278,7 @@ def main() -> None:
     }
     doc = SimpleDocTemplate(str(OUTPUT), pagesize=A4, rightMargin=right, leftMargin=left,
                             topMargin=top, bottomMargin=bottom,
-                            title="步兵 C 车 Yaw 轴系统辨识与控制优化实验总结",
+                            title="控制方向作业实验总结：龙门架与步兵 C 车 Yaw 轴",
                             author="RMCS 控制作业实验记录")
     story = parse_markdown(SOURCE.read_text(encoding="utf-8"), styles, width)
     doc.build(story, onFirstPage=decorate, onLaterPages=decorate)
