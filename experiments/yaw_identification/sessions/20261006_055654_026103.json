@@ -1,0 +1,34 @@
+{
+  "outcome": "complete",
+  "completed_trials": 1,
+  "events": [
+    {
+      "elapsed_s": 0.0024406110005656956,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Support pitch against dropping."
+    },
+    {
+      "elapsed_s": 2.2152767070001573,
+      "message": "arm: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 6.728061943000284,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 26.763290370000504,
+      "message": "Completed trial 1; holding for 5 s"
+    },
+    {
+      "elapsed_s": 31.773318188000303,
+      "message": "Session complete: 1 full sweeps"
+    },
+    {
+      "elapsed_s": 31.77397560100053,
+      "message": "off: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 39.789402512999914,
+      "message": "OFF acknowledgement unavailable: Timed out waiting for controller state/service; heartbeat stops now"
+    }
+  ]
+}

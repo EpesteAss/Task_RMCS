@@ -82,7 +82,9 @@
     <description>
         Task 2 M3508 ROS2 telemetry publisher.
     </description>
-</class>
+  </class>
+  <class type="rmcs_core::hardware::Gantry" base_class_type="rmcs_executor::Component" />
+  <class type="rmcs_core::controller::gantry::GantryController" base_class_type="rmcs_executor::Component" />
 
 <class
     type="rmcs_core::debug::Task3TargetAngle"

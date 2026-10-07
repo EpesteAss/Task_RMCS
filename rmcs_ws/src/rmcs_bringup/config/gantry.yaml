@@ -4,63 +4,154 @@ rmcs_executor:
     components:
       - rmcs_core::hardware::Gantry -> gantry
       - rmcs_core::controller::gantry::GantryController -> gantry_controller
-      - rmcs_core::controller::pid::PidController -> gantry_left_pid
-      - rmcs_core::controller::pid::PidController -> gantry_right_pid
+      - rmcs_core::controller::pid::PidController -> gantry_left_velocity_pid
+      - rmcs_core::controller::pid::PidController -> gantry_right_velocity_pid
+      - rmcs_core::controller::pid::PidController -> gantry_yaw_velocity_pid
+      - rmcs_core::debug::ValueCollector -> gantry_collector
 
 gantry:
   ros__parameters:
-<<<<<<< HEAD
-=======
-
->>>>>>> 849704d55a23fcce944d7076dc6523db3b12371a
     board_serial: ""
-    reduction_ratio: 19.2
-    lead_screw: 0.01
+    # Facing the launch direction: left lift ID 2, right lift ID 3, top yaw ID 1.
+    # Clockwise viewed from the motor top raises both lifts (raw angle decreases).
+    # Normalize lift feedback so positive travel means upward; yaw is positive left.
+    left_reversed: true
+    right_reversed: true
+    yaw_reversed: false
+    # Screw travel: 0.2 mm/revolution = 0.0002 m/revolution.
+    pitch_lead_m_per_rev: 0.0002
+    yaw_lead_m_per_rev: 0.0002
+    feedback_timeout_s: 0.1
+    remote_timeout_s: 0.1
+    stall_torque_nm: 0.3
+    stall_speed_rad_s: 0.05
+    stall_target_speed_rad_s: 0.3
+    stall_duration_s: 0.25
+    temperature_limit_c: 70.0
+    # Sensorless upper-stop homing. Motion stays locked unless both stops are found.
+    auto_home: true
+    homing_torque_limit_nm: 0.8
+    homing_contact_torque_nm: 0.25
+    homing_contact_speed_rad_s: 0.05
+    homing_contact_hold_s: 0.5
+    homing_timeout_s: 120.0
+    homing_max_travel_m: 0.02
 
-<<<<<<< HEAD
 gantry_controller:
   ros__parameters:
-    target_position: 0.3
-    max_velocity: 0.15
-    sync_gain: 2.5
-    max_sync_error: 0.008
-    position_min: -0.4
-    position_max: 0.4
+    # Manual speed control; calibrated position control remains disabled.
+    manual_test_mode: true
+    homing_speed_rad_s: 12.5
+    # Set geometry_ready only after measuring geometry and travel, with test mode off.
+    geometry_ready: false
+    front_distance_m: 0.0
+    pitch_height_at_start_m: 0.0
+    yaw_position_at_start_m: 0.0
+    pitch_lead_m_per_rev: 0.0002
+    yaw_lead_m_per_rev: 0.0002
+    pitch_min_rad: 0.0
+    pitch_max_rad: 0.0
+    yaw_min_rad: 0.0
+    yaw_max_rad: 0.0
+    # Travel is measured relative to the pose when this program starts.
+    pitch_travel_min_m: 0.0
+    pitch_travel_max_m: 0.0
+    yaw_travel_min_m: 0.0
+    yaw_travel_max_m: 0.0
+    max_pitch_rate_rad_s: 0.1
+    max_yaw_rate_rad_s: 0.1
+    joystick_deadband: 0.05
+    sync_gain: 1.0
+    max_sync_error_m: 0.005
+    max_pitch_tracking_error_m: 0.003
 
-gantry_left_pid:
+# Manual test: joystick velocity feeds one PID per motor directly.
+
+gantry_left_velocity_pid:
   ros__parameters:
-    setpoint: /gantry/cmd_vel_left
     measurement: /gantry/left_motor/velocity
+    setpoint: /gantry/left_motor/target_velocity
     control: /gantry/left_motor/control_torque
-    kp: 8.0
-    ki: 0.2
-    kd: 0.1
-    integral_min: -10.0
-    integral_max: 10.0
-    output_min: -24.0
-    output_max: 24.0
-
-gantry_right_pid:
-  ros__parameters:
-    setpoint: /gantry/cmd_vel_right
-    measurement: /gantry/right_motor/velocity
-    control: /gantry/right_motor/control_torque
-    kp: 8.0
-    ki: 0.2
-    kd: 0.1
-    integral_min: -10.0
-    integral_max: 10.0
-    output_min: -24.0
-    output_max: 24.0
-=======
-
-    target_velocity: 5.0
-
-
-    sync_coefficient: 0.2
-
-    # MatrixPidCalculator<2>
-    kp: 1.0
+    enable: /gantry/left_motor/enabled
+    kp: 0.15
     ki: 0.0
-    kd: 0.5
->>>>>>> 849704d55a23fcce944d7076dc6523db3b12371a
+    kd: 0.0
+    output_min: -0.8
+    output_max: 0.8
+
+gantry_right_velocity_pid:
+  ros__parameters:
+    measurement: /gantry/right_motor/velocity
+    setpoint: /gantry/right_motor/target_velocity
+    control: /gantry/right_motor/control_torque
+    enable: /gantry/right_motor/enabled
+    kp: 0.15
+    ki: 0.0
+    kd: 0.0
+    output_min: -0.8
+    output_max: 0.8
+
+gantry_yaw_velocity_pid:
+  ros__parameters:
+    measurement: /gantry/yaw_motor/velocity
+    setpoint: /gantry/yaw_motor/target_velocity
+    control: /gantry/yaw_motor/control_torque
+    enable: /gantry/yaw_motor/enabled
+    kp: 0.15
+    ki: 0.0
+    kd: 0.0
+    output_min: -0.8
+    output_max: 0.8
+
+gantry_collector:
+  ros__parameters:
+    csv_path: "/tmp/gantry_<timestamp>.csv"
+    write_interval: 10
+    flush_interval: 100
+    signals:
+      - /gantry/left_motor/angle
+      - /gantry/right_motor/angle
+      - /gantry/yaw_motor/angle
+      - /gantry/left_motor/velocity
+      - /gantry/right_motor/velocity
+      - /gantry/yaw_motor/velocity
+      - /gantry/left_motor/torque
+      - /gantry/right_motor/torque
+      - /gantry/yaw_motor/torque
+      - /gantry/left_position_m
+      - /gantry/right_position_m
+      - /gantry/yaw_position_m
+      - /gantry/average_height_m
+      - /gantry/sync_error_m
+      - /gantry/pitch_rad
+      - /gantry/yaw_rad
+      - /gantry/pitch_target_rad
+      - /gantry/yaw_target_rad
+      - /gantry/left_motor/target_velocity
+      - /gantry/right_motor/target_velocity
+      - /gantry/yaw_motor/target_velocity
+      - /gantry/left_motor/control_torque
+      - /gantry/right_motor/control_torque
+      - /gantry/yaw_motor/control_torque
+      - /gantry/debug/left_stick_x
+      - /gantry/debug/left_stick_y
+      - /gantry/debug/right_stick_x
+      - /gantry/debug/right_stick_y
+      - /gantry/debug/left_switch
+      - /gantry/debug/right_switch
+      - /gantry/debug/remote_valid
+      - /gantry/debug/feedback_valid
+      - /gantry/debug/hardware_fault
+      - /gantry/homing_state
+      - /gantry/debug/home_left_reached
+      - /gantry/debug/home_right_reached
+      - /gantry/debug/left_stall
+      - /gantry/debug/right_stall
+      - /gantry/debug/yaw_stall
+      - /gantry/debug/test_state
+      - /gantry/debug/dbus_rx_count
+      - /gantry/debug/uart1_rx_count
+      - /gantry/debug/uart2_rx_count
+      - /gantry/debug/dbus_bad_size_count
+      - /gantry/debug/dbus_last_size
+      - /gantry/debug/remote_age_s

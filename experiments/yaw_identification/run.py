@@ -16,9 +16,11 @@ HERE = Path(__file__).resolve().parent
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("identification", "baseline", "tuned",
+    parser.add_argument("mode", choices=("identification", "identification-rich", "baseline", "tuned",
                                          "control-baseline", "control-tuned",
-                                         "control-baseline-fast", "control-tuned-fast"))
+                                         "control-baseline-fast", "control-tuned-fast",
+                                         "control-baseline-wide", "control-tuned-wide", "control-baseline-final",
+                                         "control-tuned-final"))
     parser.add_argument("--check-only", action="store_true")
     args = parser.parse_args()
     config_name = args.mode.replace("-", "_")
@@ -43,7 +45,7 @@ def main() -> None:
     if not plugin_xml.exists() or "rmcs_core::hardware::DeformableInfantryOmniC" not in plugin_xml.read_text():
         raise SystemExit("Installed rmcs_core has no C-car hardware plugin; build/source the "
                          "assignment's merge/deformable C-car workspace first")
-    if args.mode == "identification" or args.mode.startswith("control-"):
+    if args.mode.startswith("identification") or args.mode.startswith("control-"):
         try:
             subprocess.check_output(["ros2", "pkg", "prefix", "rmcs_yaw_identification"],
                                     text=True, stderr=subprocess.STDOUT)
@@ -68,7 +70,7 @@ def main() -> None:
     print(f"Permanent recording directory: {folder}", flush=True)
     print(f"Starting {args.mode} OFF. Open a second SSH terminal and run the matching session; "
           "arm raises pitch, sweep starts yaw. "
-          "Heartbeat loss or off zeros both torques.", flush=True)
+          "Heartbeat loss zeros both torques; off stops yaw and slowly releases pitch.", flush=True)
     raise SystemExit(subprocess.call([
         "ros2", "run", "rmcs_executor", "rmcs_executor", "--ros-args",
         "--params-file", str(config_path),

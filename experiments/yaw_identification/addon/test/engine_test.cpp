@@ -16,6 +16,18 @@ int main() {
     Input in{.yaw=1.2, .pitch=0, .yaw_temperature=20, .pitch_temperature=20};
     auto o = e.update(in, Command::None, .001);
     check(o.state == State::Off && o.pitch_torque == 0 && o.yaw_torque == 0);
+    // Starting the executor and publishing heartbeat alone must never arm the
+    // controller, even while sensor feedback changes. Motion requires the
+    // explicit Arm service, followed later by the explicit Sweep service.
+    Engine startup;
+    Input startup_input{.yaw=1.2, .pitch=0, .yaw_temperature=20,
+                        .pitch_temperature=20, .heartbeat=true};
+    for (int i=0; i<5000; ++i) {
+        startup_input.yaw += 0.0001;
+        startup_input.pitch -= 0.00001;
+        o = startup.update(startup_input, Command::None, .001);
+        check(o.state == State::Off && o.pitch_torque == 0 && o.yaw_torque == 0);
+    }
     o = e.update(in, Command::Arm, .001);
     check(o.state == State::Off);
     in.heartbeat = true;
@@ -24,6 +36,100 @@ int main() {
     check(std::abs(o.yaw_torque) < 1e-10); // Captures current yaw, not absolute zero.
     o = e.update(in, Command::Sweep, .001);
     check(o.state != State::Sweep);
+
+    // World-pitch experiments remain protected after a linkage is re-indexed:
+    // the single-turn encoder may start at any phase, while permitted travel
+    // remains bounded relative to the Arm position.
+    Engine reindexed;
+    reindexed.config.world_pitch_control = true;
+    reindexed.config.pitch_limits_relative_to_arm = true;
+    reindexed.config.world_pitch_target = 5.0 * std::numbers::pi / 180.0;
+    Input reindexed_input{.pitch=150.0 * std::numbers::pi / 180.0,
+                          .pitch_world=-9.0 * std::numbers::pi / 180.0,
+                          .yaw_temperature=30, .pitch_temperature=30, .heartbeat=true};
+    o = reindexed.update(reindexed_input, Command::Arm, .001);
+    check(o.state == State::Raising && o.fault == 0);
+    reindexed_input.pitch -= 0.50;
+    o = reindexed.update(reindexed_input, Command::None, .001);
+    check(o.state == State::Raising && o.fault == 0);
+    reindexed_input.pitch -= 0.15;
+    o = reindexed.update(reindexed_input, Command::None, .001);
+    check(o.state == State::Fault && o.fault == 3);
+
+    // A stationary mechanism must make the pitch reference stop at the lead
+    // bound.  When feedback later moves, the reference may resume only by one
+    // configured ramp step; it must not inherit the feedback step itself.
+    Engine pitch_reference;
+    Input stuck{.yaw_temperature=20, .pitch_temperature=20, .heartbeat=true};
+    auto reference = pitch_reference.update(stuck, Command::Arm, .001);
+    for (int i=0; i<180; ++i)
+        reference = pitch_reference.update(stuck, Command::None, .001);
+    const double frozen_target = reference.pitch_target;
+    check(std::abs(frozen_target) <= pitch_reference.config.pitch_target_lead + 1e-12);
+    for (int i=0; i<50; ++i)
+        reference = pitch_reference.update(stuck, Command::None, .001);
+    check(std::abs(reference.pitch_target - frozen_target) < 1e-12);
+    stuck.pitch = -0.004;
+    reference = pitch_reference.update(stuck, Command::None, .001);
+    check(std::abs((reference.pitch_target - frozen_target)
+                   + pitch_reference.config.pitch_ramp * .001) < 1e-12);
+
+    Engine smooth_reference;
+    smooth_reference.config.pitch_target_soft_tau = 0.05;
+    smooth_reference.config.pitch_stiction_compensation = 0.1;
+    Input moving{.yaw_temperature=20, .pitch_temperature=20, .heartbeat=true};
+    auto smooth = smooth_reference.update(moving, Command::Arm, .001);
+    double previous_target = smooth.pitch_target;
+    double slowest_moving_step = smooth_reference.config.pitch_ramp * .001;
+    for (int i=0; i<650; ++i) {
+        if (i >= 200) {
+            moving.pitch -= smooth_reference.config.pitch_ramp * .001;
+            moving.pitch_velocity = -smooth_reference.config.pitch_ramp;
+        }
+        smooth = smooth_reference.update(moving, Command::None, .001);
+        const double step = previous_target - smooth.pitch_target;
+        check(step >= -1e-12 && step <= smooth_reference.config.pitch_ramp * .001 + 1e-12);
+        if (i > 300) slowest_moving_step = std::min(slowest_moving_step, step);
+        previous_target = smooth.pitch_target;
+    }
+    check(slowest_moving_step > 0.5 * smooth_reference.config.pitch_ramp * .001);
+    check(std::abs(smooth.pitch_target - moving.pitch)
+          <= smooth_reference.config.pitch_target_lead + 1e-4);
+
+    Engine without_compensation, with_compensation;
+    with_compensation.config.pitch_stiction_compensation = 0.1;
+    Input low_speed{.yaw_temperature=20, .pitch_temperature=20, .heartbeat=true};
+    auto plain = without_compensation.update(low_speed, Command::Arm, .001);
+    auto boosted = with_compensation.update(low_speed, Command::Arm, .001);
+    check(std::abs((boosted.pitch_torque_unlimited - plain.pitch_torque_unlimited) + 0.1)
+          < 1e-12);
+    check(std::abs(boosted.pitch_torque) <= with_compensation.config.pitch_torque_limit);
+
+    Engine precharge;
+    precharge.config.world_pitch_control = true;
+    precharge.config.pitch_precharge_s = 0.4;
+    precharge.config.pitch_precharge_torque_slew = 8.0;
+    precharge.config.pitch_start_ramp_s = 0.2;
+    precharge.config.gravity_gain = 3.45;
+    precharge.config.gravity_phase = 1.784;
+    precharge.config.pitch_torque_limit = 4.5;
+    Input initial{.pitch=0.06, .pitch_world=-8.5 * std::numbers::pi / 180.0,
+                  .yaw_temperature=20, .pitch_temperature=20, .heartbeat=true};
+    auto charging = precharge.update(initial, Command::Arm, .001);
+    const double initial_target = charging.pitch_target;
+    for (int i=0; i<380; ++i) {
+        const double previous_torque = charging.pitch_torque;
+        charging = precharge.update(initial, Command::None, .001);
+        check(std::abs(charging.pitch_target - initial_target) < 1e-12);
+        check(std::abs(charging.pitch_torque - previous_torque) <= .008 + 1e-12);
+        check(std::abs(charging.pitch_torque) <= precharge.config.pitch_torque_limit);
+    }
+    check(charging.pitch_torque < -3.0);
+    for (int i=0; i<30; ++i)
+        charging = precharge.update(initial, Command::None, .001);
+    check(charging.pitch_target < initial_target);
+    check(initial_target - charging.pitch_target < 0.05 * std::numbers::pi / 180.0);
+
     for (int i=0; i<3500; ++i) {
         in.pitch = o.pitch_target; // Ideal tracking of the ramp.
         o = e.update(in, Command::None, .001);
@@ -233,6 +339,31 @@ int main() {
     held.yaw += doubled.config.yaw_span + .001;
     o = doubled.update(held, Command::None, .001);
     check(o.state == State::Fault && o.fault == 5 && o.yaw_torque == 0);
+    // Rich identification cycles six bounded, smooth excitation profiles.
+    Engine rich;
+    rich.config.rich_identification = true;
+    rich.config.duration = 2.1;
+    rich.config.amplitude = 0.96;
+    rich.config.yaw_torque_limit = 3.6;
+    rich.config.world_pitch_control = true;
+    rich.config.world_pitch_target = 5.0 * std::numbers::pi / 180.0;
+    rich.config.min_world_pitch = 3.0 * std::numbers::pi / 180.0;
+    rich.validate();
+    Input rich_input{.pitch_world=rich.config.world_pitch_target,
+                     .yaw_temperature=30, .pitch_temperature=30, .heartbeat=true};
+    rich.update(rich_input, Command::Arm, .001);
+    for (int i=0; i<1100; ++i) rich.update(rich_input, Command::None, .001);
+    for (int profile=0; profile<6; ++profile) {
+        o = rich.update(rich_input, Command::Sweep, .001);
+        check(o.state == State::Sweep && o.excitation_profile == profile);
+        for (int i=0; i<2120; ++i) {
+            o = rich.update(rich_input, Command::None, .001);
+            check(std::isfinite(o.excitation));
+            check(std::abs(o.excitation) <= rich.config.amplitude + 1e-12);
+            check(std::abs(o.yaw_torque) <= rich.config.yaw_torque_limit + 1e-12);
+        }
+        check(o.state == State::Ready && o.completed);
+    }
     // World-pitch target uses the opposite sign to the motor encoder.
     Engine world;
     world.config.world_pitch_control = true;
@@ -298,13 +429,16 @@ int main() {
     tracking.config.world_pitch_target = 5.0 * std::numbers::pi / 180.0;
     tracking.config.min_world_pitch = 3.0 * std::numbers::pi / 180.0;
     tracking.config.tracking_test = true;
-    tracking.config.tracking_amplitude = 5.0 * std::numbers::pi / 180.0;
+    tracking.config.tracking_amplitude = 15.0 * std::numbers::pi / 180.0;
     tracking.config.tracking_frequency = 0.25;
     tracking.config.tracking_ramp = 0.5;
-    tracking.config.duration = 4.0;
+    tracking.config.duration = 6.0;
     tracking.config.yaw_span = 15.0 * std::numbers::pi / 180.0;
+    tracking.config.tracking_frequencies = {0.05, 0.075, 0.10, 0.125, 0.16,
+                                            0.20, 0.25, 0.32, 0.40};
     tracking.config.yaw_torque_limit = 3.6;
     tracking.config.yaw_torque_slew = 12.0;
+    tracking.config.yaw_torque_release_slew = 12.0;
     tracking.config.yaw_ff_velocity = 3.3;
     tracking.config.yaw_ff_acceleration = 0.3;
     tracking.config.yaw_ff_bias = 0.05;
@@ -313,19 +447,44 @@ int main() {
                          .yaw_temperature=30, .pitch_temperature=30, .heartbeat=true};
     tracking.update(tracking_input, Command::Arm, .001);
     for (int i=0; i<1100; ++i) tracking.update(tracking_input, Command::None, .001);
-    o = tracking.update(tracking_input, Command::Sweep, .001);
-    check(o.state == State::Sweep);
-    double target_peak = 0.0;
-    double previous_yaw_torque = o.yaw_torque;
-    for (int i=0; i<4100; ++i) {
-        o = tracking.update(tracking_input, Command::None, .001);
-        target_peak = std::max(target_peak, std::abs(o.yaw_target_offset));
-        check(std::abs(o.yaw_torque) <= 3.6 + 1e-12);
-        check(std::abs(o.yaw_torque - previous_yaw_torque) <= 0.012 + 1e-12);
-        previous_yaw_torque = o.yaw_torque;
+    for (int profile=0; profile<9; ++profile) {
+        o = tracking.update(tracking_input, Command::Sweep, .001);
+        check(o.state == State::Sweep && o.excitation_profile == profile);
+        check(std::abs(o.tracking_frequency - tracking.config.tracking_frequencies[profile])
+              < 1e-12);
+        double target_peak = 0.0;
+        double previous_yaw_torque = o.yaw_torque;
+        for (int i=0; i<6100; ++i) {
+            o = tracking.update(tracking_input, Command::None, .001);
+            target_peak = std::max(target_peak, std::abs(o.yaw_target_offset));
+            check(std::abs(o.yaw_target_offset) <= tracking.config.yaw_span + 1e-12);
+            check(std::abs(o.yaw_torque) <= 3.6 + 1e-12);
+            check(std::abs(o.yaw_torque - previous_yaw_torque) <= 0.012 + 1e-12);
+            previous_yaw_torque = o.yaw_torque;
+        }
+        check(o.state == State::Ready && o.completed);
+        check(target_peak > 14.9 * std::numbers::pi / 180.0);
     }
-    check(o.state == State::Ready && o.completed);
-    check(target_peak > 4.99 * std::numbers::pi / 180.0);
     check(o.yaw_target_offset == 0.0 && o.yaw_feedforward == 0.0);
+    // Applying yaw torque remains slow, but an obsolete accelerating command
+    // can be removed more quickly when velocity feedback asks for braking.
+    Engine yaw_release;
+    yaw_release.config.yaw_torque_slew = 1.0;
+    yaw_release.config.yaw_torque_release_slew = 10.0;
+    yaw_release.yaw_angle.kp = 10.0;
+    yaw_release.yaw_velocity.kp = 5.0;
+    yaw_release.validate();
+    Input yaw_input{.yaw=-0.04, .pitch=yaw_release.config.pitch_target,
+                    .yaw_temperature=30, .pitch_temperature=30, .heartbeat=true};
+    yaw_release.update(yaw_input, Command::Arm, .001);
+    for (int i=0; i<1100; ++i) yaw_release.update(yaw_input, Command::None, .001);
+    yaw_input.yaw = -0.07;
+    for (int i=0; i<100; ++i) o = yaw_release.update(yaw_input, Command::None, .001);
+    check(o.yaw_torque > 0.09 && o.yaw_torque < 0.11);
+    const double accelerating_torque = o.yaw_torque;
+    yaw_input.yaw = 0.02;
+    o = yaw_release.update(yaw_input, Command::None, .01);
+    check(accelerating_torque - o.yaw_torque > 0.09
+          && accelerating_torque - o.yaw_torque <= 0.10 + 1e-12);
     return 0;
 }

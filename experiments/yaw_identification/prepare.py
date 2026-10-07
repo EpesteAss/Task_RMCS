@@ -49,19 +49,23 @@ def main() -> None:
         "pitch_min": source_gimbal["upper_limit"],
         "pitch_max": source_gimbal["lower_limit"],
         "pitch_ramp_rad_s": 0.0872665,
+        "pitch_target_lead_limit_deg": 0.8,
         # Below the MG4010Ei10 maximum torque reference (4.5 Nm) in RMCS.
         "pitch_torque_limit": 4.5,
         # Apply lifting effort gently, but release stale torque quickly enough
         # for the feedback loop to brake during a long raise.
         "pitch_torque_slew_Nm_s": 5.0,
         "pitch_torque_release_slew_Nm_s": 30.0,
+        "pitch_off_slew_Nm_s": 1.0,
         "pitch_velocity_limit": 6.0,
+        "pitch_velocity_filter_tau_s": 0.012,
+        "yaw_velocity_filter_tau_s": 0.012,
         "yaw_torque_limit": 3.6,
         "yaw_span_rad": 0.2617993877991494,
         "pitch_gravity_ff_gain": (source_gimbal["pitch_gravity_ff_gain"]
                                   if args.pitch_gravity_ff_gain is None
                                   else args.pitch_gravity_ff_gain),
-        **({"pitch_gravity_ff_raise_gain": source_gimbal["pitch_gravity_ff_gain"]}
+        **({"pitch_gravity_ff_raise_gain": 1.32 * source_gimbal["pitch_gravity_ff_gain"]}
            if args.pitch_gravity_ff_gain is not None else {}),
         "pitch_gravity_ff_phase": source_gimbal["pitch_gravity_ff_phase"],
         "start_freq": 0.2, "end_freq": 3.0, "duration": 20.0,

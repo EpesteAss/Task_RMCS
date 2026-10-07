@@ -1,0 +1,74 @@
+{
+  "outcome": "complete",
+  "completed_trials": 6,
+  "events": [
+    {
+      "elapsed_s": 0.0023788010000771465,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Support pitch against dropping."
+    },
+    {
+      "elapsed_s": 0.6387174090000372,
+      "message": "arm: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 4.650155349999977,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 28.692984764000016,
+      "message": "Completed trial 1; holding for 5 s"
+    },
+    {
+      "elapsed_s": 33.70189577899998,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 57.750899522000054,
+      "message": "Completed trial 2; holding for 5 s"
+    },
+    {
+      "elapsed_s": 62.75256925999997,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 86.80795732700005,
+      "message": "Completed trial 3; holding for 5 s"
+    },
+    {
+      "elapsed_s": 91.81767478200004,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 115.864891371,
+      "message": "Completed trial 4; holding for 5 s"
+    },
+    {
+      "elapsed_s": 120.875376566,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 144.922901302,
+      "message": "Completed trial 5; holding for 5 s"
+    },
+    {
+      "elapsed_s": 149.93335960000002,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 173.98088685800008,
+      "message": "Completed trial 6; holding for 5 s"
+    },
+    {
+      "elapsed_s": 178.99113946199998,
+      "message": "Session complete: 6 full sweeps"
+    },
+    {
+      "elapsed_s": 178.99197988100002,
+      "message": "off: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 187.00148407300003,
+      "message": "OFF acknowledgement unavailable: Timed out waiting for controller state/service; heartbeat stops now"
+    }
+  ]
+}

@@ -33,6 +33,17 @@ Physical coefficient signs plausible: True
 Selected delay: 4 samples (0.040 s), using only a nested split inside the training trials.
 Settled-regime estimation trials: [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49]
 
+## filtered_velocity_arx2_one_step
+vf[k+1]=q1*vf[k]+q2*vf[k-1]+b*u[k]+c
+
+{'q1': 1.6159555165678694, 'q2': -0.6595268662703854, 'b': 0.012032398653106829, 'c': -0.0005715550066075959}
+
+{'velocity_rmse_rad_s': 0.00824142049593829, 'velocity_fit_percent': 93.67754429307595}
+
+Physical coefficient signs plausible: True
+
+This metric predicts only the next sample from measured filtered velocity; it is not a full-trial free-run simulation.
+
 Second-order angle model; torque input is commanded Nm, not independently calibrated shaft torque. Closed-loop noise/friction can bias estimates. Do not deploy gains from these fits without separate matched tests.
 
 A negative validation fit means worse than predicting mean velocity.

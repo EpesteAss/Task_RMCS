@@ -1,0 +1,50 @@
+{
+  "outcome": "complete",
+  "completed_trials": 3,
+  "events": [
+    {
+      "elapsed_s": 0.004731900000003009,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Support pitch against dropping."
+    },
+    {
+      "elapsed_s": 0.592693256000004,
+      "message": "arm: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 4.104734941000004,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 24.137457758000004,
+      "message": "Completed trial 1; holding for 5 s"
+    },
+    {
+      "elapsed_s": 29.147412420000002,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 49.183200545,
+      "message": "Completed trial 2; holding for 5 s"
+    },
+    {
+      "elapsed_s": 54.193862621,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 74.23130706,
+      "message": "Completed trial 3; holding for 5 s"
+    },
+    {
+      "elapsed_s": 79.241291448,
+      "message": "Session complete: 3 full sweeps"
+    },
+    {
+      "elapsed_s": 79.242097043,
+      "message": "off: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 83.24941159099998,
+      "message": "Confirmed OFF, both torque commands zero"
+    }
+  ]
+}

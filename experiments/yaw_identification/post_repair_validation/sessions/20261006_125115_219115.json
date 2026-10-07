@@ -1,0 +1,22 @@
+{
+  "outcome": "stopped",
+  "completed_trials": 0,
+  "events": [
+    {
+      "elapsed_s": 0.0029217649999964124,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Support pitch against dropping."
+    },
+    {
+      "elapsed_s": 2.9821418979999947,
+      "message": "Controller must be OFF before session start; use console.py off"
+    },
+    {
+      "elapsed_s": 2.9826812339999975,
+      "message": "off: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 3.3924599429999915,
+      "message": "Confirmed OFF, both torque commands zero"
+    }
+  ]
+}

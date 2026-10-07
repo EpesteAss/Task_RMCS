@@ -1,0 +1,66 @@
+{
+  "before_source": "experiments/yaw_identification/control_data/control-tuned-wide/20261006_072257_499687/feedback.csv",
+  "after_source": "experiments/yaw_identification/post_repair_validation/20261006_125023_324311/feedback.csv",
+  "comparison_frequency_hz": 0.1,
+  "before": {
+    "complete_trials": 1,
+    "angle_rmse_deg": 0.5932399615499826,
+    "angle_mae_deg": 0.553057311323053,
+    "angle_p95_abs_deg": 0.8024159329248153,
+    "peak_abs_error_deg": 0.841073395362292,
+    "target_peak_deg": 14.99997778074544,
+    "torque_rms_Nm": 0.6428151579566505,
+    "peak_abs_torque_Nm": 1.0719,
+    "torque_limit_fraction": 0.0,
+    "pitch_world_range_deg": [
+      4.491353130673059,
+      4.974310715344732
+    ],
+    "max_pitch_temp_C": 37.0,
+    "max_yaw_temp_C": 32.0
+  },
+  "after": {
+    "complete_trials": 2,
+    "angle_rmse_deg": 0.576376042786327,
+    "angle_mae_deg": 0.5369452517823811,
+    "angle_p95_abs_deg": 0.7782660483389487,
+    "peak_abs_error_deg": 0.843118854690909,
+    "target_peak_deg": 14.99997778074544,
+    "torque_rms_Nm": 0.5988771136115927,
+    "peak_abs_torque_Nm": 1.03963,
+    "torque_limit_fraction": 0.0,
+    "pitch_world_range_deg": [
+      4.664753077791451,
+      5.126299229659086
+    ],
+    "max_pitch_temp_C": 39.0,
+    "max_yaw_temp_C": 32.0
+  },
+  "change_percent": {
+    "angle_rmse_deg": -2.8426808469872,
+    "angle_p95_abs_deg": -3.00964669256254,
+    "peak_abs_error_deg": 0.24319629415170407,
+    "torque_rms_Nm": -6.83525330745558,
+    "peak_abs_torque_Nm": -3.010542028174268
+  },
+  "captured_yaw_center_deg": {
+    "before": [
+      70.01037822374356,
+      70.01037725532296,
+      70.01037954300105
+    ],
+    "after": [
+      216.46911843350176,
+      216.0681152674992
+    ]
+  },
+  "observations": {
+    "after_complete_trials": 2,
+    "after_fault": 4,
+    "fault_context": "Both faults occurred during OFF/Releasing when pitch IMU speed reached the 0.8 rad/s trip; yaw torque was already zero.",
+    "startup_zero_torque_yaw_motion_deg": [
+      146.26,
+      216.47
+    ]
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "source": "/workspaces/RMCS/experiments/yaw_identification/data/20261006_133045_810815/feedback.csv",
+  "accepted_trials": 18,
+  "rejected_trials": [],
+  "split": "Earlier complete trials train; later complete trials validate; no shared samples",
+  "training_trials": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "validation_trials": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "excitation_profile_counts": {
+    "0": 3,
+    "1": 3,
+    "2": 3,
+    "3": 3,
+    "4": 3,
+    "5": 3
+  },
+  "models": {
+    "linear": {
+      "equations": "theta_dot=omega; omega_dot=a*omega+b*u+c",
+      "coefficients": {
+        "a": -3.0343392176499537,
+        "b": 1.4035838937917096,
+        "c": -7.676246084818253e-05
+      },
+      "normalized_design_condition": 2.346712337117285,
+      "training_windows": 5749,
+      "physical_signs_plausible": true,
+      "validation": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.1006940422906652,
+        "angle_rmse_deg": 13.528237623136045,
+        "velocity_fit_percent": -20.018200571705513
+      },
+      "interpretation": "Candidate only; inspect held-out free-run plots and repeatability"
+    },
+    "friction": {
+      "equations": "theta_dot=omega; omega_dot=a*omega+b*u+c+f*tanh(omega/0.02)",
+      "coefficients": {
+        "a": -1.630376005541413,
+        "b": 1.639778475108051,
+        "c": 0.010846238266118234,
+        "f": -0.3344653152037768
+      },
+      "normalized_design_condition": 4.486984035656596,
+      "training_windows": 5749,
+      "physical_signs_plausible": true,
+      "validation": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.08413057199465625,
+        "angle_rmse_deg": 8.155966520274111,
+        "velocity_fit_percent": -0.2760405101248198
+      },
+      "interpretation": "Candidate only; inspect held-out free-run plots and repeatability"
+    },
+    "delayed_arx2": {
+      "equations": "theta[k]=p1*theta[k-1]+p2*theta[k-2]+b*u[k-delay]+c",
+      "coefficients": {
+        "p1": 1.9416749197935042,
+        "p2": -0.9432806190058988,
+        "b": 0.0001871025587298044,
+        "c": 4.620588500257213e-06
+      },
+      "poles": [
+        [
+          0.970837459896752,
+          0.027481729696673986
+        ],
+        [
+          0.970837459896752,
+          -0.027481729696673986
+        ]
+      ],
+      "delay_samples": 1,
+      "delay_seconds": 0.009999999999990905,
+      "delay_selection": "training-only nested split; best held-in velocity fit",
+      "delay_candidates": [
+        {
+          "delay_samples": 0,
+          "stable": true,
+          "velocity_fit_percent": 24.036883610125493,
+          "angle_fit_percent": -18.955249662460627
+        },
+        {
+          "delay_samples": 1,
+          "stable": true,
+          "velocity_fit_percent": 24.215696081057835,
+          "angle_fit_percent": -15.415078833002148
+        },
+        {
+          "delay_samples": 2,
+          "stable": true,
+          "velocity_fit_percent": 23.728823939702394,
+          "angle_fit_percent": -11.853346493790951
+        },
+        {
+          "delay_samples": 3,
+          "stable": true,
+          "velocity_fit_percent": 22.532728953336566,
+          "angle_fit_percent": -8.367305351596022
+        },
+        {
+          "delay_samples": 4,
+          "stable": true,
+          "velocity_fit_percent": 20.553635669121917,
+          "angle_fit_percent": -4.668678678152927
+        },
+        {
+          "delay_samples": 5,
+          "stable": true,
+          "velocity_fit_percent": 17.8461568292696,
+          "angle_fit_percent": -1.1353519781789334
+        },
+        {
+          "delay_samples": 6,
+          "stable": true,
+          "velocity_fit_percent": 14.668168865060549,
+          "angle_fit_percent": 1.7984477944115507
+        }
+      ],
+      "estimation_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "normalized_design_condition": 67.81685682397342,
+      "training_samples": 28777,
+      "physical_signs_plausible": true,
+      "validation": {
+        "simulation_diverged": false,
+        "velocity_rmse_rad_s": 0.06628995986345508,
+        "velocity_fit_percent": 20.988357227565402,
+        "angle_rmse_deg": 1.1744624568788236,
+        "angle_fit_percent": -23.315723997080884
+      },
+      "interpretation": "Predictive model for the settled operating regime; continuous model remains the controller-design model"
+    },
+    "filtered_velocity_arx2_one_step": {
+      "equations": "vf[k+1]=q1*vf[k]+q2*vf[k-1]+b*u[k]+c",
+      "coefficients": {
+        "q1": 1.6085900478434,
+        "q2": -0.637960189278951,
+        "b": 0.008636639311504511,
+        "c": 9.145787136296853e-06
+      },
+      "velocity_filter_tau_s": 0.012,
+      "prediction_horizon_s": 0.009999999999990905,
+      "normalized_design_condition": 19.878991683093165,
+      "training_samples": 28777,
+      "physical_signs_plausible": true,
+      "validation": {
+        "velocity_rmse_rad_s": 0.00799237500952762,
+        "velocity_fit_percent": 90.26863544486562
+      },
+      "interpretation": "Strict held-out one-step prediction of controller-filtered velocity; not comparable to full-trial free-run fit"
+    }
+  },
+  "note": "Second-order angle model; torque input is commanded Nm, not independently calibrated shaft torque. Closed-loop noise/friction can bias estimates. Do not deploy gains from these fits without separate matched tests."
+}

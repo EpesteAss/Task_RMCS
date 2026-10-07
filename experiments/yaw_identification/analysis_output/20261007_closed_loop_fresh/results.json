@@ -1,0 +1,94 @@
+{
+  "model": "theta_dot=omega; omega_dot=-a*omega+k*(reference-theta)+c; |omega|<=speed_limit",
+  "input": "known commanded yaw reference, not motor torque",
+  "sources": {
+    "train_and_selection": "experiments/yaw_identification/data/20261007_022850_274011/feedback.csv",
+    "validation": "experiments/yaw_identification/data/20261007_043913_088815/feedback.csv",
+    "config": "/workspaces/RMCS/experiments/yaw_identification/identification_rich.yaml"
+  },
+  "config": {
+    "frequencies_hz": [
+      0.05,
+      0.075,
+      0.1,
+      0.125,
+      0.16,
+      0.2,
+      0.25,
+      0.32,
+      0.4
+    ],
+    "amplitude_deg": 15.0,
+    "ramp_s": 1.5,
+    "duration_s": 24.0,
+    "speed_limit_rad_s": 0.5
+  },
+  "parameters": {
+    "damping_per_s": 10.34166921810241,
+    "tracking_stiffness_per_s2": 94.2412454370106,
+    "bias_rad_s2": 0.04638056270823683
+  },
+  "split": {
+    "train": [
+      1,
+      9
+    ],
+    "selection": [
+      10,
+      18
+    ],
+    "refit": [
+      1,
+      18
+    ],
+    "validation": [
+      19,
+      27
+    ]
+  },
+  "selection_velocity_fit_percent": 84.71919128732061,
+  "validation": {
+    "velocity_fit_percent": 84.17901078252719,
+    "velocity_rmse_rad_s": 0.03628405016562543,
+    "angle_rmse_deg": 0.6306263880224405,
+    "per_profile": [
+      {
+        "profile": 0,
+        "velocity_fit_percent": 79.801170370702
+      },
+      {
+        "profile": 1,
+        "velocity_fit_percent": 84.13963768453836
+      },
+      {
+        "profile": 2,
+        "velocity_fit_percent": 86.5407808105941
+      },
+      {
+        "profile": 3,
+        "velocity_fit_percent": 88.20189356010228
+      },
+      {
+        "profile": 4,
+        "velocity_fit_percent": 89.31130260198371
+      },
+      {
+        "profile": 5,
+        "velocity_fit_percent": 89.96439424672178
+      },
+      {
+        "profile": 6,
+        "velocity_fit_percent": 89.97855721625486
+      },
+      {
+        "profile": 7,
+        "velocity_fit_percent": 82.58969138160539
+      },
+      {
+        "profile": 8,
+        "velocity_fit_percent": 80.1801498216165
+      }
+    ]
+  },
+  "limitation": "This identifies the existing closed-loop controller plus plant under the recorded target profiles. It does not replace the torque-input mechanical model or prove new controller gains. This session is the planned independent validation collected after the model and configuration were frozen."
+}

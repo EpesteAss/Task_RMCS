@@ -1,0 +1,92 @@
+{
+  "sources": {
+    "first_two_groups": "experiments/yaw_identification/data/20261007_022850_274011/feedback.csv",
+    "held_out_group": "experiments/yaw_identification/data/20261007_043913_088815/feedback.csv"
+  },
+  "excluded_later_trials_in_first_log": 5,
+  "rejected_later_trials_in_first_log": [
+    {
+      "trial": 24,
+      "reason": "interrupted or incomplete"
+    }
+  ],
+  "excluded_earlier_trials_in_held_out_log": 0,
+  "rejected_trials_in_held_out_log": [],
+  "split": {
+    "fit": [
+      1,
+      9
+    ],
+    "select": [
+      10,
+      18
+    ],
+    "refit": [
+      1,
+      18
+    ],
+    "validate": [
+      19,
+      27
+    ]
+  },
+  "candidate_count": 90,
+  "selected_on_group_2": {
+    "variant": "friction",
+    "dead_zone_Nm": 0.15,
+    "delay_samples": 2,
+    "speed_scale_rad_s": 0.02,
+    "velocity_fit_percent": 59.00776926328574
+  },
+  "coefficients": [
+    1.9823068932386112,
+    -0.982644283482086,
+    0.0002778446238266689,
+    -0.00011026753975582632,
+    -1.0931229270004843e-05
+  ],
+  "validation": {
+    "velocity_fit_percent": 59.07503157841569,
+    "velocity_rmse_rad_s": 0.09385782309967329,
+    "angle_rmse_deg": 4.31359437595423,
+    "per_profile": [
+      {
+        "profile": 0,
+        "velocity_fit_percent": 5.594739915111379
+      },
+      {
+        "profile": 1,
+        "velocity_fit_percent": 19.800645087505544
+      },
+      {
+        "profile": 2,
+        "velocity_fit_percent": 24.86348366508694
+      },
+      {
+        "profile": 3,
+        "velocity_fit_percent": 35.35010448349605
+      },
+      {
+        "profile": 4,
+        "velocity_fit_percent": 52.852799035444534
+      },
+      {
+        "profile": 5,
+        "velocity_fit_percent": 69.70662897643274
+      },
+      {
+        "profile": 6,
+        "velocity_fit_percent": 80.60982969283108
+      },
+      {
+        "profile": 7,
+        "velocity_fit_percent": 70.22503807822049
+      },
+      {
+        "profile": 8,
+        "velocity_fit_percent": 57.49438487730794
+      }
+    ]
+  },
+  "note": "Velocity fit is full 24 s free-run. The third group does not select coefficients or hyperparameters. It is independent evidence when it was collected after the model structure and selection grid were frozen."
+}

@@ -20,10 +20,10 @@ def main():
     parser.add_argument("--max-start-temp", type=float, default=55.0,
                         help="refuse to arm when either motor starts at or above this temperature")
     args = parser.parse_args()
-    if not (0 < args.minutes <= 120 and 1 <= args.rest <= 60 and 30 <= args.stop_temp <= 60
+    if not (0 < args.minutes <= 120 and 1 <= args.rest <= 60 and 30 <= args.stop_temp <= 64
             and 30 <= args.max_start_temp <= args.stop_temp
-            and (args.trials is None or 1 <= args.trials <= 20)):
-        parser.error("minutes: (0,120], rest: [1,60], temperatures: 30 <= start <= stop <= 60")
+            and (args.trials is None or 1 <= args.trials <= 30)):
+        parser.error("minutes: (0,120], rest: [1,60], temperatures: 30 <= start <= stop <= 64")
     import rclpy
     from rclpy.node import Node
     from std_msgs.msg import Empty, String
@@ -166,7 +166,7 @@ def main():
         try:
             send("off", False)
             wait_for(lambda: status.get("state") == 0 and status.get("pitch_cmd_Nm") == 0
-                     and status.get("yaw_cmd_Nm") == 0, 3, False)
+                     and status.get("yaw_cmd_Nm") == 0, 8, False)
             log("Confirmed OFF, both torque commands zero")
         except Exception as error:
             log(f"OFF acknowledgement unavailable: {error}; heartbeat stops now")

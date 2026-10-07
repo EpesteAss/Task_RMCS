@@ -67,6 +67,9 @@ id_rsa.pub
 # Recording files
 record/
 
+# Crash dumps from local RMCS and plugin tests
+core.[0-9]*
+
 # Docker Compose override (personal config)
 docker-compose.override.yml
 

@@ -5,3 +5,11 @@ addon_install/
 addon_log/
 addon/.cache/
 addon/compile_commands.json
+
+# New captures stay local until explicitly selected for the submission.
+# Already tracked and staged final captures remain versioned.
+data/*/
+control_data/*/*/
+post_repair_validation/*/
+sessions/*.json
+NEXT_SESSION.md

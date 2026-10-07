@@ -1,0 +1,170 @@
+{
+  "outcome": "complete",
+  "completed_trials": 18,
+  "events": [
+    {
+      "elapsed_s": 0.0021204029999353224,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Support pitch against dropping."
+    },
+    {
+      "elapsed_s": 3.3585217899999407,
+      "message": "arm: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 6.8689402559999735,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 30.912803218000022,
+      "message": "Completed trial 1; holding for 5 s"
+    },
+    {
+      "elapsed_s": 35.92343102099994,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 59.97090205300003,
+      "message": "Completed trial 2; holding for 5 s"
+    },
+    {
+      "elapsed_s": 64.98147002400003,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 89.02791708400002,
+      "message": "Completed trial 3; holding for 5 s"
+    },
+    {
+      "elapsed_s": 94.03837056999998,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 118.08488830499994,
+      "message": "Completed trial 4; holding for 5 s"
+    },
+    {
+      "elapsed_s": 123.09523652400003,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 147.14093195600003,
+      "message": "Completed trial 5; holding for 5 s"
+    },
+    {
+      "elapsed_s": 152.15117526899996,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 176.19892040699995,
+      "message": "Completed trial 6; holding for 5 s"
+    },
+    {
+      "elapsed_s": 181.201592677,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 205.25576819399998,
+      "message": "Completed trial 7; holding for 5 s"
+    },
+    {
+      "elapsed_s": 210.26667233,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 234.31292850599993,
+      "message": "Completed trial 8; holding for 5 s"
+    },
+    {
+      "elapsed_s": 239.32341675700002,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 263.37090627500004,
+      "message": "Completed trial 9; holding for 5 s"
+    },
+    {
+      "elapsed_s": 268.381240843,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 292.428962105,
+      "message": "Completed trial 10; holding for 5 s"
+    },
+    {
+      "elapsed_s": 297.43941893600004,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 321.485914017,
+      "message": "Completed trial 11; holding for 5 s"
+    },
+    {
+      "elapsed_s": 326.496425421,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 350.5439391069999,
+      "message": "Completed trial 12; holding for 5 s"
+    },
+    {
+      "elapsed_s": 355.552160576,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 379.60192604300005,
+      "message": "Completed trial 13; holding for 5 s"
+    },
+    {
+      "elapsed_s": 384.61241169899995,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 408.659975667,
+      "message": "Completed trial 14; holding for 5 s"
+    },
+    {
+      "elapsed_s": 413.670419173,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 437.7168285140001,
+      "message": "Completed trial 15; holding for 5 s"
+    },
+    {
+      "elapsed_s": 442.72748995200004,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 466.7749810800001,
+      "message": "Completed trial 16; holding for 5 s"
+    },
+    {
+      "elapsed_s": 471.78516390100003,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 495.83094908299995,
+      "message": "Completed trial 17; holding for 5 s"
+    },
+    {
+      "elapsed_s": 500.84157814800005,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 524.887058111,
+      "message": "Completed trial 18; holding for 5 s"
+    },
+    {
+      "elapsed_s": 529.947446057,
+      "message": "Session complete: 18 full sweeps"
+    },
+    {
+      "elapsed_s": 529.948991882,
+      "message": "off: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 534.4058453150001,
+      "message": "Confirmed OFF, both torque commands zero"
+    }
+  ]
+}

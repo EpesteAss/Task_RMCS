@@ -1,0 +1,26 @@
+{
+  "outcome": "stopped",
+  "completed_trials": 0,
+  "events": [
+    {
+      "elapsed_s": 0.0022761839995837363,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Support pitch against dropping."
+    },
+    {
+      "elapsed_s": 3.3005833089996486,
+      "message": "arm: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 13.319548712999676,
+      "message": "Controller stopped: state=4.0 fault=7.0"
+    },
+    {
+      "elapsed_s": 13.320122275999893,
+      "message": "off: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 13.820738424999945,
+      "message": "Confirmed OFF, both torque commands zero"
+    }
+  ]
+}

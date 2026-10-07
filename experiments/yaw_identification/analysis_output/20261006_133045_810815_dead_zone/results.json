@@ -1,0 +1,99 @@
+{
+  "data": "/workspaces/RMCS/experiments/yaw_identification/data/20261006_133045_810815/feedback.csv",
+  "split": {
+    "fit": [
+      1,
+      6
+    ],
+    "select": [
+      7,
+      12
+    ],
+    "refit": [
+      1,
+      12
+    ],
+    "validation": [
+      13,
+      18
+    ]
+  },
+  "selected_on_middle_six": {
+    "dead_zone_Nm": 0.2,
+    "delay_samples": 2,
+    "velocity_fit_percent": 28.902530196736464
+  },
+  "model": {
+    "equation": "theta[k]=p1*theta[k-1]+p2*theta[k-2]+b*phi(u[k-delay])+c; phi(u)=sign(u)*max(abs(u)-dead_zone,0)",
+    "coefficients": [
+      1.929635056064548,
+      -0.9312874360276158,
+      0.0004668576270494304,
+      8.323072121564336e-06
+    ],
+    "fit_samples": 28777,
+    "poles": [
+      [
+        0.964817528032274,
+        0.020361081241123544
+      ],
+      [
+        0.964817528032274,
+        -0.020361081241123544
+      ]
+    ]
+  },
+  "original_held_out": {
+    "simulation_diverged": false,
+    "velocity_rmse_rad_s": 0.06628995986345508,
+    "velocity_fit_percent": 20.988357227565402,
+    "angle_rmse_deg": 1.1744624568788236,
+    "angle_fit_percent": -23.315723997080884
+  },
+  "dead_zone_held_out": {
+    "simulation_diverged": false,
+    "velocity_rmse_rad_s": 0.06183290998275968,
+    "velocity_fit_percent": 26.30075798505279,
+    "angle_rmse_deg": 1.1306521604451896,
+    "angle_fit_percent": -18.715748585693404
+  },
+  "per_profile": [
+    {
+      "profile": 0,
+      "measured_velocity_std_rad_s": 0.05318762364871295,
+      "original_velocity_fit_percent": -18.30990237881249,
+      "dead_zone_velocity_fit_percent": -22.341087514073266
+    },
+    {
+      "profile": 1,
+      "measured_velocity_std_rad_s": 0.14117570108629537,
+      "original_velocity_fit_percent": 37.038188793432646,
+      "dead_zone_velocity_fit_percent": 43.683676223636034
+    },
+    {
+      "profile": 2,
+      "measured_velocity_std_rad_s": 0.13420283047245313,
+      "original_velocity_fit_percent": 36.96096597456591,
+      "dead_zone_velocity_fit_percent": 43.831920927170074
+    },
+    {
+      "profile": 3,
+      "measured_velocity_std_rad_s": 0.01747841999446449,
+      "original_velocity_fit_percent": -139.5077487342724,
+      "dead_zone_velocity_fit_percent": -97.94575932402299
+    },
+    {
+      "profile": 4,
+      "measured_velocity_std_rad_s": 0.015791743744678562,
+      "original_velocity_fit_percent": -212.72296246154184,
+      "dead_zone_velocity_fit_percent": -203.21417432245
+    },
+    {
+      "profile": 5,
+      "measured_velocity_std_rad_s": 0.03011919781268516,
+      "original_velocity_fit_percent": -86.55336974507676,
+      "dead_zone_velocity_fit_percent": -88.19317210905493
+    }
+  ],
+  "caveat": "Exploratory comparison on a previously inspected holdout; collect fresh trials for independent confirmation. Dead zone is an effective model parameter, not a measured friction torque."
+}

@@ -1,0 +1,86 @@
+{
+  "input": "known target angle",
+  "model": "theta_dot=omega; omega_dot=rate*(clip(gain*(reference-theta),+-limit)-omega)-friction*tanh(omega/0.02)+bias",
+  "sources": {
+    "training_selection": "experiments/yaw_identification/data/20261007_022850_274011/feedback.csv",
+    "evaluation": "experiments/yaw_identification/data/20261007_043913_088815/feedback.csv"
+  },
+  "friction_enabled": true,
+  "parameters_log_coordinates": [
+    4.605170168074727,
+    2.655197550127386,
+    1.961803507868915,
+    -0.4848231048469949
+  ],
+  "parameters": {
+    "velocity_response_rate_per_s": 99.99999820866356,
+    "angle_gain_per_s": 14.227796484729412,
+    "friction_acceleration_rad_s2": 7.112142310106584,
+    "bias_rad_s2": -0.4848231048469949
+  },
+  "selection": {
+    "velocity_fit_percent": 92.127329745616,
+    "velocity_rmse_rad_s": 0.01811193408533991,
+    "per_profile_fit_percent": [
+      80.31027222360831,
+      85.14661966265201,
+      87.88472248511856,
+      89.78595034820869,
+      91.47046161853041,
+      92.41261041567506,
+      93.73621947405756,
+      93.7508794384996,
+      92.55549575585962
+    ],
+    "angle_rmse_deg": 0.23868935895469326,
+    "filtered_velocity": {
+      "filter_tau_s": 0.05,
+      "velocity_fit_percent": 96.3414430136459,
+      "velocity_rmse_rad_s": 0.008318310838780651,
+      "per_profile_fit_percent": [
+        90.97011210830843,
+        93.57931111335758,
+        94.69537747705988,
+        95.8145476596742,
+        96.49346762834121,
+        96.95841134792678,
+        97.56629449908093,
+        96.92084464454706,
+        95.978129265687
+      ]
+    }
+  },
+  "validation": {
+    "velocity_fit_percent": 91.78742268142369,
+    "velocity_rmse_rad_s": 0.018834825264099353,
+    "per_profile_fit_percent": [
+      80.5531605313517,
+      84.90144277528361,
+      87.80086662506842,
+      89.49537314349818,
+      91.2453490178277,
+      92.423875969205,
+      93.29186496683181,
+      93.01183009446751,
+      92.251891193872
+    ],
+    "angle_rmse_deg": 0.28471015771033475,
+    "filtered_velocity": {
+      "filter_tau_s": 0.05,
+      "velocity_fit_percent": 96.15420489333444,
+      "velocity_rmse_rad_s": 0.008714860254401947,
+      "per_profile_fit_percent": [
+        90.86530871369804,
+        93.31670918046329,
+        94.45350677888327,
+        95.39836192712815,
+        96.21716781115533,
+        96.88830778742327,
+        97.22753816452584,
+        96.56521064004625,
+        95.97768748511629
+      ]
+    }
+  },
+  "status": "Independent only when this script and configuration were frozen before the evaluation session was collected."
+}

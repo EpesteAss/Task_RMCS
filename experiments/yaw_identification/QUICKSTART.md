@@ -5,7 +5,7 @@
 扫频力矩幅值 ±0.96 N·m，总输出上限 ±3.6 N·m；频率 0.2→3 Hz，每轮 20 s。
 采集以 100 Hz 写入永久目录 `~/yaw_identification/data/日期时间/feedback.csv`。
 本轮根据实测 3.7° 时约 4.07 N·m 的保持力矩，将 pitch 保持阶段的重力前馈
-调至 3.5。低角度抬升仍使用已验证的 2.575，并在接近 3°净空时平滑过渡，
+调至 3.5。大角度验证的低角度抬升使用 3.45，并在接近 3°净空时平滑过渡，
 避免抬升超速；最终力矩上限仍为 4.5 N·m。先用一分钟验证实际角度和温度。
 
 原车在较低 pitch 时可能发生干涉。第一次使用新 5° 设置先做一分钟检查；
@@ -66,7 +66,8 @@ bash collect.bash --minutes 30
 
 ## 4. 停止与故障
 
-- 在终端 B 按 **Ctrl+C**：脚本会发送 `off`，确认零输出后退出。
+- 在终端 B 按 **Ctrl+C**：脚本会发送 `off`；yaw 立即归零，pitch 按
+  1.0 N·m/s 缓慢卸力，确认零输出后退出。状态 5 表示正在卸力。
 - 实验结束先确认 `Confirmed OFF, both torque commands zero`，再在终端 A 按 Ctrl+C。
 - SSH 断开或心跳超过 1.5 s 未收到时，控制器卸力。不能依赖网络替代现场断电手段。
 - `state=0/1/2/3/4` 分别是 OFF、抬升、保持、扫频、故障。
@@ -114,7 +115,7 @@ python3 identify.py data/日期时间/feedback.csv
 
 结果放在 `analysis_output/对应记录/`：
 
-- `results.json`：线性二阶模型、带摩擦二阶模型的系数，训练/验证试验编号、误差。
+- `results.json`：连续二阶、带摩擦二阶、延迟角度 ARX 和滤波速度 ARX 模型的系数，训练/验证试验编号与误差。
 - `REPORT.md`：结果说明。
 - `linear_validation.svg`、`friction_validation.svg`（有 matplotlib 时为 PNG）：留出试验的整段预测与实测曲线。
 
@@ -123,6 +124,10 @@ python3 identify.py data/日期时间/feedback.csv
 `θ[k]=p1θ[k-1]+p2θ[k-2]+bu[k-delay]+c`。输入延迟只在训练试验内部的
 嵌套划分上选择，最终留出试验不参与选型；该模型用于提高自由预测能力，连续
 模型仍用于参数物理解释和控制器初始设计。
+分析还会拟合 12 ms 低通滤波后的二阶速度 ARX 模型
+`ωf[k+1]=q1ωf[k]+q2ωf[k-1]+bu[k]+c`。报告中的约 93.7% 是独立留出
+试验上的 10 ms 单步预测拟合度；整段自由仿真拟合度另行报告，不能把两个指标
+混写成同一种“准确率”。
 完整试验按时间分为前 70% 拟合、后 30% 验证；中断片段跳过。只有一轮时使用
 该轮前 70% 和后 30%，会明确提示缺少独立试验。
 `velocity_fit_percent` 越高越好，负值表示比预测平均速度还差；
@@ -152,6 +157,49 @@ python3 prepare.py --source /rmcs_install/share/rmcs_bringup/config/deformable-i
 bash build-addon.bash
 ```
 
-当前交付完成的是无 DR16 的采集、重复实验和模型分析流程。
-原作业中的控制器调优、原始与优化后实机对比仍需后续完成；
-现有 baseline/tuned 仍依赖原车遥控输入，不要直接用来替代上述流程。
+无 DR16 的辨识、控制调优和旧版基准/优化实机对比已经完成。10 月 6 日更新了
+pitch 托举与 yaw 平顺性参数；最新版本的成对复测命令和待补数据见
+`FINAL_COMPARISON.md`。`baseline.yaml`/`tuned.yaml` 是原车控制参考配置，
+仍依赖遥控输入；不要拿它们替代 `control_*_final.yaml` 的自动实验。
+
+## 8. 丰富激励辨识
+
+需要继续提高整段自由预测时，使用 [RICH_IDENTIFICATION.md](RICH_IDENTIFICATION.md)
+中的第二版流程。先采9轮确认左右各15°目标运动和九种频率完整，再分三组各采9轮
+正式数据；软件保护为左右各16°。采集脚本允许低于45°C启动、64°C主动停机，
+控制器保留65°C硬故障保护，但组间
+仍建议冷却到35°C左右，以免9轮尚未完成就触发温度保护。不要把
+旧的 `collect.bash` 和新的 `collect-rich.bash` 混在同一个运行进程中。
+
+## 9. 优化控制器的大角度验证
+
+`control_tuned_wide.yaml` 保留最终 Kp10 参数，将目标扩大为左右各 15°。三轮频率
+依次为 0.10、0.15、0.25 Hz（周期 10、6.67、4 s），启停包络为 3 s。抬升阶段
+重力前馈为 3.45；arm 后先保持初始角度 0.4 s，以 8 N·m/s 建立托举力矩，
+再用 0.3 s 渐增到 10.5°/s 的抬升目标速度，并以 6 N·m/s 调整力矩。力矩硬上限仍为
+4.5 N·m。软件行程保护为左右各 16°，只用于容纳
+目标峰值处的编码器噪声；上机前必须确认从启动中心到两侧至少各有 16°机械空间。
+为减小低速走格子，pitch 轨迹最多领先实际位置 0.8°；接近上限时按经过滤波的
+实测速度连续调整轨迹，并在低速、远离目标时提供最多 0.1 N·m 的渐变摩擦补偿。
+pitch 使用 12 ms 速度滤波；
+yaw 使用 6 ms 速度滤波、Kp10 和 12 N·m/s 力矩变化率，以保证边缘
+换向时有足够阻尼和制动力。
+
+终端 A：
+
+```bash
+service rmcs stop
+cd ~/yaw_identification
+bash start-control.bash tuned-wide
+```
+
+终端 B 采三轮不同周期：
+
+```bash
+cd ~/yaw_identification
+bash collect-control.bash tuned-wide 3
+```
+
+三轮会自动按慢、中、快顺序运行，不需要中途修改配置。
+若要在左右各 15° 下与原 yaw PID 增益做成对对照，使用相同流程的
+`baseline-wide`，再重做一组 `tuned-wide`；详细步骤见 `FINAL_COMPARISON.md`。

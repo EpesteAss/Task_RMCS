@@ -22,12 +22,19 @@ from reportlab.platypus import (
     Table,
     TableStyle,
 )
+from svglib.svglib import svg2rlg
 
 
 HERE = Path(__file__).resolve().parent
 SOURCE = HERE / "FINAL_REPORT.md"
 OUTPUT = HERE / "步兵C车Yaw轴系统辨识与控制优化实验总结.pdf"
 FONT = "STSong-Light"
+TIME_CHART = HERE / "control_analysis_final_kp10" / "control_comparison.svg"
+WIDE_TIME_CHART = HERE / "control_analysis_wide_latest" / "control_comparison_trial_3.svg"
+RICH_MODEL_CHART = (HERE / "analysis_output" / "20261006_133045_810815"
+                    / "filtered_velocity_arx2_one_step_validation.svg")
+CASCADE_CHART = (HERE / "analysis_output" / "20261007_cascade_fresh"
+                 / "profile_0_validation.svg")
 
 
 class ControlChart(Flowable):
@@ -103,9 +110,23 @@ class ControlChart(Flowable):
 
 
 def markdown_markup(value: str) -> str:
+    # STSong-Light renders Chinese, while Helvetica renders ASCII formulae.
+    # Neither font covers every Greek/subscript/combining math glyph used in
+    # Markdown. Spell those glyphs out before choosing the font for code spans.
+    value = value.translate(str.maketrans({
+        "θ": "theta", "ω": "omega", "φ": "phi", "π": "pi", "μ": "mu",
+        "σ": "sigma", "Σ": "Sigma", "Δ": "Delta", "Ω": "Omega",
+        "̇": "_dot", "₀": "0", "₁": "1", "₂": "2", "₃": "3",
+        "₄": "4", "₅": "5", "₆": "6", "₇": "7", "₈": "8", "₉": "9",
+        "−": "-", "·": "*", "×": "*", "≈": "~",
+    }))
     value = escape(value, quote=False)
     value = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", value)
-    value = re.sub(r"`(.+?)`", r'<font name="Helvetica">\1</font>', value)
+    def code_span(match: re.Match[str]) -> str:
+        content = match.group(1)
+        font = FONT if any('\u3400' <= char <= '\u9fff' for char in content) else "Helvetica"
+        return f'<font name="{font}">{content}</font>'
+    value = re.sub(r"`(.+?)`", code_span, value)
     return value
 
 
@@ -159,6 +180,24 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
             story.extend([ControlChart(), Spacer(1, 4 * mm)])
             i += 1
             continue
+        if line in ("[[TIME_CHART]]", "[[WIDE_TIME_CHART]]", "[[RICH_MODEL_CHART]]", "[[CASCADE_CHART]]"):
+            chart_path = {"[[TIME_CHART]]": TIME_CHART,
+                          "[[WIDE_TIME_CHART]]": WIDE_TIME_CHART,
+                          "[[RICH_MODEL_CHART]]": RICH_MODEL_CHART,
+                          "[[CASCADE_CHART]]": CASCADE_CHART}[line]
+            drawing = svg2rlg(str(chart_path))
+            if drawing is None:
+                raise RuntimeError(f"Could not load time-series chart: {chart_path}")
+            chart_width = width * .85 if line == "[[CASCADE_CHART]]" else width
+            scale = chart_width / drawing.width
+            drawing.width *= scale
+            drawing.height *= scale
+            drawing.scale(scale, scale)
+            if line == "[[CASCADE_CHART]]":
+                drawing.hAlign = "CENTER"
+            story.extend([drawing, Spacer(1, 4 * mm)])
+            i += 1
+            continue
         if line.startswith("|"):
             block = []
             while i < len(lines) and lines[i].strip().startswith("|"):
@@ -200,7 +239,7 @@ def decorate(canvas, doc) -> None:
     canvas.line(17 * mm, 12 * mm, page_w - 17 * mm, 12 * mm)
     canvas.setFont(FONT, 8)
     canvas.setFillColor(colors.HexColor("#53657d"))
-    canvas.drawString(17 * mm, 7 * mm, "实验总结与原始数据索引｜2026-10-05")
+    canvas.drawString(17 * mm, 7 * mm, "实验总结与原始数据索引｜2026-10-07")
     canvas.drawRightString(page_w - 17 * mm, 7 * mm, str(doc.page))
     canvas.restoreState()
 

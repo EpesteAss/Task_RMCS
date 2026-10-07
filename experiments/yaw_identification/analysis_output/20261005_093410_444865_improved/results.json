@@ -218,6 +218,25 @@
         "angle_fit_percent": 45.11170889656402
       },
       "interpretation": "Predictive model for the settled operating regime; continuous model remains the controller-design model"
+    },
+    "filtered_velocity_arx2_one_step": {
+      "equations": "vf[k+1]=q1*vf[k]+q2*vf[k-1]+b*u[k]+c",
+      "coefficients": {
+        "q1": 1.6159555165678694,
+        "q2": -0.6595268662703854,
+        "b": 0.012032398653106829,
+        "c": -0.0005715550066075959
+      },
+      "velocity_filter_tau_s": 0.012,
+      "prediction_horizon_s": 0.009999999999990905,
+      "normalized_design_condition": 25.461075933205315,
+      "training_samples": 97907,
+      "physical_signs_plausible": true,
+      "validation": {
+        "velocity_rmse_rad_s": 0.00824142049593829,
+        "velocity_fit_percent": 93.67754429307595
+      },
+      "interpretation": "Strict held-out one-step prediction of controller-filtered velocity; not comparable to full-trial free-run fit"
     }
   },
   "note": "Second-order angle model; torque input is commanded Nm, not independently calibrated shaft torque. Closed-loop noise/friction can bias estimates. Do not deploy gains from these fits without separate matched tests."

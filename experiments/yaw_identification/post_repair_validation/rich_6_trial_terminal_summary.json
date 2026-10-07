@@ -1,0 +1,39 @@
+{
+  "source": "pasted terminal output; status sampled about every 5 seconds, not raw CSV",
+  "completed_trials": 6,
+  "profiles_observed": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "faults_during_sweep": [
+    0
+  ],
+  "fault_after_off": true,
+  "sweep_sampled_ranges": {
+    "yaw_deg": [
+      212.717285,
+      217.232666
+    ],
+    "yaw_cmd_Nm": [
+      -0.567011,
+      0.555936
+    ],
+    "pitch_world_deg": [
+      4.663315,
+      4.832211
+    ],
+    "pitch_temp_C": [
+      37.0,
+      43.0
+    ],
+    "yaw_temp_C": [
+      32.0,
+      32.0
+    ]
+  },
+  "session_report_remote": "/root/yaw_identification/sessions/20261006_125806_187353.json"
+}

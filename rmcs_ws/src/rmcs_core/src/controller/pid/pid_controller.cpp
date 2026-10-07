@@ -1,3 +1,4 @@
+#include <limits>
 #include <rclcpp/logging.hpp>
 #include <rclcpp/node.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -24,6 +25,8 @@ public:
               get_parameter("kd").as_double()) {
 
         register_output(get_parameter("control").as_string(), control_);
+        if (has_parameter("enable"))
+            register_input(get_parameter("enable").as_string(), enable_);
 
         get_parameter("integral_min", pid_calculator_.integral_min);
         get_parameter("integral_max", pid_calculator_.integral_max);
@@ -36,6 +39,11 @@ public:
     }
 
     void update() override {
+        if (enable_.active() && !*enable_) {
+            pid_calculator_.reset();
+            *control_ = std::numeric_limits<double>::quiet_NaN();
+            return;
+        }
         auto err = *setpoint_ - *measurement_;
         *control_ = *feedforward_ + pid_calculator_.update(err);
     }
@@ -45,6 +53,7 @@ private:
 
     PidCalculator pid_calculator_;
 
+    InputInterface<bool> enable_;
     OutputInterface<double> control_;
 };
 

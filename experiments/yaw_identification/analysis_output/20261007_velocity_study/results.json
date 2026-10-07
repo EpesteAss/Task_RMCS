@@ -1,0 +1,61 @@
+{
+  "candidate_count": 105,
+  "selected": {
+    "order_of_velocity": 2,
+    "delay_samples": 1,
+    "dead_zone_Nm": 0,
+    "variant": "friction",
+    "speed_scale_rad_s": 0.08,
+    "filter_tau_s": 0.02,
+    "selection_fit_percent": 33.69285463416376
+  },
+  "coefficients": [
+    1.6737403659384897,
+    -0.6741004174870209,
+    0.007116926410067996,
+    -0.005450525385853367,
+    -0.0003820143062199952
+  ],
+  "validation": {
+    "velocity_fit_percent": 30.96664131760476,
+    "velocity_rmse_rad_s": 0.15874581850501998,
+    "per_profile": [
+      {
+        "profile": 0,
+        "velocity_fit_percent": -138.9005142120518
+      },
+      {
+        "profile": 1,
+        "velocity_fit_percent": 1.3147794654386646
+      },
+      {
+        "profile": 2,
+        "velocity_fit_percent": 34.64813611041697
+      },
+      {
+        "profile": 3,
+        "velocity_fit_percent": 45.11810100052741
+      },
+      {
+        "profile": 4,
+        "velocity_fit_percent": 48.4750377467993
+      },
+      {
+        "profile": 5,
+        "velocity_fit_percent": 43.637912279366965
+      },
+      {
+        "profile": 6,
+        "velocity_fit_percent": 37.57211633851567
+      },
+      {
+        "profile": 7,
+        "velocity_fit_percent": 33.17725639150998
+      },
+      {
+        "profile": 8,
+        "velocity_fit_percent": 30.680861345245034
+      }
+    ]
+  }
+}

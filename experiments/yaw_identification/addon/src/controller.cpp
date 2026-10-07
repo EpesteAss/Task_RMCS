@@ -24,8 +24,13 @@ public:
         auto& c = engine_.config;
         if (!has_parameter("world_pitch_control")) declare_parameter("world_pitch_control", false);
         c.world_pitch_control = get_parameter("world_pitch_control").as_bool();
+        if (!has_parameter("pitch_limits_relative_to_arm"))
+            declare_parameter("pitch_limits_relative_to_arm", c.world_pitch_control);
+        c.pitch_limits_relative_to_arm = get_parameter("pitch_limits_relative_to_arm").as_bool();
         if (!has_parameter("tracking_test")) declare_parameter("tracking_test", false);
         c.tracking_test = get_parameter("tracking_test").as_bool();
+        if (!has_parameter("rich_identification")) declare_parameter("rich_identification", false);
+        c.rich_identification = get_parameter("rich_identification").as_bool();
         c.world_pitch_target = parameter("world_pitch_target_deg", 5.0) * std::numbers::pi / 180.0;
         c.pitch_target = parameter("pitch_target_deg", -10.0) * std::numbers::pi / 180.0;
         c.pitch_ready_tolerance = parameter("pitch_ready_tolerance_deg", 1.5)
@@ -36,11 +41,23 @@ public:
         c.pitch_max = parameter("pitch_max", c.pitch_max);
         c.pitch_ramp = parameter("pitch_ramp_rad_s", c.pitch_ramp);
         c.pitch_torque_limit = parameter("pitch_torque_limit", c.pitch_torque_limit);
+        c.pitch_target_lead = parameter("pitch_target_lead_limit_deg", 0.8)
+                              * std::numbers::pi / 180.0;
+        c.pitch_target_soft_tau = parameter("pitch_target_soft_tau_s", 0.0);
+        c.pitch_stiction_compensation = parameter("pitch_stiction_compensation_Nm", 0.0);
+        c.pitch_precharge_s = parameter("pitch_precharge_s", 0.0);
+        c.pitch_precharge_torque_slew = parameter("pitch_precharge_torque_slew_Nm_s", 8.0);
+        c.pitch_start_ramp_s = parameter("pitch_start_ramp_s", 0.0);
         c.torque_slew = parameter("pitch_torque_slew_Nm_s", c.torque_slew);
         c.torque_release_slew = parameter("pitch_torque_release_slew_Nm_s",
                                           c.torque_release_slew);
+        c.off_slew = parameter("pitch_off_slew_Nm_s", c.off_slew);
         c.yaw_torque_limit = parameter("yaw_torque_limit", c.yaw_torque_limit);
         c.yaw_span = parameter("yaw_span_rad", c.yaw_span);
+        c.pitch_velocity_filter_tau = parameter("pitch_velocity_filter_tau_s",
+                                                c.pitch_velocity_filter_tau);
+        c.yaw_velocity_filter_tau = parameter("yaw_velocity_filter_tau_s",
+                                              c.yaw_velocity_filter_tau);
         c.gravity_gain = parameter("pitch_gravity_ff_gain", c.gravity_gain);
         c.gravity_phase = parameter("pitch_gravity_ff_phase", c.gravity_phase);
         if (has_parameter("pitch_gravity_ff_raise_gain")) {
@@ -54,11 +71,17 @@ public:
         c.tracking_amplitude = parameter("tracking_amplitude_deg", 5.0)
                                * std::numbers::pi / 180.0;
         c.tracking_frequency = parameter("tracking_frequency_hz", c.tracking_frequency);
+        if (has_parameter("tracking_frequencies_hz")) {
+            const auto values = get_parameter("tracking_frequencies_hz").as_double_array();
+            c.tracking_frequencies.assign(values.begin(), values.end());
+        }
         c.tracking_ramp = parameter("tracking_ramp_s", c.tracking_ramp);
         c.yaw_ff_velocity = parameter("yaw_velocity_ff_torque_gain", 0.0);
         c.yaw_ff_acceleration = parameter("yaw_acceleration_ff_torque_gain", 0.0);
         c.yaw_ff_bias = parameter("yaw_bias_ff_torque", 0.0);
         c.yaw_torque_slew = parameter("yaw_torque_slew_Nm_s", c.yaw_torque_slew);
+        c.yaw_torque_release_slew = parameter("yaw_torque_release_slew_Nm_s",
+                                               c.yaw_torque_slew);
         configure("pitch_angle", engine_.pitch_angle);
         configure("pitch_velocity", engine_.pitch_velocity);
         configure("yaw_angle", engine_.yaw_angle);
@@ -90,6 +113,8 @@ public:
         register_output("/yaw_experiment/yaw_target_offset", yaw_target_offset_, 0.0);
         register_output("/yaw_experiment/yaw_error", yaw_error_output_, 0.0);
         register_output("/yaw_experiment/yaw_feedforward", yaw_feedforward_, 0.0);
+        register_output("/yaw_experiment/tracking_frequency_hz", tracking_frequency_, 0.0);
+        register_output("/yaw_experiment/excitation_profile", excitation_profile_, 0.0);
         heartbeat_ = create_subscription<std_msgs::msg::Empty>(
             "/yaw_experiment/heartbeat", 1, [this](const std_msgs::msg::Empty&) {
                 last_heartbeat_.store(ticks(), std::memory_order_relaxed);
@@ -148,6 +173,8 @@ public:
         *yaw_target_offset_ = out.yaw_target_offset;
         *yaw_error_output_ = out.yaw_error;
         *yaw_feedforward_ = out.yaw_feedforward;
+        *tracking_frequency_ = out.tracking_frequency;
+        *excitation_profile_ = out.excitation_profile;
         if (out.state != previous_state_) {
             RCLCPP_WARN(get_logger(), "Experiment state=%d fault=%d pitch=%.2f deg",
                         static_cast<int>(out.state), out.fault, in.pitch * 180 / std::numbers::pi);
@@ -167,6 +194,8 @@ public:
                 + " yaw_cmd_Nm=" + std::to_string(out.yaw_torque)
                 + " yaw_target_deg=" + std::to_string(out.yaw_target_offset * 180 / std::numbers::pi)
                 + " yaw_error_deg=" + std::to_string(out.yaw_error * 180 / std::numbers::pi)
+                + " tracking_hz=" + std::to_string(out.tracking_frequency)
+                + " profile=" + std::to_string(out.excitation_profile)
                 + " pitch_temp=" + std::to_string(in.pitch_temperature)
                 + " yaw_temp=" + std::to_string(in.yaw_temperature)
                 + " heartbeat_age_s=" + std::to_string(heartbeat_age / 1000000000.0)
@@ -227,6 +256,8 @@ private:
     InputInterface<double> pitch_feedback_torque_, pitch_motor_velocity_;
     OutputInterface<double> pitch_torque_, yaw_torque_, state_, fault_, completed_, time_, excitation_, pitch_target_, pitch_torque_unlimited_, pitch_world_output_;
     OutputInterface<double> yaw_target_offset_, yaw_error_output_, yaw_feedforward_;
+    OutputInterface<double> tracking_frequency_;
+    OutputInterface<double> excitation_profile_;
     OutputInterface<double> charge_power_limit_;
     std::atomic<int64_t> last_heartbeat_{0};
     std::atomic<Command> pending_{Command::None};

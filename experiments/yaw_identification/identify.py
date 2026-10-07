@@ -11,6 +11,34 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 
 
+def has_completed_sweep(path):
+    """Cheaply reject empty/aborted logs before --latest selects one."""
+    with path.open(newline="") as stream:
+        reader = csv.reader(stream)
+        names = next(reader, [])
+        try:
+            state_index = names.index("/yaw_experiment/state")
+            completed_index = names.index("/yaw_experiment/completed")
+        except ValueError:
+            return False
+        was_sweeping = False
+        for row in reader:
+            if len(row) != len(names):
+                continue
+            try:
+                state = float(row[state_index])
+                completed = float(row[completed_index])
+            except ValueError:
+                continue
+            if state == 3:
+                was_sweeping = True
+            elif was_sweeping:
+                if state == 2 and completed == 1:
+                    return True
+                was_sweeping = False
+    return False
+
+
 def read_log(path):
     # Bounded numeric storage: avoid retaining millions of Python string/dict objects.
     with path.open(newline="") as stream:
@@ -54,7 +82,12 @@ def trials(data):
                 or np.any(dt <= 0) or np.max(dt) >= .05 or np.ptp(theta) < .001):
             rejected.append({"trial": number, "reason": "bad timestamps, insufficient movement or nonfinite feedback"})
             continue
-        result.append({"number": number, "t": t-t[0], "theta": theta-theta[0],
+        profile = 0
+        if "/yaw_experiment/excitation_profile" in data:
+            profile = int(round(float(np.median(
+                data["/yaw_experiment/excitation_profile"][idx]))))
+        result.append({"number": number, "profile": profile,
+                       "t": t-t[0], "theta": theta-theta[0],
                        "omega": omega, "u": torque})
     if not result:
         raise ValueError(f"No usable completed sweeps: {rejected}")
@@ -182,6 +215,52 @@ def evaluate_delayed_arx2(validation, coeff, delay_samples):
     }, plots
 
 
+def filtered_velocity(trial, tau=0.012):
+    """Apply the same first-order velocity filter used by the experiment controller."""
+    measured = trial["omega"]
+    result = np.empty_like(measured)
+    result[0] = measured[0]
+    for k, dt in enumerate(np.diff(trial["t"]), 1):
+        alpha = dt / (tau + dt)
+        result[k] = result[k-1] + alpha * (measured[k] - result[k-1])
+    return result
+
+
+def fit_filtered_velocity_arx2(training, tau=0.012):
+    """Fit vf[k+1]=q1*vf[k]+q2*vf[k-1]+b*u[k]+c."""
+    design, response = [], []
+    for tr in training:
+        velocity = filtered_velocity(tr, tau)
+        for k in range(1, len(velocity)-1):
+            design.append([velocity[k], velocity[k-1], tr["u"][k], 1.0])
+            response.append(velocity[k+1])
+    x, y = np.asarray(design), np.asarray(response)
+    scale = np.linalg.norm(x, axis=0)
+    if len(x) < 20 or np.any(scale < 1e-10) or np.linalg.matrix_rank(x/scale) < x.shape[1]:
+        raise ValueError("Insufficient independent excitation for filtered velocity ARX2")
+    coeff = np.linalg.lstsq(x/scale, y, rcond=None)[0] / scale
+    return coeff, float(np.linalg.cond(x/scale)), len(x)
+
+
+def evaluate_filtered_velocity_arx2(validation, coeff, tau=0.012):
+    errors, actual, plots = [], [], []
+    for tr in validation:
+        velocity = filtered_velocity(tr, tau)
+        predicted = (coeff[0] * velocity[1:-1] + coeff[1] * velocity[:-2]
+                     + coeff[2] * tr["u"][1:-1] + coeff[3])
+        measured = velocity[2:]
+        errors.extend(predicted - measured)
+        actual.extend(measured)
+        plots.append({"trial": tr["number"], "time": tr["t"][2:],
+                      "measured": measured, "predicted": predicted})
+    error, measured = np.asarray(errors), np.asarray(actual)
+    rmse = float(np.sqrt(np.mean(error**2)))
+    return {
+        "velocity_rmse_rad_s": rmse,
+        "velocity_fit_percent": float(100 * (1 - rmse/max(float(np.std(measured)), 1e-12))),
+    }, plots
+
+
 def select_arx_delay(training, maximum_delay=6):
     """Select delay inside the training set, preserving final validation isolation."""
     recent = training[-min(20, len(training)):]
@@ -217,9 +296,12 @@ def analyze(path, out):
         training = [sliced(accepted[0], 0, cut)]
         validation = [sliced(accepted[0], cut, None)]
         split_note = "Only one trial: first 70% trains, last 30% validates; independent trial still needed"
+    profile_counts = {str(profile): sum(t["profile"] == profile for t in accepted)
+                      for profile in sorted({t["profile"] for t in accepted})}
     report = {"source": str(path.resolve()), "accepted_trials": len(accepted), "rejected_trials": rejected,
               "split": split_note, "training_trials": [t["number"] for t in training],
-              "validation_trials": [t["number"] for t in validation], "models": {},
+              "validation_trials": [t["number"] for t in validation],
+              "excitation_profile_counts": profile_counts, "models": {},
               "note": "Second-order angle model; torque input is commanded Nm, not independently calibrated shaft torque. Closed-loop noise/friction can bias estimates. Do not deploy gains from these fits without separate matched tests."}
     all_plots = {}
     for name, friction in (("linear", False), ("friction", True)):
@@ -259,9 +341,41 @@ def analyze(path, out):
         "interpretation": "Predictive model for the settled operating regime; continuous model remains the controller-design model",
     }
     all_plots["delayed_arx2"] = arx_predictions
+    # A one-step predictor answers a different question from free-run
+    # simulation: given the current measured state, how accurately can the
+    # model predict the next 10 ms sample?  Filtering uses the same 12 ms time
+    # constant as the controller and the final validation trials remain held
+    # out.  Report it separately so it cannot be mistaken for a 20 s free run.
+    filtered_tau = 0.012
+    filtered_coeff, filtered_condition, filtered_samples = fit_filtered_velocity_arx2(
+        training, filtered_tau)
+    filtered_metrics, filtered_plots = evaluate_filtered_velocity_arx2(
+        validation, filtered_coeff, filtered_tau)
+    filtered_poles = np.roots([1.0, -filtered_coeff[0], -filtered_coeff[1]])
+    report["models"]["filtered_velocity_arx2_one_step"] = {
+        "equations": "vf[k+1]=q1*vf[k]+q2*vf[k-1]+b*u[k]+c",
+        "coefficients": dict(zip(("q1", "q2", "b", "c"), map(float, filtered_coeff))),
+        "velocity_filter_tau_s": filtered_tau,
+        "prediction_horizon_s": sample_period,
+        "normalized_design_condition": filtered_condition,
+        "training_samples": filtered_samples,
+        "physical_signs_plausible": bool(filtered_coeff[2] > 0
+                                          and np.max(np.abs(filtered_poles)) < 1),
+        "validation": filtered_metrics,
+        "interpretation": ("Strict held-out one-step prediction of controller-filtered velocity; "
+                           "not comparable to full-trial free-run fit"),
+    }
+    # Always emit this dependency-free plot.  The one-step predictor has a
+    # different data shape from the free-run simulations below and should not
+    # be forced through the free-run plotting interface.
+    if filtered_plots:
+        from svg_plot import one_step_validation_plot
+        one_step_validation_plot(out/"filtered_velocity_arx2_one_step_validation.svg",
+                                 filtered_plots[-1])
     (out/"results.json").write_text(json.dumps(report, indent=2, allow_nan=False)+"\n")
     lines = ["# Yaw identification report", "", split_note,
-             f"Accepted complete trials: {len(accepted)}; rejected: {len(rejected)}", ""]
+             f"Accepted complete trials: {len(accepted)}; rejected: {len(rejected)}",
+             f"Excitation profile counts: {profile_counts}", ""]
     for name, model in report["models"].items():
         lines.extend([f"## {name}", model["equations"], "", str(model["coefficients"]),
                       "", str(model["validation"]), "",
@@ -271,6 +385,9 @@ def analyze(path, out):
                           f"({model['delay_seconds']:.3f} s), using only a nested split "
                           "inside the training trials.",
                           f"Settled-regime estimation trials: {model['estimation_trials']}", ""])
+        elif name == "filtered_velocity_arx2_one_step":
+            lines.extend(["This metric predicts only the next sample from measured filtered velocity; "
+                          "it is not a full-trial free-run simulation.", ""])
     lines.extend([report["note"], "", "A negative validation fit means worse than predicting mean velocity.",
                   "Longer logs alone do not prove the model is accurate. Inspect all models before tuning."])
     try:
@@ -315,7 +432,11 @@ def main():
         candidates = list((HERE/"data").glob("*/feedback.csv")) + list((HERE/"data").glob("*.csv"))
         if not candidates:
             parser.error("No recordings found in data/")
-        path = max(candidates, key=lambda p: p.stat().st_mtime)
+        path = next((candidate for candidate in
+                     sorted(candidates, key=lambda p: p.stat().st_mtime, reverse=True)
+                     if has_completed_sweep(candidate)), None)
+        if path is None:
+            parser.error("No recording contains a completed sweep")
     if path is None:
         parser.error("Supply a CSV path or --latest")
     out = args.out or HERE/"analysis_output"/(path.parent.name if path.name == "feedback.csv" else path.stem)

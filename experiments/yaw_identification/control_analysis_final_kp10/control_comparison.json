@@ -1,6 +1,6 @@
 {
-  "baseline_source": "control_data/control-baseline/20261005_141022_896820/feedback.csv",
-  "tuned_source": "control_data/control-tuned/20261005_142257_467316/feedback.csv",
+  "baseline_source": "experiments/yaw_identification/control_data/control-baseline/20261005_141022_896820/feedback.csv",
+  "tuned_source": "experiments/yaw_identification/control_data/control-tuned/20261005_142257_467316/feedback.csv",
   "baseline": {
     "complete_trials": 3,
     "angle_rmse_deg": 0.7262153942407624,
@@ -40,6 +40,23 @@
     "tuned": []
   },
   "comparison_valid": true,
+  "matched_conditions": {
+    "profile": {
+      "tracking_test": true,
+      "tracking_amplitude_deg": 5.0,
+      "tracking_frequency_hz": 0.25,
+      "tracking_frequencies_hz": null,
+      "tracking_ramp_s": 1.0,
+      "duration": 20.0
+    },
+    "pitch_configuration_matched": true,
+    "target_trajectories_matched": true,
+    "max_sampled_target_difference_deg": 0.06342585208400232,
+    "yaw_torque_limits_Nm": [
+      4.5,
+      3.6
+    ]
+  },
   "note": "Compare only matched target profiles and similar starting temperature/load.",
   "change_percent": {
     "angle_rmse_deg": -26.88288010140958,
