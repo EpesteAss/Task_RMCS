@@ -2,19 +2,23 @@
 
 ## 一、龙门架
 
+代码仓库：https://github.com/EpesteAss/Task_RMCS/blob/main/rmcs_ws/src/rmcs_core/src/hardware/gantry.cpp
+
 上方 M2006（ID 1）通过丝杆推动发射架转 yaw；下方左、右 M2006（ID 2、3）一起升降前端，控制 pitch。丝杆导程约 0.2 mm/转。遥控器左摇杆控制两个轴，双开关 DOWN 时不接受摇杆命令。
 
-左右不能只给相同力矩：负载和摩擦不同，同样的力矩仍会产生位移差。程序启动后让两侧分别向上找机械上限，先到的一侧停止，两侧到位后分别置零；正常升降再用编码器累计转角之差修正两侧速度。单侧堵转只停该侧，摇杆回中后可重试。
+左右不能只给相同力矩：负载和摩擦不同，同样的力矩仍会产生位移差。
+
+==程序启动后让两侧分别向上找机械上限==，先到的一侧停止，两侧到位后分别置零；正常升降再用编码器累计转角之差修正两侧速度。单侧堵转只停该侧，摇杆回中后可重试。
 
 上限靠“力矩较大而转速接近零”推断，没有限位传感器，中途卡住也可能被误判。当前 `gantry.yaml` 是单环速度手动测试配置；机构尺寸和安全行程还没量出，角度位置控制尚未开放。两侧是否真正水平、只转 yaw 时 pitch 是否不变，还需用倾角仪实测，不能只凭编码器同步下结论。
 
-龙门架代码：https://github.com/EpesteAss/Task_RMCS/blob/main/rmcs_ws/src/rmcs_core/src/hardware/gantry.cpp
-
 ## 二、步兵 C 车 Yaw 轴系统辨识与控制优化
+
+代码仓库：https://github.com/EpesteAss/Task_RMCS/tree/main/experiments/yaw_identification
 
 ### 1. 实验配置与数据处理
 
-车上没有可用的 DR16，因此用独立实验插件生成 yaw 目标，pitch 保持在约 5° 世界角。固定 pitch 是为了减少姿态和机械干涉对 yaw 响应的影响；自动目标则保证原增益和优化配置能重复同一段运动。两组的 pitch 配置、目标幅值、频率和时长相同。“原版”在这里指**原 RMCS yaw PID 增益在共同实验框架内的表现**。
+实验插件生成 yaw 目标，pitch 保持在约 5° 世界角。固定 pitch 是为了减少姿态和机械干涉对 yaw 响应的影响；自动目标则保证原增益和优化配置能重复同一段运动。两组的 pitch 配置、目标幅值、频率和时长相同。“原版”在这里指**原 RMCS yaw PID 增益在共同实验框架内的表现**。
 
 CSV 记录目标角、yaw 实际角、IMU 与编码器角速度、力矩命令、pitch 姿态、温度及状态。分析脚本按扫动状态切分轮次，只接受正常完成的轮次；对角度做跨圈展开，使跨过 0° 时不会出现虚假的角度突跳。时间戳倒退、相邻采样间隔达到 50 ms、反馈不是有限数或位移不足的轮次会被排除。中断记录仍保存，用来检查触发保护前的运动，不参与正常性能统计。
 
@@ -148,7 +152,6 @@ CSV 记录目标角、yaw 实际角、IMU 与编码器角速度、力矩命令�
 
 ### 8. 代码与数据索引
 
-- 系统辨识、控制实验、图表与本报告：https://github.com/EpesteAss/Task_RMCS/tree/main/experiments/yaw_identification
 - 原始辨识 CSV：`data/20261005_093410_444865/feedback.csv`（70 轮）与 `data/20261006_133045_810815/feedback.csv`（重装后 18 轮）。
 - 冻结模型训练/选型：`data/20261007_022850_274011/feedback.csv`；新采验证：`data/20261007_043913_088815/feedback.csv`。具体数值在 `analysis_output/20261007_cascade_fresh/results.json`。
 - 左右各 15° 的原增益/候选 CSV：`control_data/control-baseline-wide/20261006_070745_870317/feedback.csv` 与 `control_data/control-tuned-wide/20261006_072257_499687/feedback.csv`；统计与逐轮图在 `control_analysis_wide_latest/`。

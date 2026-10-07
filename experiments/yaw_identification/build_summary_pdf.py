@@ -124,6 +124,9 @@ def markdown_markup(value: str) -> str:
         "−": "-", "·": "*", "×": "*", "≈": "~",
     }))
     value = escape(value, quote=False)
+    value = re.sub(r"==(.+?)==",
+                   lambda match: '<onDraw name="yellow_marker" label="'
+                   + escape(match.group(1), quote=True) + '"/>' + match.group(1), value)
     value = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", value)
     def code_span(match: re.Match[str]) -> str:
         content = match.group(1)
@@ -243,7 +246,30 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
     return story
 
 
+def yellow_marker(canvas, kind, label) -> None:
+    """Draw a flattened vector marker stroke behind a short inline phrase."""
+    info = canvas._curr_tx_info
+    size = info["xs"].style.fontSize
+    x, y = info["cur_x"], info["cur_y"]
+    width = pdfmetrics.stringWidth(label, FONT, size)
+    canvas.saveState()
+    canvas.setFillColor(colors.HexColor("#ffeb67"))
+    path = canvas.beginPath()
+    path.moveTo(x - 1.5, y - 1.0)
+    path.lineTo(x + width * .33, y - 1.5)
+    path.lineTo(x + width * .72, y - .8)
+    path.lineTo(x + width + 1, y - 1.3)
+    path.lineTo(x + width + 2.5, y + size * .82)
+    path.lineTo(x + width * .65, y + size * .88)
+    path.lineTo(x + width * .25, y + size * .79)
+    path.lineTo(x, y + size * .86)
+    path.close()
+    canvas.drawPath(path, fill=1, stroke=0)
+    canvas.restoreState()
+
+
 def decorate(canvas, doc) -> None:
+    canvas.setNamedCB("yellow_marker", yellow_marker)
     canvas.saveState()
     page_w, page_h = A4
     if doc.page > 1:
