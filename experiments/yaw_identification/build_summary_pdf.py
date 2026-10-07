@@ -16,6 +16,7 @@ from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Flowable,
+    KeepTogether,
     PageBreak,
     Paragraph,
     SimpleDocTemplate,
@@ -229,8 +230,15 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
             story.append(Paragraph(markdown_markup(line[2:]), styles["body"], bulletText="•"))
         elif re.match(r"^\d+\. ", line):
             story.append(paragraph(line, styles["body"]))
+        elif re.fullmatch(r"`[^`]+`", line):
+            formulae = []
+            while i < len(lines) and re.fullmatch(r"`[^`]+`", lines[i].strip()):
+                formulae.append(paragraph(lines[i].strip(), styles["body"]))
+                i += 1
+            story.append(KeepTogether(formulae))
+            continue
         else:
-            story.append(paragraph(line, styles["body"]))
+            story.append(paragraph(line, styles["lead"] if line.endswith("：") else styles["body"]))
         i += 1
     return story
 
@@ -279,6 +287,7 @@ def main() -> None:
         "table_header": ParagraphStyle("TableHeaderCN", fontName=FONT, fontSize=7.7,
                                         leading=10.5, textColor=colors.white, wordWrap="CJK"),
     }
+    styles["lead"] = ParagraphStyle("LeadCN", parent=styles["body"], keepWithNext=True)
     doc = SimpleDocTemplate(str(OUTPUT), pagesize=A4, rightMargin=right, leftMargin=left,
                             topMargin=top, bottomMargin=bottom,
                             title="算法大作业",
