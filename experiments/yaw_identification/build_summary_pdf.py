@@ -29,7 +29,7 @@ from svglib.svglib import svg2rlg
 
 HERE = Path(__file__).resolve().parent
 SOURCE = HERE / "FINAL_REPORT.md"
-OUTPUT = HERE / "步兵C车Yaw轴系统辨识与控制优化实验总结.pdf"
+OUTPUT = HERE / "步兵C车Yaw轴系统辨识与控制优化测试总结.pdf"
 FONT = "STSong-Light"
 MATH_FONT = "DejaVuSans"
 MATH_FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
@@ -312,7 +312,7 @@ def decorate(canvas, doc) -> None:
     canvas.line(17 * mm, 12 * mm, page_w - 17 * mm, 12 * mm)
     canvas.setFont(FONT, 8)
     canvas.setFillColor(colors.HexColor("#53657d"))
-    canvas.drawString(17 * mm, 7 * mm, "算法大作业｜实验数据与报告")
+    canvas.drawString(17 * mm, 7 * mm, "算法大作业｜测试数据与报告")
     canvas.drawRightString(page_w - 17 * mm, 7 * mm, str(doc.page))
     canvas.restoreState()
 
@@ -346,7 +346,7 @@ def main() -> None:
     doc = SimpleDocTemplate(str(OUTPUT), pagesize=A4, rightMargin=right, leftMargin=left,
                             topMargin=top, bottomMargin=bottom,
                             title="算法大作业",
-                            author="RMCS 控制作业实验记录")
+                            author="RMCS 控制作业测试记录")
     story = parse_markdown(SOURCE.read_text(encoding="utf-8"), styles, width)
     doc.build(story, onFirstPage=decorate, onLaterPages=decorate)
     print(f"Created {OUTPUT} ({OUTPUT.stat().st_size} bytes)")
