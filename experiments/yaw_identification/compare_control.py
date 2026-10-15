@@ -64,16 +64,17 @@ def metrics(trials: list[dict], torque_limit: float) -> dict:
     }
 
 
-def svg_plot(path: Path, baseline: dict, tuned: dict) -> None:
+def svg_plot(path: Path, baseline: dict, tuned: dict,
+             baseline_label: str = "Original gains", tuned_label: str = "Tuned") -> None:
     width, height, left, right = 1100, 820, 98, 28
     panels = [
         ("Yaw angle", "Angle (deg)", 75, 275,
-         [("Target", "target", "#222222"), ("Original gains", "actual", "#d1495b"),
-          ("Tuned", "actual", "#00798c")]),
+         [("Target", "target", "#222222"), (baseline_label, "actual", "#d1495b"),
+          (tuned_label, "actual", "#00798c")]),
         ("Tracking error", "Error (deg)", 325, 515,
-         [("Original gains", "error", "#d1495b"), ("Tuned", "error", "#00798c")]),
+         [(baseline_label, "error", "#d1495b"), (tuned_label, "error", "#00798c")]),
         ("Yaw command", "Torque (N m)", 565, 755,
-         [("Original gains", "torque", "#d1495b"), ("Tuned", "torque", "#00798c")]),
+         [(baseline_label, "torque", "#d1495b"), (tuned_label, "torque", "#00798c")]),
     ]
     frequency = baseline.get("frequency_hz")
     title = f"Matched yaw tracking: trial {baseline['number']}"
@@ -111,7 +112,7 @@ def svg_plot(path: Path, baseline: dict, tuned: dict) -> None:
         chunks.append(f'<path d="M {x_left} {top} V {bottom} H {x_right}" fill="none" stroke="#333333" stroke-width="1.3"/>')
         chunks.append(f'<text x="{(x_left + x_right) / 2:.1f}" y="{bottom + 34}" text-anchor="middle" font-family="sans-serif" font-size="12">Time (s)</text>')
         for name, key, color in series:
-            trial = tuned if name == "Tuned" else baseline
+            trial = tuned if name == tuned_label else baseline
             t, v = trial["time"], values(trial, key)
             take = np.linspace(0, len(t) - 1, min(len(t), 1600)).astype(int)
             points = " ".join(f"{x_left + (x_right - x_left) * t[j] / x_max:.1f},{y_center - v[j] * y_scale:.1f}"
@@ -203,6 +204,8 @@ def main() -> None:
     parser.add_argument("--baseline", type=Path, required=True)
     parser.add_argument("--tuned", type=Path, required=True)
     parser.add_argument("--out", type=Path, default=Path("control_analysis"))
+    parser.add_argument("--baseline-label", default="Original gains")
+    parser.add_argument("--tuned-label", default="Tuned")
     args = parser.parse_args()
     base_trials, base_rejected = complete_trials(args.baseline)
     tuned_trials, tuned_rejected = complete_trials(args.tuned)
@@ -229,9 +232,11 @@ def main() -> None:
     }
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "control_comparison.json").write_text(json.dumps(result, indent=2) + "\n")
-    svg_plot(args.out / "control_comparison.svg", base_trials[0], tuned_trials[0])
+    svg_plot(args.out / "control_comparison.svg", base_trials[0], tuned_trials[0],
+             args.baseline_label, args.tuned_label)
     for number, (base, candidate) in enumerate(zip(base_trials, tuned_trials), 1):
-        svg_plot(args.out / f"control_comparison_trial_{number}.svg", base, candidate)
+        svg_plot(args.out / f"control_comparison_trial_{number}.svg", base, candidate,
+                 args.baseline_label, args.tuned_label)
     print(json.dumps(result, indent=2))
     print(f"Results: {args.out}")
 

@@ -1,0 +1,1072 @@
+{
+  "source": "/workspaces/RMCS/experiments/yaw_identification/data/20261005_093410_444865/feedback.csv",
+  "source_sha256": "c05fbd5db7fce1788226e0216fe1f4220c91f0c9c1125d09895ee37b8484e2d6",
+  "model": "theta_dot=omega; J*omega_dot=tau-B*omega-Fc*tanh(omega/0.02)+bias",
+  "contains_pid_parameters": false,
+  "pid_free_capture_evidence": false,
+  "status": "legacy_diagnostic_not_eligible_for_pid_free_acquisition_requirement",
+  "torque_calibration": "Unverified. J/B/Fc/bias values assume logged Nm equals yaw-axis Nm.",
+  "evaluation": "Chronological complete-trial holdout; existing inspected logs are not a new blind test.",
+  "channels": {
+    "feedback": {
+      "training_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "validation_trials": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+      ],
+      "rejected": [
+        {
+          "trial": 71,
+          "reason": "interrupted or incomplete"
+        }
+      ],
+      "models": {
+        "linear": {
+          "parameters_conditional_on_torque_calibration": {
+            "J_kg_m2": 0.2908921255322305,
+            "B_Nm_s_rad": 3.088843419293554,
+            "bias_Nm": -0.04842359284994488,
+            "Fc_Nm": 0.0
+          },
+          "normalized_design_condition": 3.0511014148055406,
+          "integral_windows": 19558,
+          "velocity_increment_rmse_rad_s": 0.06646466875238886,
+          "trial_bootstrap": {
+            "attempted": 100,
+            "accepted": 100,
+            "interpretation": "Whole-trial resampling variability only; excludes calibration error and systematic bias.",
+            "percentile_95_ranges": {
+              "J_kg_m2": [
+                0.2746983639015062,
+                0.3086962988194691
+              ],
+              "B_Nm_s_rad": [
+                2.91643367057638,
+                3.2773006067540176
+              ],
+              "bias_Nm": [
+                -0.04909384620665559,
+                -0.04767157949486608
+              ],
+              "Fc_Nm": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "window_sensitivity": {
+            "0.025": {
+              "J_kg_m2": 0.29530224138899414,
+              "B_Nm_s_rad": 3.104325104053157,
+              "bias_Nm": -0.04833768579448666,
+              "Fc_Nm": 0.0
+            },
+            "0.1": {
+              "J_kg_m2": 0.2884497669327415,
+              "B_Nm_s_rad": 3.1769293912898533,
+              "bias_Nm": -0.04873509177286263,
+              "Fc_Nm": 0.0
+            }
+          },
+          "validation": {
+            "velocity_fit_percent": 38.54147734558099,
+            "velocity_rmse_rad_s": 0.08187399763597918,
+            "angle_rmse_deg": 6.396203084728516,
+            "per_trial": [
+              {
+                "trial": 50,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 31.56691497173252,
+                "velocity_rmse_rad_s": 0.08475986029123844,
+                "angle_rmse_deg": 6.3105859758730745
+              },
+              {
+                "trial": 51,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 34.125418626774376,
+                "velocity_rmse_rad_s": 0.08279427009820775,
+                "angle_rmse_deg": 6.6702986038455006
+              },
+              {
+                "trial": 52,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 35.29035740714773,
+                "velocity_rmse_rad_s": 0.08252804622223901,
+                "angle_rmse_deg": 6.622968026591727
+              },
+              {
+                "trial": 53,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 37.859157090912035,
+                "velocity_rmse_rad_s": 0.08200329387029648,
+                "angle_rmse_deg": 7.003404520151964
+              },
+              {
+                "trial": 54,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 38.58906009729676,
+                "velocity_rmse_rad_s": 0.08153164739880872,
+                "angle_rmse_deg": 6.727760692254083
+              },
+              {
+                "trial": 55,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 41.727951330405155,
+                "velocity_rmse_rad_s": 0.07886658315238525,
+                "angle_rmse_deg": 5.796683017840593
+              },
+              {
+                "trial": 56,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 41.767760927412375,
+                "velocity_rmse_rad_s": 0.07945860243284089,
+                "angle_rmse_deg": 5.757828372656005
+              },
+              {
+                "trial": 57,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 42.65246046876921,
+                "velocity_rmse_rad_s": 0.07839926546657963,
+                "angle_rmse_deg": 5.648777730220776
+              },
+              {
+                "trial": 58,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 42.614252009102024,
+                "velocity_rmse_rad_s": 0.07894433391890936,
+                "angle_rmse_deg": 5.8394823495580415
+              },
+              {
+                "trial": 59,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 38.928543192058854,
+                "velocity_rmse_rad_s": 0.08252456768798655,
+                "angle_rmse_deg": 6.264438270476675
+              },
+              {
+                "trial": 60,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 38.07822031330785,
+                "velocity_rmse_rad_s": 0.08322295264113572,
+                "angle_rmse_deg": 7.226670436461033
+              },
+              {
+                "trial": 61,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 38.87717993477979,
+                "velocity_rmse_rad_s": 0.08266089667714631,
+                "angle_rmse_deg": 6.39792232242092
+              },
+              {
+                "trial": 62,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 38.42795855616591,
+                "velocity_rmse_rad_s": 0.08299679877372892,
+                "angle_rmse_deg": 6.751535404589412
+              },
+              {
+                "trial": 63,
+                "profile": 0,
+                "duration_s": 20.0,
+                "velocity_fit_percent": 37.98720495623028,
+                "velocity_rmse_rad_s": 0.08270643497622894,
+                "angle_rmse_deg": 6.528414444617549
+              },
+              {
+                "trial": 64,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 37.69743677295708,
+                "velocity_rmse_rad_s": 0.0832145469858024,
+                "angle_rmse_deg": 6.458404063498519
+              },
+              {
+                "trial": 65,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 37.98626421295778,
+                "velocity_rmse_rad_s": 0.0832080937314322,
+                "angle_rmse_deg": 6.450291684974744
+              },
+              {
+                "trial": 66,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 41.67991647324361,
+                "velocity_rmse_rad_s": 0.0798490078680824,
+                "angle_rmse_deg": 5.823472040478808
+              },
+              {
+                "trial": 67,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 38.68969100865661,
+                "velocity_rmse_rad_s": 0.08213702590012702,
+                "angle_rmse_deg": 6.574305704023898
+              },
+              {
+                "trial": 68,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 37.913015919106904,
+                "velocity_rmse_rad_s": 0.0823395248232708,
+                "angle_rmse_deg": 6.729475069121621
+              },
+              {
+                "trial": 69,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 39.20956757876688,
+                "velocity_rmse_rad_s": 0.08088811198034701,
+                "angle_rmse_deg": 5.856641278010735
+              },
+              {
+                "trial": 70,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 36.17681579889752,
+                "velocity_rmse_rad_s": 0.08393331669904344,
+                "angle_rmse_deg": 6.575979833061738
+              }
+            ]
+          }
+        },
+        "smooth_friction": {
+          "parameters_conditional_on_torque_calibration": {
+            "J_kg_m2": 0.2239377716729691,
+            "B_Nm_s_rad": 0.9067703711031135,
+            "bias_Nm": -0.04016869696090587,
+            "Fc_Nm": 0.3912410622787902
+          },
+          "normalized_design_condition": 6.151848590181453,
+          "integral_windows": 19558,
+          "velocity_increment_rmse_rad_s": 0.06139857562521824,
+          "trial_bootstrap": {
+            "attempted": 100,
+            "accepted": 100,
+            "interpretation": "Whole-trial resampling variability only; excludes calibration error and systematic bias.",
+            "percentile_95_ranges": {
+              "J_kg_m2": [
+                0.21235982645844287,
+                0.23809582646277913
+              ],
+              "B_Nm_s_rad": [
+                0.8234535666558386,
+                1.0158758391235854
+              ],
+              "bias_Nm": [
+                -0.04109207374221291,
+                -0.03887687038618312
+              ],
+              "Fc_Nm": [
+                0.37866664352008733,
+                0.40159148390770316
+              ]
+            }
+          },
+          "window_sensitivity": {
+            "0.025": {
+              "J_kg_m2": 0.22778636786462653,
+              "B_Nm_s_rad": 0.8900323222792407,
+              "bias_Nm": -0.04006980647196466,
+              "Fc_Nm": 0.39325953181964507
+            },
+            "0.1": {
+              "J_kg_m2": 0.2334874656105339,
+              "B_Nm_s_rad": 1.3555273735453344,
+              "bias_Nm": -0.041930785057650063,
+              "Fc_Nm": 0.32343694835231535
+            }
+          },
+          "validation": {
+            "velocity_fit_percent": 25.81570873503296,
+            "velocity_rmse_rad_s": 0.09882704994077797,
+            "angle_rmse_deg": 10.052787608087032,
+            "per_trial": [
+              {
+                "trial": 50,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 15.975969922484733,
+                "velocity_rmse_rad_s": 0.10407049525145914,
+                "angle_rmse_deg": 9.835199850426068
+              },
+              {
+                "trial": 51,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 19.95675161981778,
+                "velocity_rmse_rad_s": 0.10060211674635848,
+                "angle_rmse_deg": 10.191385559032147
+              },
+              {
+                "trial": 52,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 21.212297862601115,
+                "velocity_rmse_rad_s": 0.10048263076726492,
+                "angle_rmse_deg": 10.338677923539558
+              },
+              {
+                "trial": 53,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 23.77535082393526,
+                "velocity_rmse_rad_s": 0.1005887917498934,
+                "angle_rmse_deg": 10.847648445833526
+              },
+              {
+                "trial": 54,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 25.594835745528755,
+                "velocity_rmse_rad_s": 0.09878330516121869,
+                "angle_rmse_deg": 10.762811174688794
+              },
+              {
+                "trial": 55,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 30.98293698800755,
+                "velocity_rmse_rad_s": 0.09340910545005145,
+                "angle_rmse_deg": 8.715113756924652
+              },
+              {
+                "trial": 56,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 30.812100905556626,
+                "velocity_rmse_rad_s": 0.09440773452753645,
+                "angle_rmse_deg": 8.664162198296655
+              },
+              {
+                "trial": 57,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 32.63587046889366,
+                "velocity_rmse_rad_s": 0.09209284857213676,
+                "angle_rmse_deg": 8.641433678925523
+              },
+              {
+                "trial": 58,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 32.28635224276075,
+                "velocity_rmse_rad_s": 0.09315220253402946,
+                "angle_rmse_deg": 8.736558223418081
+              },
+              {
+                "trial": 59,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 26.445636959569384,
+                "velocity_rmse_rad_s": 0.09939245481839337,
+                "angle_rmse_deg": 9.453630837157137
+              },
+              {
+                "trial": 60,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 24.61266646009571,
+                "velocity_rmse_rad_s": 0.10132067457811322,
+                "angle_rmse_deg": 11.271578037525988
+              },
+              {
+                "trial": 61,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 25.91237999445949,
+                "velocity_rmse_rad_s": 0.10019415164089253,
+                "angle_rmse_deg": 10.619761504671477
+              },
+              {
+                "trial": 62,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 26.03898733343457,
+                "velocity_rmse_rad_s": 0.09969666656233415,
+                "angle_rmse_deg": 10.941934963826094
+              },
+              {
+                "trial": 63,
+                "profile": 0,
+                "duration_s": 20.0,
+                "velocity_fit_percent": 25.147266483165463,
+                "velocity_rmse_rad_s": 0.09983105475303106,
+                "angle_rmse_deg": 10.243023329144206
+              },
+              {
+                "trial": 64,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 24.17035427485994,
+                "velocity_rmse_rad_s": 0.10128202260500987,
+                "angle_rmse_deg": 10.589016260320301
+              },
+              {
+                "trial": 65,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 24.981500937430734,
+                "velocity_rmse_rad_s": 0.10065747890153587,
+                "angle_rmse_deg": 10.536637275497872
+              },
+              {
+                "trial": 66,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 31.179476385385563,
+                "velocity_rmse_rad_s": 0.09422569720888274,
+                "angle_rmse_deg": 8.964446971043667
+              },
+              {
+                "trial": 67,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 25.74886193577912,
+                "velocity_rmse_rad_s": 0.09947377122428012,
+                "angle_rmse_deg": 10.377843623162006
+              },
+              {
+                "trial": 68,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 24.02205369979934,
+                "velocity_rmse_rad_s": 0.10076166668452739,
+                "angle_rmse_deg": 10.992484103385797
+              },
+              {
+                "trial": 69,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 27.457910948403473,
+                "velocity_rmse_rad_s": 0.09652493638858077,
+                "angle_rmse_deg": 9.000828187329953
+              },
+              {
+                "trial": 70,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 21.495210622511397,
+                "velocity_rmse_rad_s": 0.1032409684927414,
+                "angle_rmse_deg": 10.597562946748631
+              }
+            ]
+          }
+        }
+      }
+    },
+    "command": {
+      "training_trials": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "validation_trials": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+      ],
+      "rejected": [
+        {
+          "trial": 71,
+          "reason": "interrupted or incomplete"
+        }
+      ],
+      "models": {
+        "linear": {
+          "parameters_conditional_on_torque_calibration": {
+            "J_kg_m2": 0.2932270804771101,
+            "B_Nm_s_rad": 2.919739059399939,
+            "bias_Nm": -0.048537725506979636,
+            "Fc_Nm": 0.0
+          },
+          "normalized_design_condition": 2.6551140256614674,
+          "integral_windows": 19558,
+          "velocity_increment_rmse_rad_s": 0.06006852891977356,
+          "trial_bootstrap": {
+            "attempted": 100,
+            "accepted": 100,
+            "interpretation": "Whole-trial resampling variability only; excludes calibration error and systematic bias.",
+            "percentile_95_ranges": {
+              "J_kg_m2": [
+                0.2793313022444465,
+                0.3087223219886711
+              ],
+              "B_Nm_s_rad": [
+                2.7524531044038962,
+                3.1005873956566075
+              ],
+              "bias_Nm": [
+                -0.049176478831483454,
+                -0.04788996314557228
+              ],
+              "Fc_Nm": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "window_sensitivity": {
+            "0.025": {
+              "J_kg_m2": 0.294634228570845,
+              "B_Nm_s_rad": 2.93123296079908,
+              "bias_Nm": -0.04848452201868007,
+              "Fc_Nm": 0.0
+            },
+            "0.1": {
+              "J_kg_m2": 0.2962758389609594,
+              "B_Nm_s_rad": 3.0096501071524813,
+              "bias_Nm": -0.04883715262385889,
+              "Fc_Nm": 0.0
+            }
+          },
+          "validation": {
+            "velocity_fit_percent": 40.208914828397134,
+            "velocity_rmse_rad_s": 0.07965266580713125,
+            "angle_rmse_deg": 6.713766094838372,
+            "per_trial": [
+              {
+                "trial": 50,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 32.73473484031072,
+                "velocity_rmse_rad_s": 0.08331342179054636,
+                "angle_rmse_deg": 6.903984730307994
+              },
+              {
+                "trial": 51,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 34.90648035929448,
+                "velocity_rmse_rad_s": 0.08181259500141651,
+                "angle_rmse_deg": 7.010041940537763
+              },
+              {
+                "trial": 52,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 36.148436202817166,
+                "velocity_rmse_rad_s": 0.08143368742695256,
+                "angle_rmse_deg": 6.979045297958795
+              },
+              {
+                "trial": 53,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 39.45010579184375,
+                "velocity_rmse_rad_s": 0.07990382067766635,
+                "angle_rmse_deg": 6.890209592813816
+              },
+              {
+                "trial": 54,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 40.14143669214283,
+                "velocity_rmse_rad_s": 0.07947064945020736,
+                "angle_rmse_deg": 6.840610028272546
+              },
+              {
+                "trial": 55,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 44.17173376141088,
+                "velocity_rmse_rad_s": 0.0755591180005411,
+                "angle_rmse_deg": 6.035659217259177
+              },
+              {
+                "trial": 56,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 44.1179061067418,
+                "velocity_rmse_rad_s": 0.07625180059183628,
+                "angle_rmse_deg": 5.964675531439456
+              },
+              {
+                "trial": 57,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 44.62293370829226,
+                "velocity_rmse_rad_s": 0.07570545059914267,
+                "angle_rmse_deg": 5.996710282763365
+              },
+              {
+                "trial": 58,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 44.72238924453742,
+                "velocity_rmse_rad_s": 0.0760442150620898,
+                "angle_rmse_deg": 6.030119487071908
+              },
+              {
+                "trial": 59,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 40.14725235916682,
+                "velocity_rmse_rad_s": 0.08087775177086742,
+                "angle_rmse_deg": 6.7876326193522925
+              },
+              {
+                "trial": 60,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 40.16978960596661,
+                "velocity_rmse_rad_s": 0.08041188078452365,
+                "angle_rmse_deg": 7.075995602500345
+              },
+              {
+                "trial": 61,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 40.84716137552259,
+                "velocity_rmse_rad_s": 0.07999674551142162,
+                "angle_rmse_deg": 6.987943960090114
+              },
+              {
+                "trial": 62,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 40.152186018738966,
+                "velocity_rmse_rad_s": 0.08067260492867258,
+                "angle_rmse_deg": 7.209977715507738
+              },
+              {
+                "trial": 63,
+                "profile": 0,
+                "duration_s": 20.0,
+                "velocity_fit_percent": 39.66238746175957,
+                "velocity_rmse_rad_s": 0.08047224487289487,
+                "angle_rmse_deg": 7.19835083558739
+              },
+              {
+                "trial": 64,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 39.4472149444095,
+                "velocity_rmse_rad_s": 0.08087745216464011,
+                "angle_rmse_deg": 7.045445461343959
+              },
+              {
+                "trial": 65,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 39.4850919745484,
+                "velocity_rmse_rad_s": 0.08119701345557234,
+                "angle_rmse_deg": 7.10349263707586
+              },
+              {
+                "trial": 66,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 44.02482201724449,
+                "velocity_rmse_rad_s": 0.07663847780862296,
+                "angle_rmse_deg": 6.198673021401826
+              },
+              {
+                "trial": 67,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 40.138058464837535,
+                "velocity_rmse_rad_s": 0.08019665735169855,
+                "angle_rmse_deg": 6.722642300540265
+              },
+              {
+                "trial": 68,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 39.68467649341274,
+                "velocity_rmse_rad_s": 0.07998995523157665,
+                "angle_rmse_deg": 6.818338473216889
+              },
+              {
+                "trial": 69,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 40.62902270204126,
+                "velocity_rmse_rad_s": 0.07899937652660163,
+                "angle_rmse_deg": 6.174609935375767
+              },
+              {
+                "trial": 70,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 37.467234538571624,
+                "velocity_rmse_rad_s": 0.08223629819225486,
+                "angle_rmse_deg": 6.734187873010426
+              }
+            ]
+          }
+        },
+        "smooth_friction": {
+          "parameters_conditional_on_torque_calibration": {
+            "J_kg_m2": 0.23622543846716326,
+            "B_Nm_s_rad": 0.6573197985627035,
+            "bias_Nm": -0.03997701026571984,
+            "Fc_Nm": 0.40568199049387743
+          },
+          "normalized_design_condition": 5.996924921840291,
+          "integral_windows": 19558,
+          "velocity_increment_rmse_rad_s": 0.05423251300146592,
+          "trial_bootstrap": {
+            "attempted": 100,
+            "accepted": 100,
+            "interpretation": "Whole-trial resampling variability only; excludes calibration error and systematic bias.",
+            "percentile_95_ranges": {
+              "J_kg_m2": [
+                0.22702770395173325,
+                0.24696628896571526
+              ],
+              "B_Nm_s_rad": [
+                0.595338384881363,
+                0.7394722601248557
+              ],
+              "bias_Nm": [
+                -0.041003760705087926,
+                -0.038766430709975375
+              ],
+              "Fc_Nm": [
+                0.3906775664735272,
+                0.4223399280267768
+              ]
+            }
+          },
+          "window_sensitivity": {
+            "0.025": {
+              "J_kg_m2": 0.23985644585702448,
+              "B_Nm_s_rad": 0.6835535408979582,
+              "bias_Nm": -0.040091175135975377,
+              "Fc_Nm": 0.39919012692158656
+            },
+            "0.1": {
+              "J_kg_m2": 0.24320675338508074,
+              "B_Nm_s_rad": 0.9717232459288268,
+              "bias_Nm": -0.04121713214290198,
+              "Fc_Nm": 0.3621425294235657
+            }
+          },
+          "validation": {
+            "velocity_fit_percent": 14.602450544582425,
+            "velocity_rmse_rad_s": 0.11376516161226898,
+            "angle_rmse_deg": 12.530259542052109,
+            "per_trial": [
+              {
+                "trial": 50,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 2.807856852877433,
+                "velocity_rmse_rad_s": 0.1203802586300663,
+                "angle_rmse_deg": 13.107652040362996
+              },
+              {
+                "trial": 51,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 5.9760485333609115,
+                "velocity_rmse_rad_s": 0.11817372150456991,
+                "angle_rmse_deg": 13.076678786156872
+              },
+              {
+                "trial": 52,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 7.700302819620031,
+                "velocity_rmse_rad_s": 0.1177152796705828,
+                "angle_rmse_deg": 13.299918400021017
+              },
+              {
+                "trial": 53,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 12.90683490622271,
+                "velocity_rmse_rad_s": 0.11493127670842675,
+                "angle_rmse_deg": 12.789282386419407
+              },
+              {
+                "trial": 54,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 14.030419003375162,
+                "velocity_rmse_rad_s": 0.11413669251676124,
+                "angle_rmse_deg": 12.971098190005305
+              },
+              {
+                "trial": 55,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 21.957931868422886,
+                "velocity_rmse_rad_s": 0.10562373206718313,
+                "angle_rmse_deg": 10.754748453617568
+              },
+              {
+                "trial": 56,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 21.88834098264232,
+                "velocity_rmse_rad_s": 0.10658431408576188,
+                "angle_rmse_deg": 10.474570716491638
+              },
+              {
+                "trial": 57,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 22.739563766216154,
+                "velocity_rmse_rad_s": 0.10562199354790994,
+                "angle_rmse_deg": 10.828274901241324
+              },
+              {
+                "trial": 58,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 22.762791228615097,
+                "velocity_rmse_rad_s": 0.10625355970231228,
+                "angle_rmse_deg": 10.69175301162395
+              },
+              {
+                "trial": 59,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 14.298831803529865,
+                "velocity_rmse_rad_s": 0.11580617567402594,
+                "angle_rmse_deg": 12.761600361776786
+              },
+              {
+                "trial": 60,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 14.210316552614245,
+                "velocity_rmse_rad_s": 0.11530144641779771,
+                "angle_rmse_deg": 13.238929398539016
+              },
+              {
+                "trial": 61,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 14.972105904863175,
+                "velocity_rmse_rad_s": 0.11498949101127541,
+                "angle_rmse_deg": 13.321298126816291
+              },
+              {
+                "trial": 62,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 14.226409424910935,
+                "velocity_rmse_rad_s": 0.11561957781690181,
+                "angle_rmse_deg": 13.745592334897474
+              },
+              {
+                "trial": 63,
+                "profile": 0,
+                "duration_s": 20.0,
+                "velocity_fit_percent": 13.611928747426372,
+                "velocity_rmse_rad_s": 0.1152157291528281,
+                "angle_rmse_deg": 13.549431130693163
+              },
+              {
+                "trial": 64,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 12.827526539022804,
+                "velocity_rmse_rad_s": 0.11643209384904467,
+                "angle_rmse_deg": 13.329453007440074
+              },
+              {
+                "trial": 65,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 12.877550091080614,
+                "velocity_rmse_rad_s": 0.11689818209029929,
+                "angle_rmse_deg": 13.407868108272153
+              },
+              {
+                "trial": 66,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 21.771140236153673,
+                "velocity_rmse_rad_s": 0.10710713121541876,
+                "angle_rmse_deg": 11.236843564475054
+              },
+              {
+                "trial": 67,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 14.41603957237706,
+                "velocity_rmse_rad_s": 0.11465628032100843,
+                "angle_rmse_deg": 12.238431035850965
+              },
+              {
+                "trial": 68,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 13.26055776221442,
+                "velocity_rmse_rad_s": 0.11503352213065128,
+                "angle_rmse_deg": 13.173174113000279
+              },
+              {
+                "trial": 69,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 15.792949282666434,
+                "velocity_rmse_rad_s": 0.11204640395976757,
+                "angle_rmse_deg": 11.57404202836819
+              },
+              {
+                "trial": 70,
+                "profile": 0,
+                "duration_s": 19.99000000000001,
+                "velocity_fit_percent": 9.761175423606971,
+                "velocity_rmse_rad_s": 0.11867229654124632,
+                "angle_rmse_deg": 12.63280115020435
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

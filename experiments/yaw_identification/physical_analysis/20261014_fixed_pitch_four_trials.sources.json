@@ -1,0 +1,26 @@
+[
+  {
+    "source": "experiments/yaw_identification/physical_data/20261014_071635_523252/feedback.csv",
+    "sha256": "b7398bdcd12e857be90296fc803e644833c7cad895c41e2e5f45a5bc3a36886b",
+    "valid_rows": 7600,
+    "skipped_rows": 0
+  },
+  {
+    "source": "experiments/yaw_identification/physical_data/20261014_073602_021317/feedback.csv",
+    "sha256": "9ade6c280b20694291e9f3d7547a9680200a9eb2f1cd7acddbbad8e49dc07f35",
+    "valid_rows": 2700,
+    "skipped_rows": 0
+  },
+  {
+    "source": "experiments/yaw_identification/physical_data/20261014_073756_425312/feedback.csv",
+    "sha256": "3620bd2739b1a4052eddeb2c562c2eea44d776c0245a8fde1908f114003d44cd",
+    "valid_rows": 2574,
+    "skipped_rows": 1
+  },
+  {
+    "source": "experiments/yaw_identification/physical_data/20261014_074038_343462/feedback.csv",
+    "sha256": "99659986954905cde4efd82a790256e5a30ecd4f04d47f73d14da1c4449e1cef",
+    "valid_rows": 2700,
+    "skipped_rows": 0
+  }
+]

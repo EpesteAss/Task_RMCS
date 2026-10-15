@@ -1,0 +1,65 @@
+{
+  "model_source": "physical_analysis/20261014_high_amplitude_frequency_response/frequency_response.json",
+  "parameters_unchanged": {
+    "J_kg_m2": 0.12379340240436713,
+    "B_Nm_s_rad": 0.27532279304333923,
+    "Fc_Nm": 0.21968592212200358,
+    "bias_Nm": 0.0
+  },
+  "evaluation": "Free simulation initialized once at the start of each stated window; no measured-state updates within that window.",
+  "window_caveat": "The 2-4 s window excludes the known startup mismatch and is a scoped moving-state check, not a full-sweep validation.",
+  "trials": {
+    "positive_0.5_hz_training": {
+      "source_feedback_sha256": "98eb78a90ead3765185b264e5a10e55419c870f6b16daf65e1c3eb1b88ccdea7",
+      "full_0_to_4_s": {
+        "velocity_fit_percent": 68.9720033254372,
+        "velocity_rmse_rad_s": 0.43440549300515463,
+        "angle_rmse_deg": 42.817468209285614
+      },
+      "moving_2_to_4_s": {
+        "velocity_fit_percent": 92.43546452567122,
+        "velocity_rmse_rad_s": 0.11885822651718277,
+        "angle_rmse_deg": 1.4902364263990318
+      }
+    },
+    "reverse_0.5_hz_holdout": {
+      "source_feedback_sha256": "cf1ae56804c8a6fdab73305a8d874fbf7ffb3217a9696d24909fc10cab64f76d",
+      "full_0_to_4_s": {
+        "velocity_fit_percent": 78.45489390689299,
+        "velocity_rmse_rad_s": 0.33578492078866656,
+        "angle_rmse_deg": 37.11609023897391
+      },
+      "moving_2_to_4_s": {
+        "velocity_fit_percent": 90.2445881627465,
+        "velocity_rmse_rad_s": 0.16147110587261848,
+        "angle_rmse_deg": 2.499060536241216
+      }
+    },
+    "positive_1_hz_training": {
+      "source_feedback_sha256": "23d55e75f7d0bba521275a4cb32df699a093e85e694841c11bbc1141a54b30b7",
+      "full_0_to_4_s": {
+        "velocity_fit_percent": 67.97558550066324,
+        "velocity_rmse_rad_s": 0.29088805392815703,
+        "angle_rmse_deg": 29.504049707341533
+      },
+      "moving_2_to_4_s": {
+        "velocity_fit_percent": 92.37761176598075,
+        "velocity_rmse_rad_s": 0.07153855914945595,
+        "angle_rmse_deg": 1.100731094228503
+      }
+    },
+    "positive_2_hz_training": {
+      "source_feedback_sha256": "4ff3f74f2153e55d20911ade6015e43211681e46bd502d5baab860b1e05c5e7c",
+      "full_0_to_4_s": {
+        "velocity_fit_percent": 88.00894016251185,
+        "velocity_rmse_rad_s": 0.06635243427681133,
+        "angle_rmse_deg": 2.98906893063887
+      },
+      "moving_2_to_4_s": {
+        "velocity_fit_percent": 88.76998157122885,
+        "velocity_rmse_rad_s": 0.06286962303600177,
+        "angle_rmse_deg": 0.7959084164431508
+      }
+    }
+  }
+}

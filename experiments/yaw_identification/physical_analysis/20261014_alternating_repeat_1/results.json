@@ -1,0 +1,183 @@
+{
+  "source": "/workspaces/RMCS/experiments/yaw_identification/physical_data/20261014_122053_543065/feedback.csv",
+  "source_sha256": "9295494e4714ae4176d815386a62ba80d44ad8cf0d5316710d84d35524a562e3",
+  "samples": 400,
+  "median_interval_s": 0.010000000000001563,
+  "maximum_interval_s": 0.01010000000000133,
+  "yaw_start_deg": 89.23072814028902,
+  "yaw_range_relative_deg": [
+    -16.655310146657893,
+    4.713150822746152
+  ],
+  "yaw_end_relative_deg": 4.67476265047239,
+  "imu_integrated_deg": 4.776053527135333,
+  "peak_absolute_imu_speed_rad_s": 1.05677,
+  "command_range_Nm": [
+    -0.9,
+    0.9
+  ],
+  "command_integral_Nm_s": 0.001593819999999968,
+  "feedback_integral_Nm_s": -0.0010659418999983683,
+  "max_absolute_pitch_command_Nm": 0.0,
+  "max_absolute_yaw_pid_Nm": 0.0,
+  "max_absolute_yaw_feedforward_Nm": 0.0,
+  "fault_values": [
+    0.0
+  ],
+  "guard_values": [
+    0.0
+  ],
+  "cycle_boundary_times_s": [
+    0.0,
+    1.3,
+    2.3,
+    3.3
+  ],
+  "cycle_boundary_angles_deg": [
+    0.0,
+    1.4117680072023482,
+    1.648399576591389,
+    2.2522970926592762
+  ],
+  "cycle_changes_deg": [
+    1.4117680072023482,
+    0.23663156938904084,
+    0.6038975160678872
+  ],
+  "pulses": [
+    {
+      "number": 1,
+      "direction": -1,
+      "start_s": 0.3,
+      "end_s": 0.7,
+      "angle_start_deg": 0.0,
+      "angle_end_deg": -11.601249435808908,
+      "angle_change_deg": -11.601249435808908,
+      "velocity_start_rad_s": 0.00745708,
+      "velocity_end_rad_s": -0.892719,
+      "command_impulse_Nm_s": -0.3446967249999985,
+      "feedback_impulse_Nm_s": -0.3369126669999982
+    },
+    {
+      "number": 2,
+      "direction": 1,
+      "start_s": 0.8,
+      "end_s": 1.2000000000000002,
+      "angle_start_deg": -15.726545560750827,
+      "angle_end_deg": -3.7952724349465647,
+      "angle_change_deg": 11.931273125804262,
+      "velocity_start_rad_s": -0.516669,
+      "velocity_end_rad_s": 1.04506,
+      "command_impulse_Nm_s": 0.3447009199999985,
+      "feedback_impulse_Nm_s": 0.3282275409999987
+    },
+    {
+      "number": 3,
+      "direction": -1,
+      "start_s": 1.3,
+      "end_s": 1.7000000000000002,
+      "angle_start_deg": 1.4117680072023482,
+      "angle_end_deg": -8.376642964812628,
+      "angle_change_deg": -9.788410972014978,
+      "velocity_start_rad_s": 0.703096,
+      "velocity_end_rad_s": -0.98753,
+      "command_impulse_Nm_s": -0.34460317499999854,
+      "feedback_impulse_Nm_s": -0.34080400199999816
+    },
+    {
+      "number": 4,
+      "direction": 1,
+      "start_s": 1.8,
+      "end_s": 2.2,
+      "angle_start_deg": -13.101252943461397,
+      "angle_end_deg": -3.053865048047282,
+      "angle_change_deg": 10.047387895414113,
+      "velocity_start_rad_s": -0.605089,
+      "velocity_end_rad_s": 0.955571,
+      "command_impulse_Nm_s": 0.34539781499999855,
+      "feedback_impulse_Nm_s": 0.33804615209999855
+    },
+    {
+      "number": 5,
+      "direction": -1,
+      "start_s": 2.3,
+      "end_s": 2.6999999999999997,
+      "angle_start_deg": 1.648399576591389,
+      "angle_end_deg": -8.673435102690393,
+      "angle_change_deg": -10.321834679281782,
+      "velocity_start_rad_s": 0.618938,
+      "velocity_end_rad_s": -0.983269,
+      "command_impulse_Nm_s": -0.3446992899999985,
+      "feedback_impulse_Nm_s": -0.33347238849999855
+    },
+    {
+      "number": 6,
+      "direction": 1,
+      "start_s": 2.8,
+      "end_s": 3.1999999999999997,
+      "angle_start_deg": -13.353927331114091,
+      "angle_end_deg": -2.631022195240738,
+      "angle_change_deg": 10.722905135873352,
+      "velocity_start_rad_s": -0.602958,
+      "velocity_end_rad_s": 1.01523,
+      "command_impulse_Nm_s": 0.3446995199999985,
+      "feedback_impulse_Nm_s": 0.33629228149999896
+    }
+  ],
+  "model_challenge": {
+    "positive_high_92deg": {
+      "training_source_sha256": "1fd94a3baaeccf198c3dc6f8fb22ae265f27485e3f6a797153294ba247dfb1a2",
+      "training_start_yaw_deg": 92.25766417196516,
+      "parameters_conditional_on_torque_calibration": {
+        "J_kg_m2": 0.1382697178629023,
+        "B_Nm_s_rad": 0.7087536306365319,
+        "bias_Nm": -0.005849445593283098,
+        "Fc_Nm": 0.1270670985346531
+      },
+      "velocity_fit_percent": 85.31781522870001,
+      "velocity_rmse_rad_s": 0.08682980754021268,
+      "angle_rmse_deg": 5.657778016668092,
+      "predicted_final_angle_deg": -2.535807586914182
+    },
+    "positive_low_91deg": {
+      "training_source_sha256": "ca64d8cb139b53472105dde50d985bc3612e41203fe755208a69ffd3f3f0af03",
+      "training_start_yaw_deg": 90.67572769960896,
+      "parameters_conditional_on_torque_calibration": {
+        "J_kg_m2": 0.2122888135047772,
+        "B_Nm_s_rad": 1.1388831831394521,
+        "bias_Nm": -0.022753071054746592,
+        "Fc_Nm": 0.15481959811929716
+      },
+      "velocity_fit_percent": 55.4020166143308,
+      "velocity_rmse_rad_s": 0.2637505503696496,
+      "angle_rmse_deg": 4.687440566294092,
+      "predicted_final_angle_deg": -3.9363845541406715
+    },
+    "negative_92deg": {
+      "training_source_sha256": "3c12caa7f2c21a35d363058af890f241fe520b57a07f8ba30866630ef4fb4181",
+      "training_start_yaw_deg": 92.02676218052744,
+      "parameters_conditional_on_torque_calibration": {
+        "J_kg_m2": 0.2118959225687299,
+        "B_Nm_s_rad": 1.9178829925441456,
+        "bias_Nm": 0.021704898673109946,
+        "Fc_Nm": 0.09383478017659588
+      },
+      "velocity_fit_percent": 42.23212999846567,
+      "velocity_rmse_rad_s": 0.3416366918393663,
+      "angle_rmse_deg": 4.11285689875309,
+      "predicted_final_angle_deg": 1.9133212973512157
+    },
+    "pooled_three_steps": {
+      "parameters_conditional_on_torque_calibration": {
+        "J_kg_m2": 0.20927705095043098,
+        "B_Nm_s_rad": 0.8001069043834508,
+        "bias_Nm": 0.01230704150385459,
+        "Fc_Nm": 0.2289146990350502
+      },
+      "velocity_fit_percent": 59.971384765848704,
+      "velocity_rmse_rad_s": 0.23672750418429991,
+      "angle_rmse_deg": 2.72004171157814,
+      "predicted_final_angle_deg": 1.1041248077386212
+    }
+  }
+}

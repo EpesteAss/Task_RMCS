@@ -1,0 +1,72 @@
+{
+  "status": "single_global_hysteresis_candidate_with_independent_holdout",
+  "model": "angle-dependent asymmetric LuGre friction",
+  "equations": {
+    "kinematics": "theta_dot = omega",
+    "dynamics": "J*omega_dot = tau + bias(theta) - B(theta)*omega - sigma0*z - sigma1*z_dot",
+    "bristle_state": "z_dot = omega - abs(omega)*sigma0*z/g(theta,omega)",
+    "stribeck": "g = Fc(theta,omega) + (Fs(theta,omega)-Fc(theta,omega))*exp(-(omega/vs)^2)"
+  },
+  "parameters": {
+    "J_kg_m2": 0.125,
+    "B": {
+      "formula": "exp(b0 + bc*cos(theta) + bs*sin(theta))",
+      "b0": -0.8561627645405149,
+      "bc": 0.5832010702430123,
+      "bs": 0.5339629618631253
+    },
+    "Fc": {
+      "formula": "exp(f0 + fc*cos(theta) + fs*sin(theta) + fd*tanh(omega/0.05))",
+      "f0": -0.7223039401534884,
+      "fc": -0.04313075649182663,
+      "fs": -0.19809325348413873,
+      "fd": -0.10654106053459218
+    },
+    "Fs_over_Fc": 1.16934277187171,
+    "sigma0_Nm_rad": 20.0,
+    "sigma1_Nm_s_rad": 0.03,
+    "vs_rad_s": 0.18,
+    "bias": {
+      "formula": "m0 + mc*cos(theta) + ms*sin(theta)",
+      "m0_Nm": 0.03359553040727176,
+      "mc_Nm": 0.031249958919043183,
+      "ms_Nm": 0.1394527721990758
+    }
+  },
+  "initialization_for_independent_captures": "z0 = bias(theta0)/sigma0",
+  "training": {
+    "complete_trials": 14,
+    "folders": [
+      "20261014_131635_785889",
+      "20261014_132008_333128",
+      "20261014_132044_368969",
+      "20261014_134937_577381",
+      "20261014_135209_332907",
+      "20261014_135255_810199",
+      "20261014_131749_079314",
+      "20261014_135102_123637",
+      "20261014_135439_466868",
+      "20261014_135723_638836",
+      "20261014_135808_867958",
+      "20261014_135848_503999",
+      "20261014_142121_299833",
+      "20261014_142235_079538"
+    ]
+  },
+  "independent_holdout": {
+    "folder": "20261014_142913_776918",
+    "start_angle_deg": 207.27356,
+    "first_pulse_direction": -1,
+    "velocity_fit_percent": 67.8,
+    "angle_rmse_deg": 8.72,
+    "fault": 0,
+    "guard": 0
+  },
+  "all_15_trials_pooled": {
+    "velocity_fit_percent": 69.0028134721432,
+    "velocity_rmse_rad_s": 0.3437332952636061,
+    "angle_rmse_deg": 9.389161510833924
+  },
+  "scope": "Pitch mechanically fixed near +5 deg; PID and feedforward zero; logged motor torque scale; 0.9 Nm alternating pulses and 1.25 Nm pure sines",
+  "caveat": "A single candidate that improves coverage over the two constant parameter models, but the independent holdout error is still too large for precision feedforward or a claim of a completed global physical model."
+}

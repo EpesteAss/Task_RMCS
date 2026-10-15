@@ -441,6 +441,7 @@ int main() {
     tracking.config.yaw_torque_release_slew = 12.0;
     tracking.config.yaw_ff_velocity = 3.3;
     tracking.config.yaw_ff_acceleration = 0.3;
+    tracking.config.yaw_ff_coulomb = 0.22;
     tracking.config.yaw_ff_bias = 0.05;
     tracking.validate();
     Input tracking_input{.pitch_world=tracking.config.world_pitch_target,
@@ -460,12 +461,25 @@ int main() {
             check(std::abs(o.yaw_target_offset) <= tracking.config.yaw_span + 1e-12);
             check(std::abs(o.yaw_torque) <= 3.6 + 1e-12);
             check(std::abs(o.yaw_torque - previous_yaw_torque) <= 0.012 + 1e-12);
+            if (std::abs(o.yaw_target_offset) > 1e-4)
+                check(std::isfinite(o.yaw_feedforward));
             previous_yaw_torque = o.yaw_torque;
         }
         check(o.state == State::Ready && o.completed);
         check(target_peak > 14.9 * std::numbers::pi / 180.0);
     }
     check(o.yaw_target_offset == 0.0 && o.yaw_feedforward == 0.0);
+    Engine fixed_tracking;
+    fixed_tracking.config.tracking_test = true;
+    fixed_tracking.config.passive_pitch = true;
+    fixed_tracking.config.mechanically_fixed_pitch = true;
+    fixed_tracking.config.yaw_temperature_trip_c = 130.0;
+    fixed_tracking.config.yaw_ff_coulomb = 0.2197;
+    fixed_tracking.config.yaw_ff_coulomb_scale = 0.02;
+    fixed_tracking.validate();
+    Input fixed_input{.yaw_temperature=125, .heartbeat=true};
+    o = fixed_tracking.update(fixed_input, Command::Arm, .001);
+    check(o.state == State::Ready && o.pitch_torque == 0.0);
     // Applying yaw torque remains slow, but an obsolete accelerating command
     // can be removed more quickly when velocity feedback asks for braking.
     Engine yaw_release;

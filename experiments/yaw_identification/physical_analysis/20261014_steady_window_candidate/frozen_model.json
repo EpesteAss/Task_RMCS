@@ -1,0 +1,80 @@
+{
+  "status": "frozen_candidate_requires_new_session_validation_and_torque_calibration",
+  "model": "J*omega_dot=command_torque-B*omega-Fc*tanh(omega/0.02)+bias",
+  "input_channel": "/gimbal/yaw/control_torque",
+  "time_window_s": [
+    1.3,
+    3.3
+  ],
+  "window_reason": "The first pulse pair showed large history dependence; use only pairs 2 and 3.",
+  "training_sources": [
+    {
+      "folder": "/workspaces/RMCS/experiments/yaw_identification/physical_data/20261014_085047_131865",
+      "feedback_sha256": "fd4b44ce5421a24412ef8721ae97a7e5b18597a1dffab89246ddfb4bf1b39153"
+    },
+    {
+      "folder": "/workspaces/RMCS/experiments/yaw_identification/physical_data/20261014_122053_543065",
+      "feedback_sha256": "9295494e4714ae4176d815386a62ba80d44ad8cf0d5316710d84d35524a562e3"
+    },
+    {
+      "folder": "/workspaces/RMCS/experiments/yaw_identification/physical_data/20261014_122309_735803",
+      "feedback_sha256": "6bd226fe23c8ddeaf6eb98adc5ab94c1387ec743b6c89aded52c9de094a60271"
+    }
+  ],
+  "fit": {
+    "parameters_conditional_on_torque_calibration": {
+      "J_kg_m2": 0.11700699010355167,
+      "B_Nm_s_rad": 0.4921640035772442,
+      "bias_Nm": 0.009470200745502649,
+      "Fc_Nm": 0.22901316682508796
+    },
+    "normalized_design_condition": 7.172600693006465,
+    "integral_windows": 117,
+    "velocity_increment_rmse_rad_s": 0.035846621655105174
+  },
+  "leave_one_trial_out": [
+    {
+      "held_out_feedback_sha256": "fd4b44ce5421a24412ef8721ae97a7e5b18597a1dffab89246ddfb4bf1b39153",
+      "parameters": {
+        "J_kg_m2": 0.1156061859806809,
+        "B_Nm_s_rad": 0.5251239486610083,
+        "bias_Nm": 0.005249932546235051,
+        "Fc_Nm": 0.2154980916261079
+      },
+      "velocity_fit_percent": 93.11236607177852,
+      "velocity_rmse_rad_s": 0.04804530681255678,
+      "angle_rmse_deg": 1.4171112646371944
+    },
+    {
+      "held_out_feedback_sha256": "9295494e4714ae4176d815386a62ba80d44ad8cf0d5316710d84d35524a562e3",
+      "parameters": {
+        "J_kg_m2": 0.11641894630144292,
+        "B_Nm_s_rad": 0.478206043369759,
+        "bias_Nm": 0.013223453019197206,
+        "Fc_Nm": 0.2342594397183286
+      },
+      "velocity_fit_percent": 93.68077394330825,
+      "velocity_rmse_rad_s": 0.04303803272742296,
+      "angle_rmse_deg": 1.3840576328741514
+    },
+    {
+      "held_out_feedback_sha256": "6bd226fe23c8ddeaf6eb98adc5ab94c1387ec743b6c89aded52c9de094a60271",
+      "parameters": {
+        "J_kg_m2": 0.11887348416431545,
+        "B_Nm_s_rad": 0.4766580931946413,
+        "bias_Nm": 0.009572014078375695,
+        "Fc_Nm": 0.2350166187744365
+      },
+      "velocity_fit_percent": 94.02166422727021,
+      "velocity_rmse_rad_s": 0.04177328834438376,
+      "angle_rmse_deg": 0.3692754741350919
+    }
+  ],
+  "parameter_units": {
+    "J_kg_m2": "kg m^2",
+    "B_Nm_s_rad": "N m s/rad",
+    "Fc_Nm": "N m",
+    "bias_Nm": "N m"
+  },
+  "interpretation": "Conditional effective parameters only; logged Nm to real yaw-axis Nm is unverified."
+}

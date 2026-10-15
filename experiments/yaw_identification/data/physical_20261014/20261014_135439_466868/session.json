@@ -1,0 +1,38 @@
+{
+  "outcome": "complete",
+  "completed_trials": 1,
+  "events": [
+    {
+      "elapsed_s": 0.0024658729998918716,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Keep Pitch at the required pose."
+    },
+    {
+      "elapsed_s": 0.10662414099988382,
+      "message": "Operator is monitoring Yaw shell temperature; no new numerical measurement recorded; Pitch is mechanically clamped"
+    },
+    {
+      "elapsed_s": 0.6041128429997116,
+      "message": "arm: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 1.104957006999939,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 5.112465565000093,
+      "message": "Completed trial 1; holding for 5 s"
+    },
+    {
+      "elapsed_s": 10.122516307999831,
+      "message": "Session complete: 1 full sweeps"
+    },
+    {
+      "elapsed_s": 10.123173135999423,
+      "message": "off: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 10.623599808000108,
+      "message": "Confirmed OFF, both torque commands zero"
+    }
+  ]
+}

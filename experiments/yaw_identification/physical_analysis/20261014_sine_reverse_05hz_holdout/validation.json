@@ -1,0 +1,34 @@
+{
+  "frozen_model": "/workspaces/RMCS/experiments/yaw_identification/physical_analysis/20261014_steady_window_candidate/frozen_model.json",
+  "holdout_source": "/workspaces/RMCS/experiments/yaw_identification/physical_data/20261014_124652_638847/feedback.csv",
+  "holdout_feedback_sha256": "41072dff0b19844e3a8f50215e3a1504a8202926292633e57435cc8ce8a9be34",
+  "trial_count": 1,
+  "profiles": [
+    3
+  ],
+  "time_window_s": [
+    1.3,
+    3.3
+  ],
+  "parameters_unchanged": {
+    "J_kg_m2": 0.11700699010355167,
+    "B_Nm_s_rad": 0.4921640035772442,
+    "bias_Nm": 0.009470200745502649,
+    "Fc_Nm": 0.22901316682508796
+  },
+  "metrics": {
+    "velocity_fit_percent": 70.3129303011014,
+    "velocity_rmse_rad_s": 0.12095543972041937,
+    "angle_rmse_deg": 1.948655951453857,
+    "per_trial": [
+      {
+        "trial": 1,
+        "profile": 3,
+        "duration_s": 1.9900000000000002,
+        "velocity_fit_percent": 70.3129303011014,
+        "velocity_rmse_rad_s": 0.12095543972041937,
+        "angle_rmse_deg": 1.948655951453857
+      }
+    ]
+  }
+}

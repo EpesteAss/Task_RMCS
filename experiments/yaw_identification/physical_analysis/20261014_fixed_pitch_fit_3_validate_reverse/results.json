@@ -1,0 +1,170 @@
+{
+  "source": "/workspaces/RMCS/experiments/yaw_identification/physical_analysis/20261014_fixed_pitch_four_trials.csv",
+  "source_sha256": "f891c78f8265af7e6fd24d29df74f61edb816376555180c8c127f1a54b3bcc23",
+  "model": "theta_dot=omega; J*omega_dot=tau-B*omega-Fc*tanh(omega/0.02)+bias",
+  "contains_pid_parameters": false,
+  "pid_free_capture_evidence": true,
+  "status": "physical_candidate_requires_calibration_and_validation",
+  "torque_calibration": "Unverified. J/B/Fc/bias values assume logged Nm equals yaw-axis Nm.",
+  "evaluation": "Chronological complete-trial holdout; existing inspected logs are not a new blind test.",
+  "channels": {
+    "feedback": {
+      "training_trials": [
+        1,
+        2,
+        3
+      ],
+      "validation_trials": [
+        4
+      ],
+      "rejected": [],
+      "models": {
+        "linear": {
+          "error": "Positive finite inertia is not identifiable under physical constraints"
+        },
+        "smooth_friction": {
+          "error": "Positive finite inertia is not identifiable under physical constraints"
+        }
+      }
+    },
+    "command": {
+      "training_trials": [
+        1,
+        2,
+        3
+      ],
+      "validation_trials": [
+        4
+      ],
+      "rejected": [],
+      "models": {
+        "linear": {
+          "parameters_conditional_on_torque_calibration": {
+            "J_kg_m2": 31.939475397978086,
+            "B_Nm_s_rad": 0.0,
+            "bias_Nm": 0.07470170527410286,
+            "Fc_Nm": 0.0
+          },
+          "normalized_design_condition": 2.280528513953249,
+          "integral_windows": 237,
+          "velocity_increment_rmse_rad_s": 0.032867908569716525,
+          "trial_bootstrap": {
+            "attempted": 100,
+            "accepted": 65,
+            "interpretation": "Whole-trial resampling variability only; excludes calibration error and systematic bias.",
+            "percentile_95_ranges": {
+              "J_kg_m2": [
+                4.413353010341587,
+                34.69192737388856
+              ],
+              "B_Nm_s_rad": [
+                0.0,
+                2.272590825851175
+              ],
+              "bias_Nm": [
+                -0.01361963938031233,
+                0.1079777653870859
+              ],
+              "Fc_Nm": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "window_sensitivity": {
+            "0.025": {
+              "J_kg_m2": 14.103967690094917,
+              "B_Nm_s_rad": 7.313645613140568,
+              "bias_Nm": 0.008719670293128165,
+              "Fc_Nm": 0.0
+            },
+            "0.1": {
+              "J_kg_m2": 18.080075098894838,
+              "B_Nm_s_rad": 5.082901889762593,
+              "bias_Nm": 0.08318511868727449,
+              "Fc_Nm": 0.0
+            }
+          },
+          "validation": {
+            "velocity_fit_percent": -1.519816884043168,
+            "velocity_rmse_rad_s": 0.04029926164604161,
+            "angle_rmse_deg": 0.5457175934346781,
+            "per_trial": [
+              {
+                "trial": 4,
+                "profile": 4,
+                "duration_s": 3.99,
+                "velocity_fit_percent": -1.519816884043168,
+                "velocity_rmse_rad_s": 0.04029926164604161,
+                "angle_rmse_deg": 0.5457175934346781
+              }
+            ]
+          }
+        },
+        "smooth_friction": {
+          "parameters_conditional_on_torque_calibration": {
+            "J_kg_m2": 31.939475397978086,
+            "B_Nm_s_rad": 0.0,
+            "bias_Nm": 0.07470170527410286,
+            "Fc_Nm": 0.0
+          },
+          "normalized_design_condition": 4.24086496656165,
+          "integral_windows": 237,
+          "velocity_increment_rmse_rad_s": 0.032867908569716525,
+          "trial_bootstrap": {
+            "attempted": 100,
+            "accepted": 68,
+            "interpretation": "Whole-trial resampling variability only; excludes calibration error and systematic bias.",
+            "percentile_95_ranges": {
+              "J_kg_m2": [
+                4.587490889695496,
+                36.31318064594894
+              ],
+              "B_Nm_s_rad": [
+                0.0,
+                2.2637646704639662
+              ],
+              "bias_Nm": [
+                -0.013023762471446813,
+                0.1079777653870859
+              ],
+              "Fc_Nm": [
+                0.0,
+                1.8923576714046555
+              ]
+            }
+          },
+          "window_sensitivity": {
+            "0.025": {
+              "J_kg_m2": 8.317125445620412,
+              "B_Nm_s_rad": 0.0,
+              "bias_Nm": 0.02323399012134781,
+              "Fc_Nm": 0.6499825158977388
+            },
+            "0.1": {
+              "J_kg_m2": 18.080075098894838,
+              "B_Nm_s_rad": 5.082901889762593,
+              "bias_Nm": 0.08318511868727449,
+              "Fc_Nm": 0.0
+            }
+          },
+          "validation": {
+            "velocity_fit_percent": -1.519816884043168,
+            "velocity_rmse_rad_s": 0.04029926164604161,
+            "angle_rmse_deg": 0.5457175934346781,
+            "per_trial": [
+              {
+                "trial": 4,
+                "profile": 4,
+                "duration_s": 3.99,
+                "velocity_fit_percent": -1.519816884043168,
+                "velocity_rmse_rad_s": 0.04029926164604161,
+                "angle_rmse_deg": 0.5457175934346781
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

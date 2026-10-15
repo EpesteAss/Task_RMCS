@@ -1,0 +1,424 @@
+{
+  "status": "two_conditional_moving_models_not_global_physical_model",
+  "old_model_source": "physical_analysis/20261014_high_amplitude_frequency_response/frequency_response.json",
+  "old_model_parameters": {
+    "J_kg_m2": 0.12379340240436713,
+    "B_Nm_s_rad": 0.27532279304333923,
+    "Fc_Nm": 0.21968592212200358
+  },
+  "new_high_angle_model_parameters": {
+    "J_kg_m2": 0.12568289030400429,
+    "B_Nm_s_rad": 0.36522353544510194,
+    "Fc_Nm": 0.2939135681137252
+  },
+  "new_high_angle_model_training": [
+    "high_reverse_0p5_train",
+    "high_1hz_train",
+    "mid_2hz_train"
+  ],
+  "caveat": "Angles are motor-encoder coordinates. All models use logged torque units; static startup, load history, and shaft torque calibration remain unresolved.",
+  "records": {
+    "high_reverse_0p5_train": {
+      "feedback_sha256": "40f35c1093a0ad2e99f886183439ce802f88b7219a0ce3aa9c0e6f5ad0699e2e",
+      "frequency_hz": 0.5,
+      "steady_window_start_s": 2.0,
+      "velocity_gain_rad_s_per_Nm": 1.4736653042115322,
+      "phase_deg": -40.08182398872533,
+      "effective_inertia_kg_m2": 0.13907748812796264,
+      "effective_real_impedance_Nm_s_rad": 0.5191990992649576,
+      "motion_range_deg": 70.36723865119694,
+      "peak_speed_rad_s": 1.92819,
+      "source": "physical_data/20261014_134937_577381/feedback.csv",
+      "session": "physical_data/20261014_134937_577381/session.json",
+      "config_sha256": "d1f39799d344ed1fbd57ade9cf2489ad8a05344f4015cb6ffb6311b66a75401e",
+      "start_angle_deg": 286.29268628199407,
+      "angle_min_deg": 217.02953730201426,
+      "angle_max_deg": 287.3967759532112,
+      "training_high_angle_model": true,
+      "high_angle_prediction": {
+        "velocity_gain_rad_s_per_Nm": 1.4358135227640791,
+        "phase_deg": -34.53593423596085,
+        "gain_error_percent": -2.5685466936948176,
+        "phase_error_deg": 5.545889752764481
+      }
+    },
+    "high_reverse_0p5_repeat_holdout": {
+      "feedback_sha256": "9d9e6bee655fa2d7eb2341b64979967365b904af2b7e025aac068313f8cbb489",
+      "frequency_hz": 0.5,
+      "steady_window_start_s": 2.0,
+      "velocity_gain_rad_s_per_Nm": 1.49444680098068,
+      "phase_deg": -40.36118930404499,
+      "effective_inertia_kg_m2": 0.13793647617529672,
+      "effective_real_impedance_Nm_s_rad": 0.5098723836410084,
+      "motion_range_deg": 71.89474413301569,
+      "peak_speed_rad_s": 1.93884,
+      "source": "physical_data/20261014_135102_123637/feedback.csv",
+      "session": "physical_data/20261014_135102_123637/session.json",
+      "config_sha256": "ad8b850d4a3bb2dafa5796233fc877d48d4962470583022aac00c89e737b8b9c",
+      "start_angle_deg": 283.3430995526606,
+      "angle_min_deg": 217.2214781633831,
+      "angle_max_deg": 289.1162222963988,
+      "training_high_angle_model": false,
+      "high_angle_prediction": {
+        "velocity_gain_rad_s_per_Nm": 1.4358135227640791,
+        "phase_deg": -34.53593423596085,
+        "gain_error_percent": -3.9234101995550885,
+        "phase_error_deg": 5.8252550680841395
+      }
+    },
+    "high_1hz_train": {
+      "feedback_sha256": "3c2e0cda3c4b8b69ff769a82f91169c0a0fc6fe5c70c672053576ae0baced38d",
+      "frequency_hz": 1.0,
+      "steady_window_start_s": 1.0,
+      "velocity_gain_rad_s_per_Nm": 0.9227060505275619,
+      "phase_deg": -44.600520404409394,
+      "effective_inertia_kg_m2": 0.12111349915248609,
+      "effective_real_impedance_Nm_s_rad": 0.7716646791896181,
+      "motion_range_deg": 29.196210366481363,
+      "peak_speed_rad_s": 1.24001,
+      "source": "physical_data/20261014_135209_332907/feedback.csv",
+      "session": "physical_data/20261014_135209_332907/session.json",
+      "config_sha256": "391723e8ff303471948ca3cae50013fad420244557e7c15a392a43a8b8fcc788",
+      "start_angle_deg": 283.55165619008824,
+      "angle_min_deg": 261.72712081576003,
+      "angle_max_deg": 290.9233311822414,
+      "training_high_angle_model": true,
+      "high_angle_prediction": {
+        "velocity_gain_rad_s_per_Nm": 0.9616685557320039,
+        "phase_deg": -49.41300266668453,
+        "gain_error_percent": 4.222634628023192,
+        "phase_error_deg": -4.812482262275132
+      }
+    },
+    "mid_2hz_train": {
+      "feedback_sha256": "b652666d2eb7112977b794eab84e095a49b4c342b3ccc0d2c79d52aad68c8533",
+      "frequency_hz": 2.0,
+      "steady_window_start_s": 1.0,
+      "velocity_gain_rad_s_per_Nm": 0.591329687746254,
+      "phase_deg": -60.26792612404073,
+      "effective_inertia_kg_m2": 0.11685768363156408,
+      "effective_real_impedance_Nm_s_rad": 0.8386943128434295,
+      "motion_range_deg": 8.173815905336287,
+      "peak_speed_rad_s": 0.800038,
+      "source": "physical_data/20261014_135255_810199/feedback.csv",
+      "session": "physical_data/20261014_135255_810199/session.json",
+      "config_sha256": "db1fcd335bc26c4c659e0d0040f880a2489757abfb850074df6fd56339845bcf",
+      "start_angle_deg": 260.05179222279753,
+      "angle_min_deg": 258.1679069924074,
+      "angle_max_deg": 266.3417228977437,
+      "training_high_angle_model": true,
+      "high_angle_prediction": {
+        "velocity_gain_rad_s_per_Nm": 0.548448655773769,
+        "phase_deg": -60.02088704576901,
+        "gain_error_percent": -7.251628467347604,
+        "phase_error_deg": 0.2470390782717189
+      }
+    },
+    "mid_positive_0p5_holdout": {
+      "feedback_sha256": "2e21c031fc9899c7da31c3570a2222cc5fcc8bb8d4598a32265f73c7f97ca329",
+      "frequency_hz": 0.5,
+      "steady_window_start_s": 2.0,
+      "velocity_gain_rad_s_per_Nm": 1.4097699232895404,
+      "phase_deg": -38.36814856522291,
+      "effective_inertia_kg_m2": 0.14014965774587,
+      "effective_real_impedance_Nm_s_rad": 0.5561465222220777,
+      "motion_range_deg": 66.12104843148238,
+      "peak_speed_rad_s": 1.90262,
+      "source": "physical_data/20261014_135439_466868/feedback.csv",
+      "session": "physical_data/20261014_135439_466868/session.json",
+      "config_sha256": "5349f825da8d41312408d511464698342f9f6d6e538952914c8ff759425eb3e2",
+      "start_angle_deg": 257.20075423422657,
+      "angle_min_deg": 235.387678015801,
+      "angle_max_deg": 301.5087264472834,
+      "training_high_angle_model": false,
+      "high_angle_prediction": {
+        "velocity_gain_rad_s_per_Nm": 1.4358135227640791,
+        "phase_deg": -34.53593423596085,
+        "gain_error_percent": 1.8473652362910986,
+        "phase_error_deg": 3.832214329262058
+      }
+    },
+    "lower_positive_0p5_check": {
+      "feedback_sha256": "7d4bdacef968e7661bb65908193027d43007f24aabde4cc487277ab7765cf17c",
+      "frequency_hz": 0.5,
+      "steady_window_start_s": 2.0,
+      "velocity_gain_rad_s_per_Nm": 1.6237449585841282,
+      "phase_deg": -43.76262235064928,
+      "effective_inertia_kg_m2": 0.13559154764323172,
+      "effective_real_impedance_Nm_s_rad": 0.44478142906387164,
+      "motion_range_deg": 76.44803973092036,
+      "peak_speed_rad_s": 2.11994,
+      "source": "physical_data/20261014_135723_638836/feedback.csv",
+      "session": "physical_data/20261014_135723_638836/session.json",
+      "config_sha256": "e137dbf12bf9799f972bbbf1f098231ee993924710d622de96ac6368b4f3e70d",
+      "start_angle_deg": 223.15961275211896,
+      "angle_min_deg": 203.09348485104724,
+      "angle_max_deg": 279.5415245819676,
+      "training_high_angle_model": false,
+      "high_angle_prediction": {
+        "velocity_gain_rad_s_per_Nm": 1.4358135227640791,
+        "phase_deg": -34.53593423596085,
+        "gain_error_percent": -11.573950380971244,
+        "phase_error_deg": 9.226688114688429
+      }
+    },
+    "low_positive_0p5_check": {
+      "feedback_sha256": "0d0b9d60c99f3c244ff2f265c7c87fefc23ecf4d13532def2db42695eca4ee0e",
+      "frequency_hz": 0.5,
+      "steady_window_start_s": 2.0,
+      "velocity_gain_rad_s_per_Nm": 1.7342156051832722,
+      "phase_deg": -45.610650040525286,
+      "effective_inertia_kg_m2": 0.13116310891886493,
+      "effective_real_impedance_Nm_s_rad": 0.4033699854786665,
+      "motion_range_deg": 81.00763786457142,
+      "peak_speed_rad_s": 2.2808,
+      "source": "physical_data/20261014_135808_867958/feedback.csv",
+      "session": "physical_data/20261014_135808_867958/session.json",
+      "config_sha256": "76c62b7be32123b2cce0abfc823a5d3d65480c926bfeb238e7ebf84f815823fc",
+      "start_angle_deg": 193.45289699017601,
+      "angle_min_deg": 187.04780179840856,
+      "angle_max_deg": 268.05543966298,
+      "training_high_angle_model": false,
+      "high_angle_prediction": {
+        "velocity_gain_rad_s_per_Nm": 1.4358135227640791,
+        "phase_deg": -34.53593423596085,
+        "gain_error_percent": -17.206746469546264,
+        "phase_error_deg": 11.074715804564434
+      }
+    },
+    "low_reverse_0p5_check": {
+      "feedback_sha256": "0c0f9279bceb2e22147a8aaa53b4564da7173b8ca5d1f4d5f64300a9020db2a9",
+      "frequency_hz": 0.5,
+      "steady_window_start_s": 2.0,
+      "velocity_gain_rad_s_per_Nm": 1.8384381231462719,
+      "phase_deg": -51.27426286760194,
+      "effective_inertia_kg_m2": 0.1350762292235474,
+      "effective_real_impedance_Nm_s_rad": 0.3402851327502255,
+      "motion_range_deg": 96.78976033144998,
+      "peak_speed_rad_s": 2.56843,
+      "source": "physical_data/20261014_135848_503999/feedback.csv",
+      "session": "physical_data/20261014_135848_503999/session.json",
+      "config_sha256": "de89bb96855f642917c7e04c010e6201e4764fd66467ea494f9fa0597c607499",
+      "start_angle_deg": 177.67650410124878,
+      "angle_min_deg": 119.04229517874087,
+      "angle_max_deg": 215.83205551019086,
+      "training_high_angle_model": false,
+      "high_angle_prediction": {
+        "velocity_gain_rad_s_per_Nm": 1.4358135227640791,
+        "phase_deg": -34.53593423596085,
+        "gain_error_percent": -21.900361796955547,
+        "phase_error_deg": 16.73832863164109
+      }
+    }
+  },
+  "time_domain_free_simulation": {
+    "high_reverse_0p5_train": {
+      "old_low_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 67.61076491289604,
+          "velocity_rmse_rad_s": 0.40074544017050884,
+          "angle_rmse_deg": 19.688325502474143
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 78.4606348993544,
+          "velocity_rmse_rad_s": 0.28283099533861517,
+          "angle_rmse_deg": 8.395590942669699
+        }
+      },
+      "new_high_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 87.19715108918012,
+          "velocity_rmse_rad_s": 0.15840705433163677,
+          "angle_rmse_deg": 4.186617186928935
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 87.21930416638605,
+          "velocity_rmse_rad_s": 0.16782188828921324,
+          "angle_rmse_deg": 5.757296344936603
+        }
+      }
+    },
+    "high_reverse_0p5_repeat_holdout": {
+      "old_low_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 69.09807981102838,
+          "velocity_rmse_rad_s": 0.3891289584136245,
+          "angle_rmse_deg": 22.30359633935527
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 80.03187849612873,
+          "velocity_rmse_rad_s": 0.26561582792527666,
+          "angle_rmse_deg": 6.888296520363813
+        }
+      },
+      "new_high_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 86.44148585058973,
+          "velocity_rmse_rad_s": 0.17073406624353815,
+          "angle_rmse_deg": 6.014500632776805
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 86.43381245808612,
+          "velocity_rmse_rad_s": 0.1804573422210211,
+          "angle_rmse_deg": 7.1792102214111475
+        }
+      }
+    },
+    "high_1hz_train": {
+      "old_low_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 45.48555509033145,
+          "velocity_rmse_rad_s": 0.4205015795856311,
+          "angle_rmse_deg": 29.477908435830248
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 63.65224079160809,
+          "velocity_rmse_rad_s": 0.29320897572180465,
+          "angle_rmse_deg": 7.166590380589222
+        }
+      },
+      "new_high_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 66.6393168222297,
+          "velocity_rmse_rad_s": 0.2573303276875189,
+          "angle_rmse_deg": 22.040216712265373
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 84.64100038327258,
+          "velocity_rmse_rad_s": 0.12389750135387982,
+          "angle_rmse_deg": 3.3521017370867225
+        }
+      }
+    },
+    "mid_2hz_train": {
+      "old_low_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 74.93510633800476,
+          "velocity_rmse_rad_s": 0.13109230840926508,
+          "angle_rmse_deg": 7.254853887912964
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 81.54984275033205,
+          "velocity_rmse_rad_s": 0.0959826476663572,
+          "angle_rmse_deg": 0.6231071237601118
+        }
+      },
+      "new_high_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 84.67781289051773,
+          "velocity_rmse_rad_s": 0.08013682025335282,
+          "angle_rmse_deg": 4.129764874525394
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 88.50519267724395,
+          "velocity_rmse_rad_s": 0.05979905896317568,
+          "angle_rmse_deg": 0.5928883578470229
+        }
+      }
+    },
+    "mid_positive_0p5_holdout": {
+      "old_low_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 53.18768899393837,
+          "velocity_rmse_rad_s": 0.5413978624770067,
+          "angle_rmse_deg": 38.78812527256887
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 69.32779260272032,
+          "velocity_rmse_rad_s": 0.38500768755287823,
+          "angle_rmse_deg": 16.02539165983149
+        }
+      },
+      "new_high_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 79.83915610108754,
+          "velocity_rmse_rad_s": 0.23316596762741412,
+          "angle_rmse_deg": 21.50019306292488
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 91.1043467701506,
+          "velocity_rmse_rad_s": 0.11166118026446191,
+          "angle_rmse_deg": 2.9057082371162513
+        }
+      }
+    },
+    "lower_positive_0p5_check": {
+      "old_low_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 73.70854259279173,
+          "velocity_rmse_rad_s": 0.3545213532829743,
+          "angle_rmse_deg": 30.725914269284655
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 86.9948999359128,
+          "velocity_rmse_rad_s": 0.1877512440078856,
+          "angle_rmse_deg": 5.368892300609761
+        }
+      },
+      "new_high_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 81.44947144792457,
+          "velocity_rmse_rad_s": 0.2501405070299815,
+          "angle_rmse_deg": 14.306242838971308
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 83.15006603145933,
+          "velocity_rmse_rad_s": 0.2432581101609757,
+          "angle_rmse_deg": 6.641047103410285
+        }
+      }
+    },
+    "low_positive_0p5_check": {
+      "old_low_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 87.64147500305481,
+          "velocity_rmse_rad_s": 0.1848644818189592,
+          "angle_rmse_deg": 15.69408273910835
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 92.1687259397336,
+          "velocity_rmse_rad_s": 0.12063360546797341,
+          "angle_rmse_deg": 1.4050737987284216
+        }
+      },
+      "new_high_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 77.72498478126919,
+          "velocity_rmse_rad_s": 0.33319988808842216,
+          "angle_rmse_deg": 5.70356298212467
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 78.05781968360562,
+          "velocity_rmse_rad_s": 0.3379991943871534,
+          "angle_rmse_deg": 10.24541469457974
+        }
+      }
+    },
+    "low_reverse_0p5_check": {
+      "old_low_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 77.10257127448578,
+          "velocity_rmse_rad_s": 0.353273174147318,
+          "angle_rmse_deg": 41.386592436690634
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 91.06225005546251,
+          "velocity_rmse_rad_s": 0.1462692957270987,
+          "angle_rmse_deg": 1.85112714225232
+        }
+      },
+      "new_high_angle_model": {
+        "full_0_to_4_s": {
+          "velocity_fit_percent": 67.51265451497856,
+          "velocity_rmse_rad_s": 0.5012312865647458,
+          "angle_rmse_deg": 26.288415380325524
+        },
+        "moving_2_to_4_s": {
+          "velocity_fit_percent": 71.5883039451291,
+          "velocity_rmse_rad_s": 0.46496699931712077,
+          "angle_rmse_deg": 9.660243964944648
+        }
+      }
+    }
+  }
+}

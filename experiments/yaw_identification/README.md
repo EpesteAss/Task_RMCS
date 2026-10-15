@@ -1,8 +1,14 @@
-# C 车 yaw 辨识：当前操作入口
+# C 车 Yaw 辨识
 
-**请以 [QUICKSTART.md](QUICKSTART.md) 为准。** 当前世界 pitch 目标为 +5°，
+2026-10-14 重做后的原始采集已归档到 [data/physical_20261014/](data/physical_20261014/)，其中 `MANIFEST.csv` 给出逐文件 SHA-256。采集器写入的原始工作目录是 `physical_data/`，归档程序为 `archive_physical_data.py`。最终报告使用无 Yaw PID 的直接力矩数据；运动段物理参数由 `frequency_response_identification.py` 和 `position_dependence_identification.py` 复算，时域留出验证由 `validate_frequency_response_time_domain.py` 复算。
+
+以下为历史操作记录，不属于最终 PDF 的实验数据。
+
+验收新增要求：采集时 Yaw 也不能使用 PID。新路线见 [PHYSICAL_IDENTIFICATION.md](PHYSICAL_IDENTIFICATION.md)。旧实验、数据与控制对比保留为历史成果；下文是原采集入口。
+
+原方案的操作步骤见 [QUICKSTART.md](QUICKSTART.md)。该方案世界 pitch 目标为 +5°，
 yaw 限制为左右各 15°，`bash collect.bash --minutes 30` 自动执行多轮 20 s 扫频。
-数据永久保存在 `data/日期时间/`；分析入口为 `identify.py --latest`。
+该方案数据保存在 `data/日期时间/`；分析入口为 `identify.py --latest`。
 以下保留早期调试记录，其中旧的角度、临时日志路径和分析命令不代表当前默认值。
 
 ## 早期调试记录

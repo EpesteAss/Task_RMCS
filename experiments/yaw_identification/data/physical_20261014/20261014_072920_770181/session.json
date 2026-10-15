@@ -1,0 +1,34 @@
+{
+  "outcome": "stopped",
+  "completed_trials": 0,
+  "events": [
+    {
+      "elapsed_s": 0.002483511000036742,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Keep Pitch at the required pose."
+    },
+    {
+      "elapsed_s": 0.14262982900004317,
+      "message": "Operator measured Yaw shell temperature: 30 C; Pitch is mechanically clamped"
+    },
+    {
+      "elapsed_s": 0.5201201840000067,
+      "message": "arm: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 1.0207769260000532,
+      "message": "sweep: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 3.524745151000161,
+      "message": "Physical trial aborted near yaw travel/speed guard; no automatic retry"
+    },
+    {
+      "elapsed_s": 3.525388115000169,
+      "message": "off: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 4.0256557150000845,
+      "message": "Confirmed OFF, both torque commands zero"
+    }
+  ]
+}

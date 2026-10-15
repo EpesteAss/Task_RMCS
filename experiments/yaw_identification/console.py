@@ -54,7 +54,7 @@ def main():
     finally:
         if rclpy.ok():
             future = send("off")
-            deadline = time.monotonic() + 8.0
+            deadline = time.monotonic() + 25.0
             while time.monotonic() < deadline and (future is None or not future.done()
                                                     or state["value"] != 0):
                 rclpy.spin_once(node, timeout_sec=0.05)

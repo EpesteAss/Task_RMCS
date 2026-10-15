@@ -3,13 +3,13 @@ from html import escape
 import numpy as np
 
 
-def validation_plot(path, trial, prediction):
+def validation_plot(path, trial, prediction, torque_label="Total command"):
     t = trial["t"] - trial["t"][0]
     panels = [
         ("Yaw (deg)", [("Measured", np.rad2deg(trial["theta"])),
                        ("Free-run model", np.rad2deg(prediction[:, 0]))]),
         ("Velocity (rad/s)", [("Measured", trial["omega"]), ("Free-run model", prediction[:, 1])]),
-        ("Torque (Nm)", [("Total command", trial["u"])])]
+        ("Torque (Nm)", [(torque_label, trial["u"])])]
     svg = ['<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="880" viewBox="0 0 1000 880">',
            '<rect width="1000" height="880" fill="white"/>',
            '<g font-family="sans-serif" font-size="13" fill="#222">',

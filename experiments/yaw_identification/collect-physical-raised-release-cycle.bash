@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+cd "$(dirname "$0")"
+source /opt/ros/jazzy/setup.bash
+source /rmcs_install/setup.bash
+source addon_install/setup.bash
+exec python3 session.py --config identification_physical_raised_release_temp130_cycle.yaml --trials 0 --max-start-temp 40 --stop-temp 55 --yaw-max-start-temp 126 --yaw-stop-temp 130 --require-off-pitch-world-deg -8 --off-pitch-tolerance-deg 2 --require-off-slew-Nm-s 0.3 --pitch-cycle-only

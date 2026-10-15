@@ -1,0 +1,94 @@
+rmcs_executor:
+  ros__parameters:
+    update_rate: 1000.0
+    components:
+    - rmcs_core::hardware::DeformableInfantryOmniC -> deformable_infantry
+    - rmcs_core::referee::Status -> referee_status
+    - yaw_identification::Controller -> yaw_experiment
+    - rmcs_core::debug::ValueCollector -> yaw_collector
+deformable_infantry:
+  ros__parameters:
+    serial_filter_bottom_board: AF-C1C3-DFE8-40A8-FC4B-B853-6ED7-AC9F-1DED
+    serial_filter_top_board: AF-ABAC-786D-1B53-99F6-00A2-42A6-AA95-9D69
+    chassis_radius: 0.2341741
+    rod_length: 0.14
+    yaw_motor_zero_point: 38910
+    pitch_motor_zero_point: 7093
+yaw_experiment:
+  ros__parameters:
+    allow_arm: true
+    allow_sweep: true
+    tracking_test: true
+    physical_identification: false
+    rich_identification: false
+    passive_pitch: true
+    mechanically_fixed_pitch: true
+    passive_pitch_world_min_deg: 3.0
+    passive_pitch_world_max_deg: 7.0
+    yaw_temperature_trip_c: 130.0
+    duration: 20.0
+    tracking_amplitude_deg: 15.0
+    tracking_frequencies_hz:
+    - 0.1
+    - 0.15
+    - 0.25
+    tracking_frequency_hz: 0.15
+    tracking_ramp_s: 3.0
+    yaw_span_rad: 0.3490658503988659
+    yaw_speed_trip_rad_s: 1.0
+    yaw_torque_limit: 3.6
+    yaw_torque_slew_Nm_s: 12.0
+    yaw_torque_release_slew_Nm_s: 60.0
+    yaw_velocity_filter_tau_s: 0.006
+    yaw_angle_kp: 10.0
+    yaw_angle_ki: 0.0
+    yaw_angle_kd: 0.0
+    yaw_angle_output_min: -0.5
+    yaw_angle_output_max: 0.5
+    yaw_angle_integral_min: -0.5
+    yaw_angle_integral_max: 0.5
+    yaw_velocity_kp: 13.0
+    yaw_velocity_ki: 0.02
+    yaw_velocity_kd: 0.0
+    yaw_velocity_output_min: -3.6
+    yaw_velocity_output_max: 3.6
+    yaw_velocity_integral_min: -3.0
+    yaw_velocity_integral_max: 3.0
+    yaw_velocity_ff_torque_gain: 0.2753
+    yaw_acceleration_ff_torque_gain: 0.1238
+    yaw_coulomb_ff_torque: 0.2197
+    yaw_coulomb_ff_velocity_scale_rad_s: 0.02
+    yaw_bias_ff_torque: 0.0
+    pitch_torque_limit: 0.01
+yaw_collector:
+  ros__parameters:
+    csv_path: /root/yaw_model_control_20261015/control_data/control-model-ff-fixed/20261015_015157_513409/feedback.csv
+    signals:
+    - /gimbal/yaw/angle
+    - /gimbal/yaw/velocity
+    - /gimbal/yaw/velocity_imu
+    - /gimbal/yaw/torque
+    - /gimbal/yaw/control_torque
+    - /gimbal/yaw/temperature
+    - /gimbal/pitch/angle
+    - /gimbal/pitch/velocity_imu
+    - /gimbal/pitch/control_torque
+    - /gimbal/pitch/torque
+    - /gimbal/pitch/temperature
+    - /yaw_experiment/state
+    - /yaw_experiment/fault
+    - /yaw_experiment/completed
+    - /yaw_experiment/time_s
+    - /yaw_experiment/excitation
+    - /yaw_experiment/excitation_profile
+    - /yaw_experiment/pitch_world
+    - /yaw_experiment/yaw_target_offset
+    - /yaw_experiment/yaw_error
+    - /yaw_experiment/yaw_feedforward
+    - /yaw_experiment/yaw_pid_torque
+    - /yaw_experiment/tracking_frequency_hz
+    - /yaw_experiment/physical_identification
+    - /yaw_experiment/passive_pitch
+    - /yaw_experiment/mechanically_fixed_pitch
+    write_interval: 10
+    flush_interval: 1

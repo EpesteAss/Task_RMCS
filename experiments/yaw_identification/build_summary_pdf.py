@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Render FINAL_REPORT.md as a paginated Chinese PDF with a control comparison chart."""
+"""Render the report into the two PDF filenames used by the project."""
 from __future__ import annotations
 
 import re
+import shutil
+import os
 from html import escape
 from pathlib import Path
 
@@ -12,7 +14,6 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     Flowable,
@@ -30,17 +31,29 @@ from svglib.svglib import svg2rlg
 HERE = Path(__file__).resolve().parent
 SOURCE = HERE / "FINAL_REPORT.md"
 OUTPUT = HERE / "步兵C车Yaw轴系统辨识与控制优化测试总结.pdf"
-FONT = "STSong-Light"
+OUTPUT_REBUILT = HERE / "步兵C车Yaw轴系统辨识与控制优化测试总结_重构版.pdf"
+FONT = "WenQuanYiMicroHei"
+FONT_PATH = Path(os.environ.get(
+    "YAW_REPORT_FONT", "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc"))
 MATH_FONT = "DejaVuSans"
 MATH_FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
 TIME_CHART = HERE / "control_analysis_final_kp10" / "control_comparison.svg"
-WIDE_TIME_CHART = HERE / "control_analysis_wide_latest" / "control_comparison_trial_3.svg"
+WIDE_TIME_CHART = (HERE / "control_analysis_model_ff_20261015"
+                   / "control_comparison_trial_3.svg")
 RICH_MODEL_CHART = (HERE / "analysis_output" / "20261006_133045_810815"
                     / "filtered_velocity_arx2_one_step_validation.svg")
 DELAYED_CHART = (HERE / "analysis_output" / "20261005_093410_444865_improved"
                  / "delayed_arx2_validation.svg")
 CASCADE_CHART = (HERE / "analysis_output" / "20261007_cascade_fresh"
                  / "profile_0_validation.svg")
+NARX_HOLDOUT_CHART = (HERE / "physical_analysis" / "20261014_report_figures"
+                      / "blind_prediction_compact.svg")
+PROCESS_CHARTS = {
+    "[[STEP_RESPONSE_CHART]]": HERE / "physical_analysis/20261014_report_figures/step_response.svg",
+    "[[WAVEFORM_FIT_CHART]]": HERE / "physical_analysis/20261014_report_figures/waveform_fit.svg",
+    "[[HANN_PEAK_CHART]]": HERE / "physical_analysis/20261014_report_figures/hann_torque_peaks.svg",
+    "[[STARTUP_MISMATCH_CHART]]": HERE / "physical_analysis/20261014_report_figures/startup_mismatch.svg",
+}
 
 
 class EquationBlock(Flowable):
@@ -50,7 +63,7 @@ class EquationBlock(Flowable):
         super().__init__()
         self.equations = equations
         self.width = 0.0
-        self.height = 14 + 16 * len(equations)
+        self.height = 18 + 20 * len(equations)
 
     def wrap(self, avail_width: float, avail_height: float) -> tuple[float, float]:
         self.width = avail_width
@@ -65,11 +78,11 @@ class EquationBlock(Flowable):
         c.line(0, 5, 0, self.height - 5)
         c.setFillColor(colors.HexColor("#17365d"))
         for index, equation in enumerate(self.equations):
-            size = 11.4
-            while size > 8 and pdfmetrics.stringWidth(equation, MATH_FONT, size) > self.width - 28:
+            size = 12.2
+            while size > 8.5 and pdfmetrics.stringWidth(equation, MATH_FONT, size) > self.width - 32:
                 size -= 0.25
             c.setFont(MATH_FONT, size)
-            c.drawCentredString(self.width / 2, self.height - 17 - 16 * index, equation)
+            c.drawCentredString(self.width / 2, self.height - 21 - 20 * index, equation)
 
 
 class ControlChart(Flowable):
@@ -144,14 +157,85 @@ class ControlChart(Flowable):
         c.drawString(w - 18 * mm, legend_y, "优化")
 
 
+class PositionGainChart(Flowable):
+    """Show the measured 0.5 Hz gain change across Yaw encoder positions."""
+
+    positive = [(193.5, 1.7342), (214.7, 1.7778), (223.2, 1.6237), (257.2, 1.4098)]
+    reverse = [(169.4, 1.8696), (177.7, 1.8384), (283.3, 1.4944), (286.3, 1.4737)]
+
+    def __init__(self, width: float = 0, height: float = 74 * mm):
+        super().__init__()
+        self.width = width
+        self.height = height
+
+    def wrap(self, avail_width: float, avail_height: float) -> tuple[float, float]:
+        self.width = avail_width
+        return self.width, self.height
+
+    def draw(self) -> None:
+        c = self.canv
+        left, right = 16 * mm, self.width - 7 * mm
+        bottom, top = 12 * mm, self.height - 10 * mm
+        xmin, xmax, ymin, ymax = 160.0, 295.0, 1.3, 2.0
+
+        def px(value: float) -> float:
+            return left + (value - xmin) / (xmax - xmin) * (right - left)
+
+        def py(value: float) -> float:
+            return bottom + (value - ymin) / (ymax - ymin) * (top - bottom)
+
+        c.setFont(FONT, 9)
+        c.setFillColor(colors.HexColor("#333333"))
+        c.drawString(left, self.height - 5 * mm, "0.5 Hz 实测速度增益随 Yaw 起点变化")
+        c.setFont(FONT, 7.5)
+        c.setStrokeColor(colors.HexColor("#d7dee8"))
+        c.setLineWidth(.45)
+        for tick in (1.4, 1.6, 1.8, 2.0):
+            y = py(tick)
+            c.line(left, y, right, y)
+            c.setFillColor(colors.HexColor("#53657d"))
+            c.drawRightString(left - 2 * mm, y - 1.8, f"{tick:.1f}")
+        for tick in (170, 200, 230, 260, 290):
+            x = px(tick)
+            c.setStrokeColor(colors.HexColor("#e3e8ef"))
+            c.line(x, bottom, x, top)
+            c.setFillColor(colors.HexColor("#53657d"))
+            c.drawCentredString(x, bottom - 4 * mm, str(tick))
+        c.setStrokeColor(colors.HexColor("#68788d"))
+        c.line(left, bottom, right, bottom)
+        c.line(left, bottom, left, top)
+        c.setFillColor(colors.HexColor("#53657d"))
+        c.drawCentredString((left + right) / 2, 1.5 * mm, "Yaw 起点（编码器角度，°）")
+        c.saveState()
+        c.translate(3 * mm, (bottom + top) / 2)
+        c.rotate(90)
+        c.drawCentredString(0, 0, "增益 (rad/s)/(N m)")
+        c.restoreState()
+
+        for points, color, label, offset in (
+            (self.positive, colors.HexColor("#00798c"), "正相", 0),
+            (self.reverse, colors.HexColor("#d1495b"), "反相", 15 * mm),
+        ):
+            ordered = sorted(points)
+            c.setStrokeColor(color)
+            c.setLineWidth(1.2)
+            path = c.beginPath()
+            path.moveTo(px(ordered[0][0]), py(ordered[0][1]))
+            for x_value, y_value in ordered[1:]:
+                path.lineTo(px(x_value), py(y_value))
+            c.drawPath(path, fill=0, stroke=1)
+            c.setFillColor(color)
+            for x_value, y_value in points:
+                c.circle(px(x_value), py(y_value), 2.2, fill=1, stroke=0)
+            legend_x = right - 33 * mm + offset
+            c.rect(legend_x, top + 3 * mm, 3 * mm, 3 * mm, fill=1, stroke=0)
+            c.setFont(FONT, 7.5)
+            c.drawString(legend_x + 4 * mm, top + 3 * mm, label)
+
+
 def markdown_markup(value: str) -> str:
     # STSong-Light renders Chinese; the embedded TrueType font renders Greek math.
-    # Use plain digits/operators where combining marks and subscripts vary by viewer.
-    value = value.translate(str.maketrans({
-        "̇": "_dot", "₀": "0", "₁": "1", "₂": "2", "₃": "3",
-        "₄": "4", "₅": "5", "₆": "6", "₇": "7", "₈": "8", "₉": "9",
-        "−": "-", "·": "*", "×": "*", "≈": "~",
-    }))
+    # Keep mathematical minus, multiplication dots, superscripts and subscripts intact.
     value = escape(value, quote=False)
     value = re.sub(r"==(.+?)==",
                    lambda match: '<onDraw name="yellow_marker" label="'
@@ -223,24 +307,43 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
             story.extend([ControlChart(), Spacer(1, 4 * mm)])
             i += 1
             continue
-        if line in ("[[TIME_CHART]]", "[[WIDE_TIME_CHART]]", "[[RICH_MODEL_CHART]]",
-                    "[[DELAYED_CHART]]", "[[CASCADE_CHART]]"):
-            chart_path = {"[[TIME_CHART]]": TIME_CHART,
-                          "[[WIDE_TIME_CHART]]": WIDE_TIME_CHART,
-                          "[[RICH_MODEL_CHART]]": RICH_MODEL_CHART,
-                          "[[DELAYED_CHART]]": DELAYED_CHART,
-                          "[[CASCADE_CHART]]": CASCADE_CHART}[line]
+        if line == "[[POSITION_GAIN_CHART]]":
+            story.extend([PositionGainChart(), Spacer(1, 4 * mm)])
+            i += 1
+            continue
+        if line in PROCESS_CHARTS:
+            chart_path = PROCESS_CHARTS[line]
             drawing = svg2rlg(str(chart_path))
             if drawing is None:
-                raise RuntimeError(f"Could not load time-series chart: {chart_path}")
-            chart_width = width * .85 if line == "[[CASCADE_CHART]]" else width
+                raise RuntimeError(f"Could not load process chart: {chart_path}")
+            chart_width = width * (.76 if line == "[[STARTUP_MISMATCH_CHART]]" else .88)
             scale = chart_width / drawing.width
             drawing.width *= scale
             drawing.height *= scale
             drawing.scale(scale, scale)
-            if line == "[[CASCADE_CHART]]":
+            drawing.hAlign = "CENTER"
+            story.extend([drawing, Spacer(1, 2 * mm)])
+            i += 1
+            continue
+        if line in ("[[TIME_CHART]]", "[[WIDE_TIME_CHART]]", "[[RICH_MODEL_CHART]]",
+                    "[[DELAYED_CHART]]", "[[CASCADE_CHART]]", "[[NARX_HOLDOUT_CHART]]"):
+            chart_path = {"[[TIME_CHART]]": TIME_CHART,
+                          "[[WIDE_TIME_CHART]]": WIDE_TIME_CHART,
+                          "[[RICH_MODEL_CHART]]": RICH_MODEL_CHART,
+                          "[[DELAYED_CHART]]": DELAYED_CHART,
+                          "[[CASCADE_CHART]]": CASCADE_CHART,
+                          "[[NARX_HOLDOUT_CHART]]": NARX_HOLDOUT_CHART}[line]
+            drawing = svg2rlg(str(chart_path))
+            if drawing is None:
+                raise RuntimeError(f"Could not load time-series chart: {chart_path}")
+            chart_width = width * .68 if line == "[[NARX_HOLDOUT_CHART]]" else width * .85 if line == "[[CASCADE_CHART]]" else width
+            scale = chart_width / drawing.width
+            drawing.width *= scale
+            drawing.height *= scale
+            drawing.scale(scale, scale)
+            if line in ("[[CASCADE_CHART]]", "[[NARX_HOLDOUT_CHART]]"):
                 drawing.hAlign = "CENTER"
-            story.extend([drawing, Spacer(1, 4 * mm)])
+            story.extend([drawing, Spacer(1, 2 * mm if line == "[[NARX_HOLDOUT_CHART]]" else 4 * mm)])
             i += 1
             continue
         if line.startswith("|"):
@@ -256,6 +359,8 @@ def parse_markdown(text: str, styles: dict[str, ParagraphStyle], width: float) -
             story.append(Spacer(1, 4 * mm))
         elif line.startswith("## "):
             story.extend([Spacer(1, 2 * mm), paragraph(line[3:], styles["h1"])])
+        elif line.startswith("#### "):
+            story.extend([Spacer(1, 1 * mm), paragraph(line[5:], styles["h2"])])
         elif line.startswith("### "):
             story.extend([Spacer(1, 1.5 * mm), paragraph(line[4:], styles["h2"])])
         elif line.startswith("- "):
@@ -307,18 +412,18 @@ def decorate(canvas, doc) -> None:
         canvas.line(17 * mm, page_h - 13 * mm, page_w - 17 * mm, page_h - 13 * mm)
         canvas.setFont(FONT, 8)
         canvas.setFillColor(colors.HexColor("#53657d"))
-        canvas.drawString(17 * mm, page_h - 10 * mm, "算法大作业")
+        canvas.drawString(17 * mm, page_h - 10 * mm, "Yaw 轴辨识与控制优化")
     canvas.setStrokeColor(colors.HexColor("#d6e0ec"))
     canvas.line(17 * mm, 12 * mm, page_w - 17 * mm, 12 * mm)
     canvas.setFont(FONT, 8)
     canvas.setFillColor(colors.HexColor("#53657d"))
-    canvas.drawString(17 * mm, 7 * mm, "算法大作业｜测试数据与报告")
+    canvas.drawString(17 * mm, 7 * mm, "实车测试数据与技术报告")
     canvas.drawRightString(page_w - 17 * mm, 7 * mm, str(doc.page))
     canvas.restoreState()
 
 
 def main() -> None:
-    pdfmetrics.registerFont(UnicodeCIDFont(FONT))
+    pdfmetrics.registerFont(TTFont(FONT, str(FONT_PATH), subfontIndex=0))
     pdfmetrics.registerFont(TTFont(MATH_FONT, str(MATH_FONT_PATH)))
     page_w, _ = A4
     left = right = 17 * mm
@@ -350,6 +455,8 @@ def main() -> None:
     story = parse_markdown(SOURCE.read_text(encoding="utf-8"), styles, width)
     doc.build(story, onFirstPage=decorate, onLaterPages=decorate)
     print(f"Created {OUTPUT} ({OUTPUT.stat().st_size} bytes)")
+    shutil.copyfile(OUTPUT, OUTPUT_REBUILT)
+    print(f"Synchronized {OUTPUT_REBUILT}")
 
 
 if __name__ == "__main__":

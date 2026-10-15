@@ -43,7 +43,7 @@ def main():
     if not future.done() or not future.result().success:
         raise SystemExit("OFF request failed: cut motor power")
 
-    deadline = time.monotonic() + 10.0
+    deadline = time.monotonic() + 25.0
     while time.monotonic() < deadline:
         rclpy.spin_once(node, timeout_sec=0.05)
         if (status.get("state") == 0
@@ -53,7 +53,7 @@ def main():
             node.destroy_node()
             rclpy.shutdown()
             return
-    raise SystemExit(f"OFF not confirmed within 10 s; last status: {status}. Cut motor power")
+    raise SystemExit(f"OFF not confirmed within 25 s; last status: {status}. Cut motor power")
 
 
 if __name__ == "__main__":

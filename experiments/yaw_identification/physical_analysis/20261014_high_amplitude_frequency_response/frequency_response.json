@@ -1,0 +1,77 @@
+{
+  "status": "validated_moving_high_amplitude_describing_function",
+  "model": "T1 = (B + j*Omega*J + 4*Fc/(pi*A_velocity))*V1; A_velocity is peak velocity amplitude",
+  "scope": "Pitch mechanically fixed near +5 deg; 1.25 Nm sine; moving periodic response",
+  "torque_calibration": "Conditional on logged motor torque units; output-shaft calibration unavailable.",
+  "parameters": {
+    "J_kg_m2": 0.12379340240436713,
+    "B_Nm_s_rad": 0.27532279304333923,
+    "Fc_Nm": 0.21968592212200358
+  },
+  "training_inertia_range_kg_m2": [
+    0.11611301768367888,
+    0.12990488835679462
+  ],
+  "trials": {
+    "positive_0.5_hz": {
+      "feedback_sha256": "98eb78a90ead3765185b264e5a10e55419c870f6b16daf65e1c3eb1b88ccdea7",
+      "frequency_hz": 0.5,
+      "steady_window_start_s": 2.0,
+      "velocity_gain_rad_s_per_Nm": 1.7778496822678667,
+      "phase_deg": -46.51504604717058,
+      "effective_inertia_kg_m2": 0.12990488835679462,
+      "effective_real_impedance_Nm_s_rad": 0.3870766315587486,
+      "motion_range_deg": 82.59530391487898,
+      "peak_speed_rad_s": 2.35324,
+      "training": true
+    },
+    "reverse_0.5_hz_holdout": {
+      "feedback_sha256": "cf1ae56804c8a6fdab73305a8d874fbf7ffb3217a9696d24909fc10cab64f76d",
+      "frequency_hz": 0.5,
+      "steady_window_start_s": 2.0,
+      "velocity_gain_rad_s_per_Nm": 1.8695516581047429,
+      "phase_deg": -51.88633251987704,
+      "effective_inertia_kg_m2": 0.1339585013625607,
+      "effective_real_impedance_Nm_s_rad": 0.3301452368955693,
+      "motion_range_deg": 95.55389036735278,
+      "peak_speed_rad_s": 2.53008,
+      "training": false
+    },
+    "positive_1_hz": {
+      "feedback_sha256": "23d55e75f7d0bba521275a4cb32df699a093e85e694841c11bbc1141a54b30b7",
+      "frequency_hz": 1.0,
+      "steady_window_start_s": 1.0,
+      "velocity_gain_rad_s_per_Nm": 1.0674033284437336,
+      "phase_deg": -57.22114424602682,
+      "effective_inertia_kg_m2": 0.12536230117262792,
+      "effective_real_impedance_Nm_s_rad": 0.5072103103306641,
+      "motion_range_deg": 35.59041936014133,
+      "peak_speed_rad_s": 1.52124,
+      "training": true
+    },
+    "positive_2_hz": {
+      "feedback_sha256": "4ff3f74f2153e55d20911ade6015e43211681e46bd502d5baab860b1e05c5e7c",
+      "frequency_hz": 2.0,
+      "steady_window_start_s": 1.0,
+      "velocity_gain_rad_s_per_Nm": 0.6304312366196525,
+      "phase_deg": -66.90771675843486,
+      "effective_inertia_kg_m2": 0.11611301768367888,
+      "effective_real_impedance_Nm_s_rad": 0.6221348278599502,
+      "motion_range_deg": 9.750022799741227,
+      "peak_speed_rad_s": 0.837323,
+      "training": true
+    }
+  },
+  "reverse_0.5_hz_holdout": {
+    "predicted": {
+      "velocity_gain_rad_s_per_Nm": 1.7919944438473956,
+      "phase_deg": -44.1805559514789
+    },
+    "measured": {
+      "velocity_gain_rad_s_per_Nm": 1.8695516581047429,
+      "phase_deg": -51.88633251987704
+    },
+    "gain_error_percent": -4.148439221838396,
+    "phase_error_deg": 7.705776568398136
+  }
+}

@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
     {
         pluginlib::ClassLoader<rmcs_executor::Component> loader(
             "rmcs_executor", "rmcs_executor::Component");
-        rmcs_executor::Component::initializing_component_name = "yaw_experiment_plugin_test";
+        rmcs_executor::Component::initializing_component_name = "yaw_experiment";
         auto instance = loader.createSharedInstance("yaw_identification::Controller");
         // Constructor only: no hardware instantiated and no control update executed.
     }

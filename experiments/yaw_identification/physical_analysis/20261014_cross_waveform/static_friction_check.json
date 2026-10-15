@@ -1,0 +1,28 @@
+{
+  "threshold_selected_on": "train_positive",
+  "static_threshold_Nm_conditional": 0.86,
+  "fixed_moving_parameters": {
+    "J_kg_m2": 0.11700699010355167,
+    "B_Nm_s_rad": 0.4921640035772442,
+    "bias_Nm": 0.009470200745502649,
+    "Fc_Nm": 0.22901316682508796
+  },
+  "scores": {
+    "train_positive": {
+      "velocity_fit_percent": 54.132457711543736,
+      "angle_rmse_deg": 14.90495923473217
+    },
+    "holdout_reverse": {
+      "velocity_fit_percent": 53.097502604427184,
+      "angle_rmse_deg": 15.862667410432358
+    },
+    "holdout_after_square": {
+      "velocity_fit_percent": 54.17993918537827,
+      "angle_rmse_deg": 14.67422238601778
+    },
+    "holdout_square": {
+      "velocity_fit_percent": 86.58611926867795,
+      "angle_rmse_deg": 1.7777222133539312
+    }
+  }
+}

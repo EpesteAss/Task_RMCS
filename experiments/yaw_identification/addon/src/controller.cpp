@@ -21,6 +21,8 @@ public:
         rclcpp::NodeOptions().automatically_declare_parameters_from_overrides(true)) {
         if (!has_parameter("allow_arm")) declare_parameter("allow_arm", true);
         allow_arm_ = get_parameter("allow_arm").as_bool();
+        if (!has_parameter("allow_sweep")) declare_parameter("allow_sweep", true);
+        allow_sweep_ = get_parameter("allow_sweep").as_bool();
         auto& c = engine_.config;
         if (!has_parameter("world_pitch_control")) declare_parameter("world_pitch_control", false);
         c.world_pitch_control = get_parameter("world_pitch_control").as_bool();
@@ -31,6 +33,49 @@ public:
         c.tracking_test = get_parameter("tracking_test").as_bool();
         if (!has_parameter("rich_identification")) declare_parameter("rich_identification", false);
         c.rich_identification = get_parameter("rich_identification").as_bool();
+        if (!has_parameter("physical_identification")) declare_parameter("physical_identification", false);
+        c.physical_identification = get_parameter("physical_identification").as_bool();
+        if (!has_parameter("passive_pitch")) declare_parameter("passive_pitch", false);
+        c.passive_pitch = get_parameter("passive_pitch").as_bool();
+        if (!has_parameter("mechanically_fixed_pitch")) declare_parameter("mechanically_fixed_pitch", false);
+        c.mechanically_fixed_pitch = get_parameter("mechanically_fixed_pitch").as_bool();
+        if (!has_parameter("controlled_pitch_parking")) declare_parameter("controlled_pitch_parking", false);
+        c.controlled_pitch_parking = get_parameter("controlled_pitch_parking").as_bool();
+        c.pitch_park_world = parameter("pitch_park_world_deg", -8.0) * std::numbers::pi / 180.0;
+        c.pitch_park_ramp = parameter("pitch_park_ramp_deg_s", 2.0) * std::numbers::pi / 180.0;
+        c.pitch_park_tolerance = parameter("pitch_park_tolerance_deg", 1.0) * std::numbers::pi / 180.0;
+        c.pitch_park_timeout = parameter("pitch_park_timeout_s", 12.0);
+        c.passive_pitch_world_min = parameter("passive_pitch_world_min_deg", -10.0)
+                                    * std::numbers::pi / 180.0;
+        c.passive_pitch_world_max = parameter("passive_pitch_world_max_deg", -6.0)
+                                    * std::numbers::pi / 180.0;
+        if (has_parameter("physical_frequencies_hz"))
+            c.physical_frequencies = get_parameter("physical_frequencies_hz").as_double_array();
+        if (!has_parameter("physical_pure_sine")) declare_parameter("physical_pure_sine", false);
+        c.physical_pure_sine = get_parameter("physical_pure_sine").as_bool();
+        if (!has_parameter("physical_step_pulse")) declare_parameter("physical_step_pulse", false);
+        c.physical_step_pulse = get_parameter("physical_step_pulse").as_bool();
+        if (!has_parameter("physical_step_direction")) declare_parameter("physical_step_direction", 1);
+        c.physical_step_direction = static_cast<int>(get_parameter("physical_step_direction").as_int());
+        c.physical_step_start_s = parameter("physical_step_start_s", c.physical_step_start_s);
+        c.physical_step_end_s = parameter("physical_step_end_s", c.physical_step_end_s);
+        if (!has_parameter("physical_alternating_pulses")) declare_parameter("physical_alternating_pulses", false);
+        c.physical_alternating_pulses = get_parameter("physical_alternating_pulses").as_bool();
+        if (!has_parameter("physical_alternating_first_direction"))
+            declare_parameter("physical_alternating_first_direction", -1);
+        c.physical_alternating_first_direction = static_cast<int>(
+            get_parameter("physical_alternating_first_direction").as_int());
+        if (!has_parameter("physical_alternating_cycles")) declare_parameter("physical_alternating_cycles", 3);
+        c.physical_alternating_cycles = static_cast<int>(get_parameter("physical_alternating_cycles").as_int());
+        c.physical_alternating_start_s = parameter("physical_alternating_start_s", c.physical_alternating_start_s);
+        c.physical_alternating_on_s = parameter("physical_alternating_on_s", c.physical_alternating_on_s);
+        c.physical_alternating_gap_s = parameter("physical_alternating_gap_s", c.physical_alternating_gap_s);
+        if (!has_parameter("physical_start_profile")) declare_parameter("physical_start_profile", 0);
+        c.physical_start_profile = static_cast<int>(get_parameter("physical_start_profile").as_int());
+        c.physical_guard_fraction = parameter("physical_guard_fraction", c.physical_guard_fraction);
+        c.physical_start_speed = parameter("physical_start_speed_rad_s", c.physical_start_speed);
+        c.yaw_speed_trip = parameter("yaw_speed_trip_rad_s", c.yaw_speed_trip);
+        c.yaw_temperature_trip_c = parameter("yaw_temperature_trip_c", c.yaw_temperature_trip_c);
         c.world_pitch_target = parameter("world_pitch_target_deg", 5.0) * std::numbers::pi / 180.0;
         c.pitch_target = parameter("pitch_target_deg", -10.0) * std::numbers::pi / 180.0;
         c.pitch_ready_tolerance = parameter("pitch_ready_tolerance_deg", 1.5)
@@ -78,14 +123,18 @@ public:
         c.tracking_ramp = parameter("tracking_ramp_s", c.tracking_ramp);
         c.yaw_ff_velocity = parameter("yaw_velocity_ff_torque_gain", 0.0);
         c.yaw_ff_acceleration = parameter("yaw_acceleration_ff_torque_gain", 0.0);
+        c.yaw_ff_coulomb = parameter("yaw_coulomb_ff_torque", 0.0);
+        c.yaw_ff_coulomb_scale = parameter("yaw_coulomb_ff_velocity_scale_rad_s", 0.02);
         c.yaw_ff_bias = parameter("yaw_bias_ff_torque", 0.0);
         c.yaw_torque_slew = parameter("yaw_torque_slew_Nm_s", c.yaw_torque_slew);
         c.yaw_torque_release_slew = parameter("yaw_torque_release_slew_Nm_s",
                                                c.yaw_torque_slew);
         configure("pitch_angle", engine_.pitch_angle);
         configure("pitch_velocity", engine_.pitch_velocity);
-        configure("yaw_angle", engine_.yaw_angle);
-        configure("yaw_velocity", engine_.yaw_velocity);
+        if (!c.physical_identification) {
+            configure("yaw_angle", engine_.yaw_angle);
+            configure("yaw_velocity", engine_.yaw_velocity);
+        }
         engine_.validate();
         register_input("/gimbal/pitch/angle", pitch_);
         register_input("/tf", tf_);
@@ -113,6 +162,14 @@ public:
         register_output("/yaw_experiment/yaw_target_offset", yaw_target_offset_, 0.0);
         register_output("/yaw_experiment/yaw_error", yaw_error_output_, 0.0);
         register_output("/yaw_experiment/yaw_feedforward", yaw_feedforward_, 0.0);
+        register_output("/yaw_experiment/yaw_pid_torque", yaw_pid_torque_, 0.0);
+        register_output("/yaw_experiment/physical_identification", physical_mode_, c.physical_identification ? 1.0 : 0.0);
+        register_output("/yaw_experiment/passive_pitch", passive_mode_, c.passive_pitch ? 1.0 : 0.0);
+        register_output("/yaw_experiment/mechanically_fixed_pitch", fixed_pitch_mode_,
+                        c.mechanically_fixed_pitch ? 1.0 : 0.0);
+        register_output("/yaw_experiment/controlled_pitch_parking", parking_mode_, c.controlled_pitch_parking ? 1.0 : 0.0);
+        register_output("/yaw_experiment/pitch_off_slew_Nm_s", pitch_off_slew_output_, c.off_slew);
+        register_output("/yaw_experiment/physical_guard_stop", physical_guard_stop_, 0.0);
         register_output("/yaw_experiment/tracking_frequency_hz", tracking_frequency_, 0.0);
         register_output("/yaw_experiment/excitation_profile", excitation_profile_, 0.0);
         heartbeat_ = create_subscription<std_msgs::msg::Empty>(
@@ -124,9 +181,14 @@ public:
         add_service("sweep", Command::Sweep);
         add_service("hold", Command::Hold);
         add_service("off", Command::Off);
-        RCLCPP_WARN(get_logger(), "Experiment OFF. Pitch target %.1f deg (%s), torque limit %.2f Nm. Use console.py or session.py.",
-                    (c.world_pitch_control ? c.world_pitch_target : c.pitch_target) * 180 / std::numbers::pi,
-                    c.world_pitch_control ? "world" : "encoder", c.pitch_torque_limit);
+        if (c.mechanically_fixed_pitch)
+            RCLCPP_WARN(get_logger(), "Experiment OFF. Mechanically fixed Pitch: Pitch command torque stays zero. Use session.py.");
+        else if (c.passive_pitch)
+            RCLCPP_WARN(get_logger(), "Experiment OFF. Passive Pitch at low pose: Pitch command torque stays zero. Use session.py.");
+        else
+            RCLCPP_WARN(get_logger(), "Experiment OFF. Pitch target %.1f deg (%s), torque limit %.2f Nm. Use console.py or session.py.",
+                        (c.world_pitch_control ? c.world_pitch_target : c.pitch_target) * 180 / std::numbers::pi,
+                        c.world_pitch_control ? "world" : "encoder", c.pitch_torque_limit);
     }
 
     void update() override {
@@ -145,7 +207,9 @@ public:
         auto cmd = pending_.exchange(Command::None);
         if (off_requested_.exchange(false)) cmd = Command::Off;
         // Temperature outputs initialize at zero; do not arm before both motors have replied.
-        if (cmd == Command::Arm && (in.yaw_temperature <= 0 || in.pitch_temperature <= 0)) {
+        if (cmd == Command::Arm && (in.yaw_temperature <= 0
+                                    || (!engine_.config.mechanically_fixed_pitch
+                                        && in.pitch_temperature <= 0))) {
             RCLCPP_WARN(get_logger(), "Arm refused: waiting for nonzero motor temperature feedback");
             cmd = Command::None;
         }
@@ -155,10 +219,9 @@ public:
                         in.heartbeat, std::isfinite(in.pitch_world),
                         in.pitch_temperature, in.yaw_temperature);
         if (cmd == Command::Sweep && out.state != State::Sweep)
-            RCLCPP_WARN(get_logger(), "Sweep did not start: state=%d fault=%d world_pitch=%.1f deg (minimum %.1f deg). Check pitch stability and clearance.",
+            RCLCPP_WARN(get_logger(), "Sweep did not start: state=%d fault=%d world_pitch=%.1f deg. Check pose, yaw speed and clearance.",
                         static_cast<int>(out.state), out.fault,
-                        in.pitch_world * 180 / std::numbers::pi,
-                        engine_.config.min_world_pitch * 180 / std::numbers::pi);
+                        in.pitch_world * 180 / std::numbers::pi);
         state_snapshot_.store(out.state);
         *yaw_torque_ = out.yaw_torque;
         *pitch_torque_ = out.pitch_torque;
@@ -173,6 +236,13 @@ public:
         *yaw_target_offset_ = out.yaw_target_offset;
         *yaw_error_output_ = out.yaw_error;
         *yaw_feedforward_ = out.yaw_feedforward;
+        *yaw_pid_torque_ = out.yaw_pid_torque;
+        *physical_mode_ = engine_.config.physical_identification ? 1.0 : 0.0;
+        *passive_mode_ = engine_.config.passive_pitch ? 1.0 : 0.0;
+        *fixed_pitch_mode_ = engine_.config.mechanically_fixed_pitch ? 1.0 : 0.0;
+        *parking_mode_ = engine_.config.controlled_pitch_parking ? 1.0 : 0.0;
+        *pitch_off_slew_output_ = engine_.config.off_slew;
+        *physical_guard_stop_ = out.physical_guard_stop;
         *tracking_frequency_ = out.tracking_frequency;
         *excitation_profile_ = out.excitation_profile;
         if (out.state != previous_state_) {
@@ -192,6 +262,13 @@ public:
                 + " motor_rad_s=" + std::to_string(*pitch_motor_velocity_)
                 + " yaw_deg=" + std::to_string(in.yaw * 180 / std::numbers::pi)
                 + " yaw_cmd_Nm=" + std::to_string(out.yaw_torque)
+                + " physical_identification=" + std::to_string(engine_.config.physical_identification ? 1 : 0)
+                + " passive_pitch=" + std::to_string(engine_.config.passive_pitch ? 1 : 0)
+                + " mechanically_fixed_pitch=" + std::to_string(engine_.config.mechanically_fixed_pitch ? 1 : 0)
+                + " controlled_pitch_parking=" + std::to_string(engine_.config.controlled_pitch_parking ? 1 : 0)
+                + " pitch_off_slew_Nm_s=" + std::to_string(engine_.config.off_slew)
+                + " physical_guard_stop=" + std::to_string(out.physical_guard_stop)
+                + " yaw_pid_Nm=" + std::to_string(out.yaw_pid_torque)
                 + " yaw_target_deg=" + std::to_string(out.yaw_target_offset * 180 / std::numbers::pi)
                 + " yaw_error_deg=" + std::to_string(out.yaw_error * 180 / std::numbers::pi)
                 + " tracking_hz=" + std::to_string(out.tracking_frequency)
@@ -240,7 +317,7 @@ private:
                     response->message = "No recent heartbeat; wait for heartbeat_age_s < 1.5";
                     return;
                 } else if ((cmd == Command::Arm && state == State::Off && allow_arm_)
-                           || (cmd == Command::Sweep && state == State::Ready)
+                           || (cmd == Command::Sweep && state == State::Ready && allow_sweep_)
                            || (cmd == Command::Hold && state != State::Off && state != State::Fault)) {
                     Command expected = Command::None;
                     response->success = pending_.compare_exchange_strong(expected, cmd);
@@ -251,11 +328,14 @@ private:
     }
     Engine engine_;
     bool allow_arm_ = true;
+    bool allow_sweep_ = true;
     InputInterface<double> pitch_, yaw_, pitch_velocity_, yaw_velocity_, pitch_temperature_, yaw_temperature_, rate_;
     InputInterface<rmcs_description::Tf> tf_;
     InputInterface<double> pitch_feedback_torque_, pitch_motor_velocity_;
     OutputInterface<double> pitch_torque_, yaw_torque_, state_, fault_, completed_, time_, excitation_, pitch_target_, pitch_torque_unlimited_, pitch_world_output_;
     OutputInterface<double> yaw_target_offset_, yaw_error_output_, yaw_feedforward_;
+    OutputInterface<double> yaw_pid_torque_, physical_mode_, passive_mode_, fixed_pitch_mode_, parking_mode_, physical_guard_stop_;
+    OutputInterface<double> pitch_off_slew_output_;
     OutputInterface<double> tracking_frequency_;
     OutputInterface<double> excitation_profile_;
     OutputInterface<double> charge_power_limit_;

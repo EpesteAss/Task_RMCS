@@ -9,14 +9,16 @@
 
 ## 步兵 C 车 yaw 系统辨识与控制优化
 
-- 操作入口：`experiments/yaw_identification/QUICKSTART.md`。
+- 验收补充要求：采集期间 Yaw 不使用 PID，辨识机械本体的惯量、阻尼及摩擦。该项已完成实车采集、留出验证和模型前馈 A/B；输出轴实际力矩尚未用独立传感器标定，因此物理参数以日志电机力矩刻度为条件。
+
+- 新物理辨识操作入口：`experiments/yaw_identification/PHYSICAL_IDENTIFICATION.md`；历史闭环实验入口：`experiments/yaw_identification/QUICKSTART.md`。
 - 实验插件及脚本：`experiments/yaw_identification/addon/`、`closed_loop_cascade_study.py`、`compare_control.py`。
 - 文档：`experiments/yaw_identification/FINAL_REPORT.md` 和同目录的 PDF。
-- 最终模型复算数据：`data/20261007_022850_274011/feedback.csv` 的前 18 轮用于训练与选型，`data/20261007_043913_088815/feedback.csv` 的最后 9 轮用于冻结后验证。
-- 原版与优化版成对数据：`control_data/control-baseline-wide/20261006_070745_870317/feedback.csv` 和 `control_data/control-tuned-wide/20261006_072257_499687/feedback.csv`。
+- 最终物理模型数据：`experiments/yaw_identification/data/physical_20261014/`；频响拟合使用正相 0.5、1、2 Hz，反相 0.5 Hz 整轮留出验证。
+- 零前馈与模型前馈成对数据：`control_data/control-model-baseline-fixed/20261015_015001_319800/` 和 `control_data/control-model-ff-fixed/20261015_015157_513409/`。
 
-冻结后 9 轮完整自由预测的原始 IMU 速度拟合度为 91.23%；相同 50 ms 因果低通施加于实测和预测后，总体为 95.75%，最低速 0.05 Hz 为 90.47%。原始最低速为 79.98%。左右各 15 度的三档成对控制实验中，角度 RMSE 从 1.283 度降到 0.821 度。模型拟合与控制器对比使用不同实验，请按报告中的输入、滤波和验证划分分别解读。
+最终采用含黏性阻尼和库仑摩擦的二阶转动模型。较低角度工作区参数为 `J=0.1238 kg·m²`、`B=0.2753 N·m·s/rad`、`F_c=0.2197 N·m`；反相 0.5 Hz 留出轮次的已运动区间速度拟合度为 90.2%，角度 RMSE 为 2.50°。相同 PID 和轨迹下加入模型前馈后，三档合并角度 RMSE 从 1.288° 降至 1.191°，改善 7.55%。
 
 未纳入本次提交的中间尝试日志仍保存在实验机器的本地工作区；上述最终数据和配置快照足以复算主要结论。
 
-本地提交前验证：`rmcs_core` 与实验插件编译通过；4 个龙门架逻辑测试、2 个插件测试和 11 个 Python 工具测试通过。使用上面列出的原始 CSV 重新运行模型与控制对比脚本，所得 JSON 与保存的结果完全一致。PDF 公式改用可移植的 ASCII 写法，并检查过文字提取及图表排版。
+本地提交前验证：实验插件的 4 项 CTest 和辨识工具的 24 项 Python 测试通过；PDF 已检查文字提取、公式和图表排版。

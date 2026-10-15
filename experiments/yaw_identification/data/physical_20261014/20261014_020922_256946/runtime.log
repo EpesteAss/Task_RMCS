@@ -1,0 +1,58 @@
+Static preflight passed (hardware dependency pairing occurs at startup): /root/yaw_identification_physical_20261013/identification_physical_low_pitch_temp130.yaml
+Permanent recording directory: /root/yaw_identification_physical_20261013/physical_data/20261014_020922_256946
+Starting identification-physical-low-pitch-temp130 OFF. Open a second SSH terminal and run the matching session; Pitch stays at zero torque; arm then sweep excites yaw. Heartbeat loss zeros both torques.
+[librmcs] [warn] USB device firmware version mismatch: found 'RMCS Agent v3.3.0-beta.2', expected 'RMCS Agent v3.3.0-beta.1'. Continuing because dangerously_skip_version_checks is enabled.
+[librmcs] [warn] USB device firmware version mismatch: found 'RMCS Agent v3.3.0-beta.2', expected 'RMCS Agent v3.3.0-beta.1'. Continuing because dangerously_skip_version_checks is enabled.
+[WARN] [1791943762.428821501] [yaw_experiment]: Experiment OFF. Passive Pitch at low pose: Pitch command torque stays zero. Use session.py.
+[INFO] [1791943762.431203216] [yaw_collector]: collecting 24 signals to /root/yaw_identification_physical_20261013/physical_data/20261014_020922_256946/feedback.csv
+[INFO] [1791943762.431229775] [rmcs_executor]: Calculating component dependencies
+[INFO] [1791943762.431238541] [rmcs_executor]: - predefined_msg_provider
+[INFO] [1791943762.431247708] [rmcs_executor]: -     deformable_infantry
+[INFO] [1791943762.431252476] [rmcs_executor]: -         referee_status
+[INFO] [1791943762.431256203] [rmcs_executor]: -     yaw_experiment
+[INFO] [1791943762.431259519] [rmcs_executor]: -         deformable_infantry_command
+[INFO] [1791943762.431262785] [rmcs_executor]: -         yaw_collector
+[WARN] [1791943762.431445680] [deformable_infantry]: deformable joint feedback invalid, fallback chassis radius to default 0.374 m
+[INFO] [1791943767.431539140] [rmcs_executor]: Update/Skipped: 5001/0 (0.0%), Stat ms p50/p99/max: start_late 0.056/0.058/0.189, update 0.022/0.093/0.819
+[INFO] [1791943767.431580195] [rmcs_executor]: Component 5s: deformable_infantry_command 0.017ms/64.9%, yaw_experiment 0.007ms/27.1%, deformable_infantry 0.001ms/3.8%
+[INFO] [1791943771.493965385] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[Fatal] Segmentation fault
+>>> STACK TRACE BEGIN
+/rmcs_install/lib/librmcs_core.so(_ZNSt10_HashtableINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt4pairIKS5_St13unordered_setIS5_St4hashIS5_ESt8equal_toIS5_ESaIS5_EEESaISF_ENSt8__detail10_Select1stESC_SA_NSH_18_Mod_range_hashingENSH_20_Default_ranged_hashENSH_20_Prime_rehash_policyENSH_17_Hashtable_traitsILb1ELb0ELb1EEEE21_M_insert_unique_nodeEmmPNSH_10_Hash_nodeISF_Lb1EEEm+0x51)[0x707c5fe81501]
+/rmcs_install/lib/librmcs_core.so(_ZNSt8__detail9_Map_baseINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEESt4pairIKS6_St13unordered_setIS6_St4hashIS6_ESt8equal_toIS6_ESaIS6_EEESaISG_ENS_10_Select1stESD_SB_NS_18_Mod_range_hashingENS_20_Default_ranged_hashENS_20_Prime_rehash_policyENS_17_Hashtable_traitsILb1ELb0ELb1EEELb1EEixERS8_+0x18c)[0x707c5fe8180c]
+/rmcs_install/lib/librmcs_core.so(+0x2b1844)[0x707c5fe9d844]
+/rmcs_install/lib/librmcs_core.so(_ZN9rmcs_core8hardware23DeformableInfantryOmniC11BottomBoard26gyroscope_receive_callbackERKN7librmcs4data20ImuGyroscopeDataViewE+0xe2)[0x707c5fea4732]
+/rmcs_install/lib/librmcs_core.so(+0x36c527)[0x707c5ff58527]
+/rmcs_install/lib/librmcs_core.so(+0x36f0e5)[0x707c5ff5b0e5]
+/rmcs_install/lib/librmcs_core.so(+0x36bcc2)[0x707c5ff57cc2]
+/rmcs_install/lib/librmcs_core.so(+0x36e437)[0x707c5ff5a437]
+/lib/x86_64-linux-gnu/libusb-1.0.so.0(+0xecf9)[0x707c742b0cf9]
+/lib/x86_64-linux-gnu/libusb-1.0.so.0(+0xf77f)[0x707c742b177f]
+/lib/x86_64-linux-gnu/libusb-1.0.so.0(+0xfca2)[0x707c742b1ca2]
+/lib/x86_64-linux-gnu/libusb-1.0.so.0(+0xd909)[0x707c742af909]
+/lib/x86_64-linux-gnu/libusb-1.0.so.0(libusb_handle_events_timeout_completed+0x210)[0x707c742b2780]
+/lib/x86_64-linux-gnu/libusb-1.0.so.0(libusb_handle_events+0x32)[0x707c742b27e2]
+/rmcs_install/lib/librmcs_core.so(+0x36e5b9)[0x707c5ff5a5b9]
+/lib/x86_64-linux-gnu/libstdc++.so.6(+0xecdb4)[0x707c7ce3edb4]
+/lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x707c7cac3aa4]
+/lib/x86_64-linux-gnu/libc.so.6(+0x129c6c)[0x707c7cb50c6c]
+<<< STACK TRACE END
+Traceback (most recent call last):
+  File "/root/yaw_identification_physical_20261013/run.py", line 113, in <module>
+    main()
+  File "/root/yaw_identification_physical_20261013/run.py", line 106, in main
+    raise SystemExit(subprocess.call([
+                     ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 391, in call
+    return p.wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

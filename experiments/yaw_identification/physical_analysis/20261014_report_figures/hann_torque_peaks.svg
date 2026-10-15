@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="480" viewBox="0 0 1000 480">
+<rect width="1000" height="480" fill="white"/>
+<g font-family="DejaVu Sans, sans-serif" font-size="17" fill="#25364d">
+<text x="90" y="38" font-size="24" font-weight="bold">Hann-windowed cosine: recorded torque extrema</text>
+<text x="90" y="70">The positive and negative peaks change differently with frequency</text>
+<path d="M 158.6 105 V 370" stroke="#dbe3ed" stroke-width="1"/>
+<text x="158.6" y="402" text-anchor="middle">-1.0</text>
+<path d="M 344.3 105 V 370" stroke="#dbe3ed" stroke-width="1"/>
+<text x="344.3" y="402" text-anchor="middle">-0.5</text>
+<path d="M 530.0 105 V 370" stroke="#25364d" stroke-width="2"/>
+<text x="530.0" y="402" text-anchor="middle">+0.0</text>
+<path d="M 715.7 105 V 370" stroke="#dbe3ed" stroke-width="1"/>
+<text x="715.7" y="402" text-anchor="middle">+0.5</text>
+<path d="M 901.4 105 V 370" stroke="#dbe3ed" stroke-width="1"/>
+<text x="901.4" y="402" text-anchor="middle">+1.0</text>
+<text x="110" y="152" text-anchor="end">0.5 Hz</text>
+<rect x="345.5" y="135" width="184.5" height="30" fill="#c0392b"/>
+<rect x="530" y="135" width="334.3" height="30" fill="#1565c0"/>
+<text x="337.5" y="156" text-anchor="end">-0.497</text>
+<text x="872.3" y="156">+0.900</text>
+<text x="110" y="238" text-anchor="end">1 Hz</text>
+<rect x="243.2" y="221" width="286.8" height="30" fill="#c0392b"/>
+<rect x="530" y="221" width="334.2" height="30" fill="#1565c0"/>
+<text x="235.2" y="242" text-anchor="end">-0.772</text>
+<text x="872.2" y="242">+0.900</text>
+<text x="110" y="324" text-anchor="end">2 Hz</text>
+<rect x="208.3" y="307" width="321.7" height="30" fill="#c0392b"/>
+<rect x="530" y="307" width="334.2" height="30" fill="#1565c0"/>
+<text x="200.3" y="328" text-anchor="end">-0.866</text>
+<text x="872.2" y="328">+0.900</text>
+<text x="530" y="440" text-anchor="middle">Recorded Yaw torque command (Nm)</text>
+</g></svg>

@@ -1,0 +1,22 @@
+{
+  "outcome": "interrupted",
+  "completed_trials": 0,
+  "events": [
+    {
+      "elapsed_s": 0.0025384860000485787,
+      "message": "Keep this SSH terminal open. Motion starts now; Ctrl+C sends OFF. Keep Pitch at the required pose."
+    },
+    {
+      "elapsed_s": 0.5024631720002617,
+      "message": "Operator measured Yaw shell temperature: 30 C; Pitch is mechanically clamped"
+    },
+    {
+      "elapsed_s": 0.503086672000336,
+      "message": "arm: Queued; watch status for resulting state"
+    },
+    {
+      "elapsed_s": 0.9990489310002886,
+      "message": "sweep: Queued; watch status for resulting state"
+    }
+  ]
+}
